@@ -1,6 +1,7 @@
 #############
 
 #' FitSparsePCA
+#'
 #' Fit sparse PCA on a grid of alpha
 #' @param Y a data frame
 #' @param r the number of missing actors

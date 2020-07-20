@@ -2,8 +2,7 @@
 % Please edit documentation in R/fonctions-V2.R
 \name{FitSparsePCA}
 \alias{FitSparsePCA}
-\title{FitSparsePCA
-Fit sparse PCA on a grid of alpha}
+\title{FitSparsePCA}
 \usage{
 FitSparsePCA(Y, r = 1, minV = 1, alphaGrid = 10^(seq(-4, 0, by =
   0.1)))
@@ -21,7 +20,6 @@ FitSparsePCA(Y, r = 1, minV = 1, alphaGrid = 10^(seq(-4, 0, by =
 a list
 }
 \description{
-FitSparsePCA
 Fit sparse PCA on a grid of alpha
 }
 \examples{
