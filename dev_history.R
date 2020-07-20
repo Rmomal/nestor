@@ -14,6 +14,8 @@ usethis::use_package("tidyr")
 usethis::use_package("mvtnorm")
 usethis::use_package("PLNmodels")
 usethis::use_package("sparsepca")
+library(huge)
+library(Matrix)
 # readme
 usethis::use_readme_rmd()
 #git link
@@ -27,7 +29,7 @@ usethis::edit_r_environ()
 usethis::use_travis() # inclure [ci skip] dans le message du commit pour pusher sans travis
 # pkgdown
 usethis::use_pkgdown()
-usethis::edit_r_environ()
+#usethis::edit_r_environ()
 usethis::git_vaccinate()
 usethis::use_pkgdown_travis()
 # ssh deployment key manual:
