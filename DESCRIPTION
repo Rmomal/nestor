@@ -1,0 +1,23 @@
+Package: VEMtree
+Title: Network inference with missing actors
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Raphaelle",
+           family = "Momal",
+           role = c("aut", "cre"),
+           email = "rmomaleisenring@gmail.com",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: VEMtree runs a variational inference using an average on spanning trees to infer the conditional dependency structure from abundance data, while accounting for missing actors.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.1.1
+Imports: 
+    MASS,
+    parallel,
+    ROCR,
+    dplyr,
+    tidyr,
+    mvtnorm,
+    PLNmodels
