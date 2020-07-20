@@ -13,12 +13,9 @@
 #'
 #' @examples #blabla
 FitSparsePCA <- function(Y, r=1,minV=1, alphaGrid=10^(seq(-4, 0, by=.1))){
-  #
-  # Needs an estimate o Sigma: empirical variance of the rotated scores
-  #    + diagonal risidual variances (why not?)
+  # estimate of Sigma: empirical variance of the rotated scores  + diagonal risidual variances
   n <- nrow(Y); p <- ncol(Y); alphaNb <- length(alphaGrid); nbDifferentH=-1
   while(nbDifferentH!=r){
-    # Fits all sparsePCA
     sPCA <- list()
 
     for(a in 1:alphaNb){
@@ -31,16 +28,14 @@ FitSparsePCA <- function(Y, r=1,minV=1, alphaGrid=10^(seq(-4, 0, by=.1))){
       sPCA[[a]]$loglik <- sum(dmvnorm((Y), sigma=sPCA[[a]]$Sigma, log=TRUE))
       sPCA[[a]]$bic <- sPCA[[a]]$loglik - log(n)*sPCA[[a]]$df/2
     }
-
-    #2 neighbors minimum
     df<-unlist(lapply(sPCA, function(sPca){sPca$df}))
 
-    good<-do.call(rbind,lapply(sPCA, function(spca){# entre 2 et p-1 voisins
+    good<-do.call(rbind,lapply(sPCA, function(spca){
       vec_col<-apply(spca$loadings, 2,function(col){
         (sum(col!=0)>minV && sum(col!=0)<p)})
       return(sum(vec_col)==r)
     }))
-    good2<- do.call(rbind,lapply(sPCA, function(spca){# des axes différents
+    good2<- do.call(rbind,lapply(sPCA, function(spca){# missing actors should be different
       vec_col<-lapply(1:ncol(spca$loadings), function(col){
         which(spca$loadings[,col]!=0)})
       return(length(unique(vec_col))==r)}))
@@ -62,7 +57,22 @@ FitSparsePCA <- function(Y, r=1,minV=1, alphaGrid=10^(seq(-4, 0, by=.1))){
               loglik=loglik, bic=bic, cliques=cliques))
 }
 
-boot_FitSparsePCA<-function(Y, B,r, minV=1,cores=3, unique=TRUE){
+#' boot_FitSparsePCA
+#'
+#' Finds initial cliques using a spca on bosstraps sub-samples
+#'
+#' @param Y data
+#' @param B number of bootstrap samples
+#' @param r number of missing actors
+#' @param minV minimum number of neighbors of missing actors
+#' @param cores number of cores for possible parallel computation
+#' @param unique should unique results only be displayed ?
+#'
+#' @return
+#' @export
+#'
+#' @examples
+boot_FitSparsePCA<-function(Y, B,r, minV=1,cores=1, unique=TRUE){
   cliqueList<-mclapply(1:B, function(x){
     n=nrow(Y); v=0.8; n.sample=round(0.8*n, 0)
     ech=sample(1:n,n.sample,replace = FALSE)
@@ -78,11 +88,25 @@ boot_FitSparsePCA<-function(Y, B,r, minV=1,cores=3, unique=TRUE){
   return(list(cliqueList=cliqueList,nb_occ=nb_occ) )
 }
 
+#' init_blockmodels
+#'
+#'Find initial cliques using blockmodels on the initial network (possibly inferred using EMtree or VEMtree with r=0)
+#' @param k number of groups
+#' @param counts data
+#' @param sigma_obs original covariance matrix estimate
+#' @param MO original observed means estimate
+#' @param SO original observed marginal variances estimate
+#' @param alpha tempering parameter
+#'
+#' @return a list of possible cliques
+#' @export
+#'
+#' @examples
 init_blockmodels<-function(k, counts, sigma_obs, MO, SO, alpha=0.1){
   init=initVEM(counts = counts,initviasigma=NULL, cov2cor(sigma_obs),MO,r = 0)
-  Wginit= init$Wginit; Winit= init$Winit; upsinit=init$upsinit ; MHinit=init$MHinit
+  Wginit= init$Wginit; Winit= init$Winit; omegainit=init$omegainit ; MHinit=init$MHinit
   #--- fit VEMtree with 0 missing actor
-  resVEM0<- tryCatch(VEMtree(counts,MO,SO,MH=MHinit,upsinit,Winit,Wginit, eps=1e-3, alpha=alpha,
+  resVEM0<- tryCatch(VEMtree(counts,MO,SO,MH=MHinit,omegainit,Winit,Wginit, eps=1e-3, alpha=alpha,
                     maxIter=100, plot=FALSE,print.hist=FALSE, verbatim = FALSE,trackJ=FALSE),
                     error=function(e){e}, finally={})
   if(length(resVEM0)>3){
@@ -101,6 +125,15 @@ init_blockmodels<-function(k, counts, sigma_obs, MO, SO, alpha=0.1){
   })
   return(clique)
 }
+#' extractParamBM
+#'
+#'internal function for initialization with blockmodels
+#' @param BMobject
+#' @param Q
+#'
+#' @return
+#'
+#' @examples
 extractParamBM <- function(BMobject,Q){
   model <- BMobject$model_name
   membership_name <-  BMobject$membership_name
@@ -180,74 +213,71 @@ extractParamBM <- function(BMobject,Q){
   return(res)
 }
 
-##build full sigma and omega
-initEM <- function(Sigma = NULL,n=1e6,cst=1.1,pca=TRUE,cliqueList) {
-  # -----------------------------------------------------------------------------------------------------------------------------
-  # FUNCTION
-  #   Initialize Sigma and Omega by taking the principal component of cliques as initial value for the hidden variables.
-  #   The PCA is done on the correaltion matrix, the variance of hidden variables are set to the empirical variances of the pca.
-  #   The corresponding precision term in omega is set to 1 for identifiability reasons.
-  # INPUT
-  #   Sigma     :  variance-covariance matrix (p x p)
-  #   cliqueList : list of found cliques, given as vectorss of nodes indices
-  # OUTPUT
-  #   Sigma0    : initial value of complete covariance matrix ((p+r)x(p+r) matrix)
-  #   K0        : initial value of complete precision matrix ((p+r)x(p+r) matrix)
-  #   clique    : vector containing the indices of the nodes in the clique
-  # -----------------------------------------------------------------------------------------------------------------------------
 
+#' initEM
+#'
+#'Initialize Sigma and Omega by taking the principal component of cliques as initial value for the hidden variables.
+#'  The PCA is done on the correaltion matrix, the variance of hidden variables are set to the empirical variances of the pca.
+#'  The corresponding precision term in omega is set to 1 for identifiability reasons.
+#' @param Sigma variance-covariance matrix (p x p)
+#' @param cst small constant for positive definiteness
+#' @param cliqueList list of found cliques, given as vectorss of nodes indices
+#'
+#' @return  \itemize{
+#' \item{Sigma0: }{initial value of complete covariance matrix ((p+r)x(p+r) matrix)}
+#' \item{K0: }{initial value of complete precision matrix ((p+r)x(p+r) matrix)}
+#' \item{clique: }{vector containing the indices of the nodes in the clique}}
+#' @export
+#'
+#' @examples
+initEM <- function(Sigma = NULL, cst=1.1, cliqueList) {
   r=length(cliqueList) ; p=ncol(Sigma);H=(p+1):(p+r)
-  # code sans simulation de données
   Corr <- cov2cor(Sigma); sigma <- sqrt(diag(Sigma))
   coef <- matrix(0, p, r)
   sapply(seq_along(cliqueList), function(c){
     coef[, c] <<- rep(0, p);
-    if(length(cliqueList[[c]])>1){ # ne pas faire d'acp si la clique est un noeud
+    if(length(cliqueList[[c]])>1){ # no pca if only one neighbor
       pca <-eigen(cov2cor(Corr[cliqueList[[c]], cliqueList[[c]]]))
       coef[cliqueList[[c]], c] <<- pca$vectors[, 1]
     }else{
       coef[,c]<<-Corr[cliqueList[[c]],]
     }
   })
-
   # Recontructing Sigma
   CorrFull <- rbind(cbind(Corr, Corr%*%coef), cbind(t(coef)%*%Corr, cst*t(coef)%*%Corr%*%coef))
-  # sigmaFull <- c(sigma,1/sqrt(diag(CorrFull)[(p+1):(p+r)]))
-  # SigmaFull <- diag(sigmaFull) %*% CorrFull %*% diag(sigmaFull)
-  #
   # Initialising Omega
-  OmegaFull <- tryCatch({solve(CorrFull)},
-                        error=function(e){browser()},finally={})
-  # coefDiag <- c(rep(1, p), 1/sqrt(diag(OmegaFull)[p+(1:r)]))
-  # OmegaFull <- diag(coefDiag) %*% OmegaFull %*% diag(coefDiag)
-  if(r>1){
-    OmegaFull[H,H]<-diag(diag(OmegaFull[H,H]))
-  }
-
+  OmegaFull <- solve(CorrFull)
+  if(r>1) OmegaFull[H,H]<-diag(diag(OmegaFull[H,H]))
   return(list( Sigma0 = CorrFull, K0 = OmegaFull, cliquelist = cliqueList))
 }
 
 
-## wraper to initialize all parameters
-initVEM<-function(counts,initviasigma,sigma_obs,MO,r){
+
+#' initVEM
+#'
+#'wraper to initialize all parameters for the variational inference
+#' @param counts
+#' @param cliquelist
+#' @param sigma_obs
+#' @param MO
+#' @param r
+#'
+#' @return
+#' @export
+#'
+#' @examples
+initVEM<-function(counts,cliquelist,sigma_obs,MO,r){
   p=ncol(counts)
   n=nrow(counts)
   # Tree
   Wginit <- matrix(1, p+r, p+r); Wginit =Wginit / sum(Wginit)
   Winit <- matrix(1, p+r, p+r); Winit =Winit / sum(Winit)
-  #Winit[1:p,1:p] <- EMtree_corZ(cov2cor(sigma_obs),n = n,maxIter = 20,verbatim = FALSE)$edges_weight
   diag(Wginit) = 0;diag(Winit) = 0
   # Z
   if(r!=0){
-    initial.param<-initEM(sigma_obs,n=n,cliqueList = (initviasigma),cst=1.05, pca=TRUE) # quick and dirty modif for initEM to take a covariance matrix as input
-    upsinit=initial.param$K0
-
-    # MHinit<-sapply(initviasigma, function(clique){
-    #   pr=prcomp(t(MO[,clique]),scale. = FALSE)
-    #   res = matrix(pr$rotation[,1]*pr$sdev[1],nrow=n,ncol=1)
-    #   return(res)
-    # })
-    MHinit<-sapply(initviasigma, function(clique){
+    initial.param<-initEM(sigma_obs,n=n,cliqueList = (cliquelist),cst=1.05, pca=TRUE) # quick and dirty modif for initEM to take a covariance matrix as input
+    omegainit=initial.param$K0
+    MHinit<-sapply(cliquelist, function(clique){
       if(length(clique)>1){
          res=matrix(rowMeans(MO[,clique]), n, 1)
       }else{   res=matrix(MO[,clique], n, 1)}
@@ -255,14 +285,35 @@ initVEM<-function(counts,initviasigma,sigma_obs,MO,r){
     })
 
   }else{#init with no missing actors
-    upsinit=solve(sigma_obs)
+    omegainit=solve(sigma_obs)
     MHinit=NULL
   }
-  return(list(Wginit= Wginit, Winit= Winit, upsinit=upsinit,MHinit=MHinit))
+  return(list(Wginit= Wginit, Winit= Winit, omegainit=omegainit,MHinit=MHinit))
 }
 
 ## simulate data and parameters
-missing_from_scratch<-function(n,p,r,type,plot, dens=2/p){
+#' missing_from_scratch
+#'
+#'Function to simulate data and parameters
+#' @param n number of samples
+#' @param p number of observed species
+#' @param r number of missing actors
+#' @param type type of conditional dependency structure (graph), either "erdos", "cluster", or "scale-free".
+#' @param plot should the simulated graph be plotted ? default to FALSE
+#' @param dens density parameter for cluster and erdos graphs. For erdos graphs, this corresponds to the edges probability of connectance
+#'
+#' @return \itemize{
+#' \item{Y:}{}
+#' \item{UH:}{}
+#' \item{Sigma:}{}
+#' \item{Omega:}{}
+#' \item{G:}{}
+#' \item{TC:}{}
+#' \item{H:}{}}
+#' @export
+#'
+#' @examples
+missing_from_scratch<-function(n,p,r,type,plot=FALSE, dens=2/p){
   #generate a graph and data Y and U
   data=data_from_scratch(type = type,p = p+r,n = n,signed = FALSE,dens = dens,v = 0)
   omega=data$omega
@@ -279,7 +330,7 @@ missing_from_scratch<-function(n,p,r,type,plot, dens=2/p){
                    pal="black",nodes_label =1:(p+r))$G
     print(g)
   }
-  #compute final parameters R and upsilon
+  #compute final parameters R and Omega
   if(r!=0){
     Kh  <- omega[hidden,hidden]
     Ko  <- omega[-hidden,-hidden]
@@ -295,10 +346,10 @@ missing_from_scratch<-function(n,p,r,type,plot, dens=2/p){
     sigmaO=solve(omega)
   }
   R=cov2cor(solve(omega))
-  upsilon=solve(R)
+  omega=solve(R) # inverse of a correlation matrix for the normalized formulation
 
-  return(list(Y=counts, UH=UH, Sigma=sigmaO, Upsilon=upsilon,G=G ,TC=trueClique, H=hidden))
-}# est-ce qu'on veut sigmaO ou RO ?
+  return(list(Y=counts, UH=UH, Sigma=sigmaO, Omega=omega,G=G ,TC=trueClique, H=hidden))
+}
 
 
 
@@ -308,7 +359,23 @@ missing_from_scratch<-function(n,p,r,type,plot, dens=2/p){
 #=====
 # VE step
 
-computeWg<-function(Rho,Upsilon,W,r,n, alpha, hist=FALSE, verbatim=FALSE ){
+#' computeWg
+#'
+#'Central function for the update of the variational edges weights.
+#' @param Rho Correlation matrix
+#' @param Omega Market matrix filled with all the precision values common to all spanning trees
+#' @param W Edge weight matrix
+#' @param r number of missing actors
+#' @param n number of samples
+#' @param alpha tempering parameter
+#' @param hist should the histogram of the log-values of OO blocs and OH blocs be printed ?
+#' @param verbatim controls verbosity
+#'
+#' @return The variational edge weights matrix
+#' @export
+#'
+#' @examples
+computeWg<-function(Rho,Omega,W,r,n, alpha, hist=FALSE, verbatim=FALSE ){
   q=ncol(Rho); p=q-r; O = 1:p ;   binf=exp(-20) ; bsup=exp(30)
   Wg<-matrix(0,q,q)
   logWg<-matrix(0,q,q)
@@ -316,7 +383,7 @@ computeWg<-function(Rho,Upsilon,W,r,n, alpha, hist=FALSE, verbatim=FALSE ){
 
   ## update
   null = union(which(W==0),which((1-Rho^2)==0))
-  logWg[-null]<-log(W[-null])-alpha*n*(0.5*log((1-Rho^2)[-null])+(Upsilon*Rho)[-null])
+  logWg[-null]<-log(W[-null])-alpha*n*(0.5*log((1-Rho^2)[-null])+(Omega*Rho)[-null])
   diag(logWg) = 0
   #--- centrage
   gammaO=logWg[O,O]
@@ -337,9 +404,6 @@ computeWg<-function(Rho,Upsilon,W,r,n, alpha, hist=FALSE, verbatim=FALSE ){
     vec=(x==0)
     return(sum(vec))
   })
-  # if(sum(vec_null==(p-1))!=0){
-  #   stop("isolated nodes: algorithm failed to converge")
-  # }
 
   return(list(Wg=Wg ))
 }
@@ -348,31 +412,57 @@ computeWg<-function(Rho,Upsilon,W,r,n, alpha, hist=FALSE, verbatim=FALSE ){
 # M step
 
 
-comp_Upsilon<-function(Pg,Rho,p){
+#' comp_Omega
+#'
+#'Update of the precision terms
+#' @param Pg Edge probability matrix
+#' @param Rho Correlation matrix
+#' @param p number of observed species
+#'
+#' @return the market matrix filled with all the precision values common to all spanning trees
+#' @export
+#'
+#' @examples
+comp_Omega<-function(Pg,Rho,p){
   q=ncol(Rho) ; hidden=(q!=p)
   # diagonal
   quantity<-Pg*Rho^2/(1-Rho^2)
   diag(quantity)=NA
   vectorSuml=colSums(quantity, na.rm=TRUE)
-  UpsiDiag =vectorSuml+1
+  OmegaDiag =vectorSuml+1
   #off-diagonal
-  Upsilon = -Rho/(1-Rho^2)
-  diag(Upsilon)=UpsiDiag
-
-  if(hidden){ #assumption A
+  Omega = -Rho/(1-Rho^2)
+  diag(Omega)=OmegaDiag
+  if(hidden){ #model assumption
     H=(p+1):q
-    if(length(H)>1) Upsilon[H,H]<-diag(diag(Upsilon[H,H]))
+    if(length(H)>1) Omega[H,H]<-diag(diag(Omega[H,H]))
   }
-
-  return(Upsilon)
+  return(Omega)
 }
 
 
 #=====
 #Lower bound
 
-LowerBound<-function(Pg ,Upsilon, M, S, W, Wg,p, logSTW, logSTWg){
-  n=nrow(M) ; q=nrow(Upsilon) ; O=1:p ; r=q-p
+#' LowerBound
+#'
+#'Computes the lower bound.
+#' @param Pg
+#' @param Omega
+#' @param M
+#' @param S
+#' @param W
+#' @param Wg
+#' @param p
+#' @param logSTW
+#' @param logSTWg
+#'
+#' @return a vector containing the different terms of the lower bound
+#' @export
+#'
+#' @examples
+LowerBound<-function(Pg ,Omega, M, S, W, Wg,p, logSTW, logSTWg){
+  n=nrow(M) ; q=nrow(Omega) ; O=1:p ; r=q-p
   hidden = (q!=p)
   if(hidden) H=(p+1):q
   Rho=cov2cor((1/n)*(t(M)%*%M+diag(colSums(S))))
@@ -380,8 +470,8 @@ LowerBound<-function(Pg ,Upsilon, M, S, W, Wg,p, logSTW, logSTWg){
   diag(phi)=0
   #Egh lop (Z |T)
   t1<-(-n*0.25)*sum(Pg *log( phi +(phi<1e-16) )) #manip pour 0 sur la diagonale
-  t2<-(-n*0.5) *sum((Pg+diag(q))*Upsilon*Rho)
-  t3<- n*0.5* sum(log(diag(Upsilon)))  - q*n*0.5*log(2*pi)
+  t2<-(-n*0.5) *sum((Pg+diag(q))*Omega*Rho)
+  t3<- n*0.5* sum(log(diag(Omega)))  - q*n*0.5*log(2*pi)
   T1<-t1+t2+t3
 
   # Eglog(p) - Eg log(g)
@@ -408,45 +498,6 @@ True_lowBound<-function(Y, M,S,theta,X, W, Wg, Pg, omega){
   TrueJ<-as.numeric(partJ)+partY
   return(TrueJ)
 }
-DoubleProba <- function(W,r=1, verbatim=FALSE){
-  #computes the probability for a hidden covariate to be linked to two other nodes
-  #Coded for 1 hidden covariate
-  logWcum = logSumTree(W)$det
-  q = nrow(W);  p=q-r  ; H=(p+1):(p+r)
-  P2 = matrix(0, q, q)
-  sapply(1:p-1,
-         function(j){
-           sapply((j+1):p, #visits all combinations of observed nodes
-                  function(k){
-                    W_jk = W
-                    W_jk[h, k] = W_jk[k, h] = 0 #kills kh edge in W_kj
-                    W_jk[h, j] = W_jk[j, h] = 0 #kills jh edge in W_kj
-                    P[k, j] <<- 1 - exp(logSumTree(W_jk)$det - logWcum )
-                    P[j, k] <<- P[k, j]
-                  }
-           )
-         }
-  )
-  P[which(P<1e-10)]=1e-10
-  diag(P)=0
-  return(P)
-}
-CgMatrix<-function(Pg,Pghkl,omega,p){ # code for 1 hidden covariate. Otherwise, must be a sum on h
-  h=ncol(omega)
-  omegaH=omega[h,h]
-  Cg = matrix(1/omegaH,p,p)
-
-  sapply(1:p-1,
-         function(j){
-           sapply((j+1):p, #visits all combinations of observed nodes
-                  function(k){
-                    Cg[k, j] <<- omega[h,k]*omega[h,j] * (Pg[h,k]+Pg[h,j]+Pghkl[k,j] -1)
-                    Cg[j, k] <<- Cg[k, j]
-                  }
-           )
-         })
-  return(Cg)
-}
 
 # Lowerbound correction
 part_JPLN<-function(mat_var,EhZZ,n, var=TRUE){
@@ -458,12 +509,12 @@ part_JPLN<-function(mat_var,EhZZ,n, var=TRUE){
   return(partJPLN)
 }
 getJcor<-function(vem,p,eig.tol=1e-14,eps=1e-14){
-  Upsilon=vem$Upsilon
-  q=ncol(Upsilon)
+  Omega=vem$Omega
+  q=ncol(Omega)
   O=1:p ; H=(p+1):q ; r=length(H) ; n=nrow(vem$M)
   EhZZ=t(vem$M[,O])%*%vem$M[,O] + diag(colSums(vem$S[,O]))
   sigTilde = (1/n)*EhZZ
-  EgO=vem$Pg*vem$Upsilon+diag(diag(vem$Upsilon))
+  EgO=vem$Pg*vem$Omega+diag(diag(vem$Omega))
   if(q==p){
     r=0
     EgOm = EgO[O,O]
@@ -567,13 +618,13 @@ EdgeProba <- function(W, verbatim=FALSE, p.min=1e-16){
 }
 
 #===========
-VE<-function(MO,SO,SH,Upsilon,W,Wg,MH,Pg,logSTW,logSTWg,eps, alpha,it1, verbatim,trackJ=FALSE, hist=FALSE){
+VE<-function(MO,SO,SH,Omega,W,Wg,MH,Pg,logSTW,logSTWg,eps, alpha,it1, verbatim,trackJ=FALSE, hist=FALSE){
   #--Setting up
   t1=Sys.time()
-  n=nrow(MO); q=ncol(Upsilon) ;  p=ncol(MO);  O=1:ncol(MO); trim=FALSE ;
+  n=nrow(MO); q=ncol(Omega) ;  p=ncol(MO);  O=1:ncol(MO); trim=FALSE ;
   hidden=(q!=p)
   if(hidden){
-    H=(p+1):ncol(Upsilon); r=length(H)
+    H=(p+1):ncol(Omega); r=length(H)
     S<-cbind(SO,SH)
     M=cbind(MO,MH)
   }else{
@@ -581,15 +632,15 @@ VE<-function(MO,SO,SH,Upsilon,W,Wg,MH,Pg,logSTW,logSTWg,eps, alpha,it1, verbatim
     r=0
     M=MO
   }
-  if(trackJ) LB0=LowerBound(Pg = Pg, Upsilon=Upsilon, M=M, S=S,W=W, Wg=Wg,p, logSTW=logSTW,logSTWg=logSTWg)[1]
+  if(trackJ) LB0=LowerBound(Pg = Pg, Omega=Omega, M=M, S=S,W=W, Wg=Wg,p, logSTW=logSTW,logSTWg=logSTWg)[1]
 
   #-- Updates
   #--- MH
   if(hidden){
     if(r>1){
-      MH.new<- (-MO) %*% (Pg[O,H] * Upsilon[O,H])%*% diag(1/diag(Upsilon)[H])
+      MH.new<- (-MO) %*% (Pg[O,H] * Omega[O,H])%*% diag(1/diag(Omega)[H])
     }else{
-      MH.new<- (-MO) %*% (Pg[O,H] * Upsilon[O,H])/diag(Upsilon)[H]
+      MH.new<- (-MO) %*% (Pg[O,H] * Omega[O,H])/diag(Omega)[H]
     }
    # if(diag(t(MH.new)%*%MH.new)<n){#filtre numérique pour la mise à jour de MH
       MH=MH.new
@@ -601,9 +652,9 @@ VE<-function(MO,SO,SH,Upsilon,W,Wg,MH,Pg,logSTW,logSTWg,eps, alpha,it1, verbatim
     M=cbind(MO,MH)
 
     #SH <-matrix(rep(pmax((n-diag(t(MH)%*%MH))/n,0),n),n,r, byrow = TRUE)
-    SH <-matrix(1/(diag(Upsilon)[H]),n,r, byrow = TRUE)
+    SH <-matrix(1/(diag(Omega)[H]),n,r, byrow = TRUE)
     S<-cbind(SO,SH)
-    if(trackJ) LB1=c(LowerBound(Pg = Pg, Upsilon=Upsilon, M=M, S=S,W=W, Wg=Wg,p, logSTW=logSTW,logSTWg=logSTWg),"MH")
+    if(trackJ) LB1=c(LowerBound(Pg = Pg, Omega=Omega, M=M, S=S,W=W, Wg=Wg,p, logSTW=logSTW,logSTWg=logSTWg),"MH")
   }else{if(trackJ)LB1=LB0}
 
   #--- Wg
@@ -612,7 +663,7 @@ VE<-function(MO,SO,SH,Upsilon,W,Wg,MH,Pg,logSTW,logSTWg,eps, alpha,it1, verbatim
     message("trim Rho")
     Rho[Rho>1]=1
     Rho[Rho<(-1)]=-1}
-  compWg= computeWg(Rho, Upsilon, W, r, n, alpha,  hist=hist, verbatim=verbatim)
+  compWg= computeWg(Rho, Omega, W, r, n, alpha,  hist=hist, verbatim=verbatim)
   Wg.new = compWg$Wg
 
   logSTWg.tot=logSumTree(Wg.new)
@@ -630,7 +681,7 @@ VE<-function(MO,SO,SH,Upsilon,W,Wg,MH,Pg,logSTW,logSTWg,eps, alpha,it1, verbatim
   sumP=signif(sum(Pg.new)-2*(q-1),3)
 
   if(verbatim) cat(paste0(" sumP=", sumP))
-  if(trackJ) LB2=c(LowerBound(Pg = Pg.new, Upsilon=Upsilon, M=M, S=S,W=W, Wg=Wg.new,p, logSTW=logSTW,logSTWg=logSTWg.new),"Wg")
+  if(trackJ) LB2=c(LowerBound(Pg = Pg.new, Omega=Omega, M=M, S=S,W=W, Wg=Wg.new,p, logSTW=logSTW,logSTWg=logSTWg.new),"Wg")
  # if(!max.prec){
     Wg=Wg.new
     Pg=Pg.new
@@ -649,16 +700,16 @@ VE<-function(MO,SO,SH,Upsilon,W,Wg,MH,Pg,logSTW,logSTWg,eps, alpha,it1, verbatim
 }
 
 #===========
-Mstep<-function(M, S, Pg, Upsilon,W, logSTW, logSTWg, eps, Wg, p, trackJ=FALSE){
-  n=nrow(S)  ; O=1:p ; q=ncol(Upsilon) ; iterM=0 ; diff=1
+Mstep<-function(M, S, Pg, Omega,W, logSTW, logSTWg, eps, Wg, p, trackJ=FALSE){
+  n=nrow(S)  ; O=1:p ; q=ncol(Omega) ; iterM=0 ; diff=1
   hidden=(q!=p)
   if(hidden) H=(p+1):q
   Rho = cov2cor((t(M)%*%M+ diag(colSums(S)) )/ n)
 
-  #--- Upsilon
+  #--- Omega
 
-  Upsilon=comp_Upsilon(Pg, Rho,p)
-  if(trackJ) LB1=c(LowerBound(Pg = Pg, Upsilon=Upsilon, M=M, S=S,W=W, Wg=Wg,p,logSTW=logSTW,logSTWg=logSTWg),"Upsilon")
+  Omega=comp_Omega(Pg, Rho,p)
+  if(trackJ) LB1=c(LowerBound(Pg = Pg, Omega=Omega, M=M, S=S,W=W, Wg=Wg,p,logSTW=logSTW,logSTWg=logSTWg),"Omega")
 
   #--- Beta
 
@@ -676,7 +727,7 @@ Mstep<-function(M, S, Pg, Upsilon,W, logSTW, logSTWg, eps, Wg, p, trackJ=FALSE){
 
   logSTW.tot=logSumTree(W)
   logSTW=logSTW.tot$det
-  if(trackJ) LB2=c(LowerBound(Pg = Pg, Upsilon=Upsilon, M=M, S=S,W=W, Wg=Wg,p,logSTW=logSTW,logSTWg=logSTWg),"W")
+  if(trackJ) LB2=c(LowerBound(Pg = Pg, Omega=Omega, M=M, S=S,W=W, Wg=Wg,p,logSTW=logSTW,logSTWg=logSTWg),"W")
   max.prec=logSTW.tot$max.prec
   if(max.prec){
     W=W.new/10
@@ -686,8 +737,8 @@ Mstep<-function(M, S, Pg, Upsilon,W, logSTW, logSTWg, eps, Wg, p, trackJ=FALSE){
     if(max.prec) message("max.prec!")
   }
 
-  if(trackJ){LB=rbind(LB1,LB2)}else{LB=LowerBound(Pg = Pg, Upsilon=Upsilon, M=M, S=S,W=W, Wg=Wg,p,logSTW=logSTW,logSTWg=logSTWg)}
-  res=list(W=W, Upsilon=Upsilon, LB=LB , logSTW=logSTW,max.prec=max.prec)
+  if(trackJ){LB=rbind(LB1,LB2)}else{LB=LowerBound(Pg = Pg, Omega=Omega, M=M, S=S,W=W, Wg=Wg,p,logSTW=logSTW,logSTWg=logSTWg)}
+  res=list(W=W, Omega=Omega, LB=LB , logSTW=logSTW,max.prec=max.prec)
 
   return(res)
 }
@@ -707,7 +758,7 @@ VEMtree<-function(counts,MO,SO,MH,upsi_init,W_init,Wg_init, maxIter=20,eps=1e-2,
     SH= NULL
     M=MO ; S=SO
   }
-  Upsilon=upsi_init;  W=W_init;  Wg=Wg_init; Pg=matrix(0.5, ncol(W),ncol(W))
+  Omega=upsi_init;  W=W_init;  Wg=Wg_init; Pg=matrix(0.5, ncol(W),ncol(W))
   iter=0 ; lowbound=list()
   diffW=c(); diffUpsi=c(); diffWg=c(); diffPg=c(); diffJ=c(); diffMH=c()
   diffWiter=1 ; diffJ=1 ; J=c()
@@ -722,7 +773,7 @@ VEMtree<-function(counts,MO,SO,MH,upsi_init,W_init,Wg_init, maxIter=20,eps=1e-2,
     iter=iter+1
     if(verbatim) cat(paste0("\n Iter n°", iter))
     #--- VE
-    resVE<-VE(MO=MO,SO=SO,SH=SH,Upsilon=Upsilon,W=W,Wg=Wg,MH=MH,Pg=Pg,logSTW,logSTWg,eps=1e-3,
+    resVE<-VE(MO=MO,SO=SO,SH=SH,Omega=Omega,W=W,Wg=Wg,MH=MH,Pg=Pg,logSTW,logSTWg,eps=1e-3,
               it1=(iter==1),verbatim=verbatim, alpha=alpha, trackJ=trackJ, hist=print.hist)
     M=resVE$M
     S=resVE$S
@@ -742,17 +793,17 @@ VEMtree<-function(counts,MO,SO,MH,upsi_init,W_init,Wg_init, maxIter=20,eps=1e-2,
     logSTWg=resVE$logSTWg
     #--- M
 
-    resM<-Mstep(M=M,S=S,Pg=Pg, Upsilon=Upsilon,W=W,logSTW,logSTWg, trackJ=trackJ,eps=1e-3 ,Wg=Wg, p=p)
+    resM<-Mstep(M=M,S=S,Pg=Pg, Omega=Omega,W=W,logSTW,logSTWg, trackJ=trackJ,eps=1e-3 ,Wg=Wg, p=p)
     W.new=resM$W
     #diffW[iter]=abs(max(log(W.new+(W.new==0))-log(W+(W==0))))
     diffW[iter]=abs(max(W.new-W))
     diffWiter=diffW[iter]
     W=W.new
-    Upsilon.new=resM$Upsilon
+    Omega.new=resM$Omega
     logSTW=resM$logSTW
     if(resM$max.prec) max.prec=TRUE
-    diffUpsi[iter]=abs(max((Upsilon.new)-(Upsilon)))
-    Upsilon=Upsilon.new
+    diffUpsi[iter]=abs(max((Omega.new)-(Omega)))
+    Omega=Omega.new
 
     if(trackJ){
       Jiter=as.numeric(tail(resM$LB[,1],1))
@@ -764,7 +815,7 @@ VEMtree<-function(counts,MO,SO,MH,upsi_init,W_init,Wg_init, maxIter=20,eps=1e-2,
     J<-c(J, Jiter)
   }
   ########################
-  resVE<-VE(MO=MO,SO=SO,SH=SH,Upsilon=Upsilon,W=W,Wg=Wg,logSTW,logSTWg,MH=MH,Pg=Pg,eps=1e-3,it1=(iter==1),
+  resVE<-VE(MO=MO,SO=SO,SH=SH,Omega=Omega,W=W,Wg=Wg,logSTW,logSTWg,MH=MH,Pg=Pg,eps=1e-3,it1=(iter==1),
             verbatim=verbatim, alpha=alpha, trackJ=trackJ, hist=print.hist)
   M=resVE$M
   S=resVE$S
@@ -777,11 +828,11 @@ VEMtree<-function(counts,MO,SO,MH,upsi_init,W_init,Wg_init, maxIter=20,eps=1e-2,
     MH<-matrix(M[,H],n,r)
   }
   #--- M
-  resM<-Mstep(M=M,S=S,Pg=Pg, Upsilon=Upsilon,W=W,logSTW,logSTWg,trackJ=trackJ, eps=1e-3 ,Wg=Wg, p=p )
+  resM<-Mstep(M=M,S=S,Pg=Pg, Omega=Omega,W=W,logSTW,logSTWg,trackJ=trackJ, eps=1e-3 ,Wg=Wg, p=p )
   if(resM$max.prec) max.prec=TRUE
 
   W=resM$W
-  Upsilon=resM$Upsilon
+  Omega=resM$Omega
 
   ##########################
 
@@ -812,7 +863,7 @@ VEMtree<-function(counts,MO,SO,MH,upsi_init,W_init,Wg_init, maxIter=20,eps=1e-2,
       guides(color=FALSE)}
     grid.arrange(g1,g2, ncol=1)
   }
-  return(list(M=M,S=S,Pg=Pg,Wg=Wg,W=W,Upsilon=Upsilon, lowbound=lowbound, features=features,
+  return(list(M=M,S=S,Pg=Pg,Wg=Wg,W=W,Omega=Omega, lowbound=lowbound, features=features,
               finalIter=iter, time=time,max.prec=max.prec))
 }
 
@@ -829,10 +880,10 @@ List.VEM<-function(cliquesObj, counts, sigma_obs, MO,SO, r,alpha, cores,maxIter,
     #init
     c=cliquesObj$cliqueList[[num]]
     init=initVEM(counts = counts, initviasigma=c, sigma_obs,MO,r = r)
-    Wginit= init$Wginit; Winit= init$Winit; upsinit=init$upsinit ; MHinit=init$MHinit
+    Wginit= init$Wginit; Winit= init$Winit; omegainit=init$omegainit ; MHinit=init$MHinit
     #run VEMtree
 
-    VEM<- tryCatch({VEMtree(counts=counts,MO=MO,SO=SO,MH=MHinit,upsi_init=upsinit,W_init=Winit,
+    VEM<- tryCatch({VEMtree(counts=counts,MO=MO,SO=SO,MH=MHinit,upsi_init=omegainit,W_init=Winit,
                             Wg_init=Wginit, eps=eps, alpha=alpha,maxIter=maxIter,
                             verbatim = FALSE, print.hist=FALSE, trackJ=trackJ)},
                    error=function(e){e},finally={})
