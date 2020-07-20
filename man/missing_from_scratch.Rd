@@ -4,7 +4,7 @@
 \alias{missing_from_scratch}
 \title{missing_from_scratch}
 \usage{
-missing_from_scratch(n, p, r, type, plot = FALSE, dens = 2/p)
+missing_from_scratch(n, p, r = 1, type, plot = FALSE, dens = 2/p)
 }
 \arguments{
 \item{n}{number of samples}
@@ -21,14 +21,14 @@ missing_from_scratch(n, p, r, type, plot = FALSE, dens = 2/p)
 }
 \value{
 \itemize{
-\item{Y:}{}
-\item{UH:}{}
-\item{Sigma:}{}
-\item{Omega:}{}
-\item{G:}{}
-\item{TC:}{}
-\item{H:}{}}
+\item{Y:}{ Observed count data}
+\item{UH:}{ Hidden latent Gaussian parameters}
+\item{Sigma:}{ Observed bloc of the variance-covariance matrix}
+\item{Omega:}{ Observed bloc of the precision matrix}
+\item{G:}{ The generated conditional dependency structure}
+\item{TC:}{ The true clique of neighbors of the missing actors (a list if r>1)}
+\item{H:}{  Indexes corresponding to missing actors in the original data}}
 }
 \description{
-Function to simulate data and parameters
+Function to simulate data and parameters including missing actors. Setting r=1 is advised.
 }

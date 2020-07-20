@@ -7,7 +7,23 @@
 initVEM(counts, cliquelist, sigma_obs, MO, r)
 }
 \arguments{
-\item{r}{}
+\item{counts}{count data matrix}
+
+\item{cliquelist}{list of initial neighbors for the missing actors}
+
+\item{sigma_obs}{estimated observed bloc of the variance-covariance matrix}
+
+\item{MO}{estimated mean values of the latent parameters corresponding to observed species}
+
+\item{r}{number of missing actors}
+}
+\value{
+initVEM computes the following initial matrices:
+\itemize{
+\item{Wginit:}{ Variational edges weights matrix}
+\item{Winit:}{ Edges weights matrix}
+\item{omegainit:}{ Precision matrix}
+\item{MHinit:}{ Mean values for the hidden latent Gaussian parameters}}
 }
 \description{
 wraper to initialize all parameters for the variational inference

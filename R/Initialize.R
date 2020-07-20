@@ -6,8 +6,12 @@
 #' @param minV the minimum number of neighbors for each missing actor
 #' @param alphaGrid the grid for alpha
 #'
-#' @return a list
-#' @export
+#' @return \itemize{
+#' \item{sPcaOpt}{ the optimal spca object }
+#' \item{alphaOpt}{ the best alpha value among the provided grid}
+#' \item{loglik}{ vector of log likelihood obtained for each value of alpha}
+#' \item{bic}{ vecotr of BIC values}
+#' \item{cliques}{ optimal clique of neighbors}}
 #'
 #' @examples
 FitSparsePCA <- function(Y, r=1,minV=1, alphaGrid=10^(seq(-4, 0, by=.1))){
@@ -51,13 +55,12 @@ FitSparsePCA <- function(Y, r=1,minV=1, alphaGrid=10^(seq(-4, 0, by=.1))){
     })
     nbDifferentH<-length(unique(cliques))
   }
-  return(list(sPcaOpt=sPcaOpt, alphaGrid=alphaGrid, alphaOpt=alphaOpt,
-              loglik=loglik, bic=bic, cliques=cliques))
+  return(list(sPcaOpt=sPcaOpt,  alphaOpt=alphaOpt, loglik=loglik, bic=bic, cliques=cliques))
 }
 
 #' boot_FitSparsePCA
 #'
-#' Finds initial cliques using a spca on bosstraps sub-samples
+#' Finds initial cliques using a sparse PCA on bootstraps sub-samples
 #'
 #' @param Y data
 #' @param B number of bootstrap samples
@@ -66,7 +69,9 @@ FitSparsePCA <- function(Y, r=1,minV=1, alphaGrid=10^(seq(-4, 0, by=.1))){
 #' @param cores number of cores for possible parallel computation
 #' @param unique should unique results only be displayed ?
 #'
-#' @return
+#' @return \itemize{
+#' \item{cliqueList:}{ a list of all possible initial cliques of neighbors. Each element is of size r}
+#' \item{nb_occ:}{ vector of the number of times each cliques has been found by sPCA.}}
 #' @export
 #'
 #' @examples
@@ -204,13 +209,18 @@ initEM <- function(Sigma = NULL, cst=1.1, cliqueList) {
 #' initVEM
 #'
 #'wraper to initialize all parameters for the variational inference
-#' @param counts
-#' @param cliquelist
-#' @param sigma_obs
-#' @param MO
-#' @param r
+#' @param counts count data matrix
+#' @param cliquelist list of initial neighbors for the missing actors
+#' @param sigma_obs estimated observed bloc of the variance-covariance matrix
+#' @param MO estimated mean values of the latent parameters corresponding to observed species
+#' @param r number of missing actors
 #'
-#' @return
+#' @return initVEM computes the following initial matrices:
+#' \itemize{
+#' \item{Wginit:}{ Variational edges weights matrix}
+#' \item{Winit:}{ Edges weights matrix}
+#' \item{omegainit:}{ Precision matrix}
+#' \item{MHinit:}{ Mean values for the hidden latent Gaussian parameters}}
 #' @export
 #'
 #' @examples

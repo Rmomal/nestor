@@ -14,8 +14,9 @@ usethis::use_package("tidyr")
 usethis::use_package("mvtnorm")
 usethis::use_package("PLNmodels")
 usethis::use_package("sparsepca")
-library(huge)
-library(Matrix)
+usethis::use_package("huge")
+usethis::use_package("Matrix")
+
 # readme
 usethis::use_readme_rmd()
 #git link
@@ -24,6 +25,8 @@ usethis::use_git()
 usethis::use_testthat()
 # usethis::use_test("name_of_test_file")
 # devtools::test()
+#coverage
+usethis::use_coverage(type="codecov")
 #travis
 usethis::edit_r_environ()
 usethis::use_travis() # inclure [ci skip] dans le message du commit pour pusher sans travis
@@ -32,16 +35,14 @@ usethis::use_pkgdown()
 #usethis::edit_r_environ()
 usethis::git_vaccinate()
 usethis::use_pkgdown_travis()
-# ssh deployment key manual:
-# use_travis_deploy, but manual
-#travis::use_travis_deploy()
-# Generate SSH keypair
-# key <- openssl::rsa_keygen()
-# pub_key <- tic::get_public_key(key)
-# private_key <- tic:::encode_private_key(key)
 
-#coverage
-usethis::use_coverage(type="codecov")
+# ssh deployment key manual:
+# use_travis_deploy, but manual see https://gist.github.com/gaborcsardi/68960fb01bec74d89611bb9c2b0b7e5a
+key <- openssl::rsa_keygen()
+pub_key <- travis:::get_public_key(key)
+private_key <- travis:::encode_private_key(key) # for travis key
+openssl::write_ssh(pub_key) # for git key
+
 
 # workflow
 devtools::document()

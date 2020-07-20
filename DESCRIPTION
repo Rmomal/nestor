@@ -21,6 +21,8 @@ Imports:
     tidyr,
     mvtnorm,
     PLNmodels,
-    sparsepca
+    sparsepca,
+    huge,
+    Matrix
 Suggests: 
     covr

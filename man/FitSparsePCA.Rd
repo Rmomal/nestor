@@ -17,7 +17,12 @@ FitSparsePCA(Y, r = 1, minV = 1, alphaGrid = 10^(seq(-4, 0, by =
 \item{alphaGrid}{the grid for alpha}
 }
 \value{
-a list
+\itemize{
+\item{sPcaOpt}{ the optimal spca object }
+\item{alphaOpt}{ the best alpha value among the provided grid}
+\item{loglik}{ vector of log likelihood obtained for each value of alpha}
+\item{bic}{ vecotr of BIC values}
+\item{cliques}{ optimal clique of neighbors}}
 }
 \description{
 Fit sparse PCA on a grid of alpha

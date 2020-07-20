@@ -19,6 +19,11 @@ boot_FitSparsePCA(Y, B, r, minV = 1, cores = 1, unique = TRUE)
 
 \item{unique}{should unique results only be displayed ?}
 }
+\value{
+\itemize{
+\item{cliqueList:}{ a list of all possible initial cliques of neighbors. Each element is of size r}
+\item{nb_occ:}{ vector of the number of times each cliques has been found by sPCA.}}
+}
 \description{
-Finds initial cliques using a spca on bosstraps sub-samples
+Finds initial cliques using a sparse PCA on bootstraps sub-samples
 }
