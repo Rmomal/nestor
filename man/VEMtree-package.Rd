@@ -4,12 +4,12 @@
 \name{VEMtree-package}
 \alias{VEMtree}
 \alias{VEMtree-package}
-\title{VEMtree: What the Package Does (One Line, Title Case)}
+\title{VEMtree: Network inference with missing actors}
 \description{
-What the package does (one paragraph).
+VEMtree runs a variational inference using an average on spanning trees to infer the conditional dependency structure from abundance data, while accounting for missing actors.
 }
 \author{
-\strong{Maintainer}: First Last \email{first.last@example.com} (YOUR-ORCID-ID)
+\strong{Maintainer}: Raphaelle Momal \email{rmomaleisenring@gmail.com} (YOUR-ORCID-ID)
 
 }
 \keyword{internal}
