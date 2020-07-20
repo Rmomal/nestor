@@ -23,6 +23,7 @@ usethis::use_testthat()
 # usethis::use_test("name_of_test_file")
 # devtools::test()
 #travis
+usethis::edit_r_environ()
 usethis::use_travis() # inclure [ci skip] dans le message du commit pour pusher sans travis
 # pkgdown
 usethis::use_pkgdown()
