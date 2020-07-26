@@ -1,12 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-VEMtree
-=======
+nestor
+======
 
 <!-- badges: start -->
-[![Travis build status](https://travis-ci.org/Rmomal/VEMtree.svg?branch=master)](https://travis-ci.org/Rmomal/VEMtree) [![Codecov test coverage](https://codecov.io/gh/Rmomal/VEMtree/branch/master/graph/badge.svg)](https://codecov.io/gh/Rmomal/VEMtree?branch=master) <!-- badges: end -->
+[![Travis build status](https://travis-ci.org/Rmomal/nestor.svg?branch=master)](https://travis-ci.org/Rmomal/nestor) [![Codecov test coverage](https://codecov.io/gh/Rmomal/nestor/branch/master/graph/badge.svg)](https://codecov.io/gh/Rmomal/nestor?branch=master) <!-- badges: end -->
 
-The goal of VEMtree is to ...
+The goal of nestor is to infer network of species conditional dependencies from abundances while accounting for possible missing actors in the data.
 
 Installation
 ------------
