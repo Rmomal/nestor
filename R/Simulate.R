@@ -18,11 +18,16 @@
 #' \item{TC:}{ The true clique of neighbors of the missing actors (a list if r>1)}
 #' \item{H:}{  Indexes corresponding to missing actors in the original data}}
 #' @export
+#' @importFrom EMtree data_from_scratch draw_network
 #'
-#' @examples
+#' @examples n=100
+#' p=10
+#' r=1
+#' type="scale-free"
+#' data=missing_from_scratch(n,p,r,type, plot=TRUE)
 missing_from_scratch<-function(n,p,r=1,type,plot=FALSE, dens=2/p){
   #generate a graph and data Y and U
-  norm_data=data_from_scratch(type = type,p = p+r,n = n,signed = FALSE,dens = dens,v = 0)
+  norm_data=EMtree::data_from_scratch(type = type,p = p+r,n = n,norm=TRUE,signed = FALSE,dens = dens,v = 0)
   omega=norm_data$omega
   G=1*(omega!=0)
 
@@ -33,7 +38,7 @@ missing_from_scratch<-function(n,p,r=1,type,plot=FALSE, dens=2/p){
   trueClique=lapply(hidden, function(h){ which(omega[h,-h]!=0)})
   group=1*(diag(omega)==diag(omega)[hidden][1])
   if(plot){
-    g=draw_network(1*(omega==1),groupes=group,layout="nicely",curv=0,nb=2,
+    g=EMtree::draw_network(1*(omega==1),groupes=group,layout="nicely",curv=0,nb=2,
                    pal="black",nodes_label =1:(p+r))$G
     print(g)
   }
