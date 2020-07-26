@@ -16,7 +16,7 @@ usethis::use_package("PLNmodels")
 usethis::use_package("sparsepca")
 usethis::use_package("huge")
 usethis::use_package("Matrix")
-
+usethis::use_package("EMtree")
 # readme
 usethis::use_readme_rmd()
 #git link

@@ -1,4 +1,4 @@
-Package: VEMtree
+Package: nestor
 Title: Network inference with missing actors
 Version: 0.0.0.9000
 Authors@R: 
@@ -23,6 +23,8 @@ Imports:
     PLNmodels,
     sparsepca,
     huge,
-    Matrix
+    Matrix,
+    EMtree
 Suggests: 
     covr
+Remotes: git::https://github.com/Rmomal/EMtree
