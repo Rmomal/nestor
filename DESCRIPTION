@@ -24,7 +24,14 @@ Imports:
     sparsepca,
     huge,
     Matrix,
-    EMtree
+    EMtree,
+    blockmodels,
+    rcdd,
+    ggplot2,
+    gridExtra,
+    magrittr,
+    tibble,
+    reshape2
 Suggests: 
     covr
 Remotes: git::https://github.com/Rmomal/EMtree

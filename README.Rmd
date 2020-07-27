@@ -26,16 +26,30 @@ The goal of nestor is to infer network of species conditional dependencies from 
 
 You can install the development version from [GitHub](https://github.com/) with:
 
-```{r}
-# install.packages("devtools")
-#devtools::install_github("Rmomal/VEMtree")
+```{r, eval=FALSE}
+install.packages("devtools")
+devtools::install_github("Rmomal/nestor")
 ```
+
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
-
-```{r example}
-#library(VEMtree)
-## basic example code
+```{r example, eval=FALSE}
+library(nestor)
+data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+PLNfit<-norm_PLN(data$Y)
+MO<-PLNfit$MO
+SO<-PLNfit$SO
+sigma_obs=PLNfit$sigma_obs
+data$TC
+#-- find initial clique
+findclique=init_blockmodels(data$Y,sigma_obs, MO, SO, k=3 )
+initClique=findclique$cliqueList
+#-- initialize the VEM
+initList=initVEM(data$Y,cliquelist=initClique[[2]],sigma_obs, MO,r=1 )
+#-- run one clique from cliqueList
+fit=nestor(data$Y, MO,SO, initList=initList,alpha=0.2, maxIter=15, plot=TRUE, trackJ=FALSE)
+fit$Pg
+# run all cliques
+List.nestor(initClique, data$Y,sigma_obs, MO,SO,r=1)
 ```
 

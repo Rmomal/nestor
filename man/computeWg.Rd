@@ -27,5 +27,5 @@ computeWg(Rho, Omega, W, r, n, alpha, hist = FALSE, verbatim = FALSE)
 The variational edge weights matrix
 }
 \description{
-Central function for the update of the variational edges weights.
+Central function for the update of the variational edges weights inside the VEM.
 }

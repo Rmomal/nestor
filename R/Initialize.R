@@ -12,8 +12,16 @@
 #' \item{loglik}{ vector of log likelihood obtained for each value of alpha}
 #' \item{bic}{ vecotr of BIC values}
 #' \item{cliques}{ optimal clique of neighbors}}
-#'
-#' @examples
+#' @export
+#' @importFrom sparsepca spca
+#' @importFrom mvtnorm dmvnorm
+#' @importFrom stats cov var
+#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+#' TrueClique=data$TC
+#' findclique=FitSparsePCA(data$Y,r=1)
+#' initClique=findclique$cliques
+#' TrueClique
+#' initClique
 FitSparsePCA <- function(Y, r=1,minV=1, alphaGrid=10^(seq(-4, 0, by=.1))){
   # estimate of Sigma: empirical variance of the rotated scores  + diagonal risidual variances
   n <- nrow(Y); p <- ncol(Y); alphaNb <- length(alphaGrid); nbDifferentH=-1
@@ -27,7 +35,7 @@ FitSparsePCA <- function(Y, r=1,minV=1, alphaGrid=10^(seq(-4, 0, by=.1))){
       resVar <- (n-1)*apply(Y - sPCA[[a]]$scores %*% t(sPCA[[a]]$transform), 2, var)/n
       sPCA[[a]]$Sigma <- sPCA[[a]]$Sigma  + diag(resVar)
       sPCA[[a]]$df <- 1 + sum(sPCA[[a]]$loadings!=0)
-      sPCA[[a]]$loglik <- sum(dmvnorm((Y), sigma=sPCA[[a]]$Sigma, log=TRUE))
+      sPCA[[a]]$loglik <- sum(mvtnorm::dmvnorm((Y), sigma=sPCA[[a]]$Sigma, log=TRUE))
       sPCA[[a]]$bic <- sPCA[[a]]$loglik - log(n)*sPCA[[a]]$df/2
     }
     df<-unlist(lapply(sPCA, function(sPca){sPca$df}))
@@ -73,8 +81,9 @@ FitSparsePCA <- function(Y, r=1,minV=1, alphaGrid=10^(seq(-4, 0, by=.1))){
 #' \item{cliqueList:}{ a list of all possible initial cliques of neighbors. Each element is of size r}
 #' \item{nb_occ:}{ vector of the number of times each cliques has been found by sPCA.}}
 #' @export
-#'
-#' @examples
+#' @importFrom parallel mclapply
+#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+#' boot_FitSparsePCA(data$Y, B=20, r=1)
 boot_FitSparsePCA<-function(Y, B,r, minV=1,cores=1, unique=TRUE){
   cliqueList<-mclapply(1:B, function(x){
     n=nrow(Y); v=0.8; n.sample=round(0.8*n, 0)
@@ -91,31 +100,67 @@ boot_FitSparsePCA<-function(Y, B,r, minV=1,cores=1, unique=TRUE){
   return(list(cliqueList=cliqueList,nb_occ=nb_occ) )
 }
 
+#' norm_PLN
+#'
+#' Runs PLN function from the PLNmodels package and normalized the outputs
+#' @param Y count dataset
+#'
+#' @return \itemize{
+#' \item{MO}{ Normalized means}
+#' \item{SO}{ Normalized marginal variances}
+#' \item{sigma_obs}{Vairance-covariance matrix Sigma as estimated by PLNmodels}}
+#' @export
+#' @importFrom PLNmodels PLN
+#'
+#' @examples  data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+#' norm_PLN(data$Y)
+norm_PLN<-function(Y){
+  n=nrow(Y)
+  p=ncol(Y)
+  PLNfit<-PLN(Y~1)
+  MO<-PLNfit$var_par$M
+  SO<-PLNfit$var_par$S
+  sigma_obs=PLNfit$model_par$Sigma
+  #-- normalize the PLN outputs
+  D=diag(sigma_obs)
+  matsig=(matrix(rep(1/sqrt(D),n),n,p, byrow = TRUE))
+  MO=MO*matsig
+  SO=SO*matsig^2
+  return(list(MO=MO, SO=SO, sigma_obs=sigma_obs))
+}
 #' init_blockmodels
 #'
 #'Find initial cliques using blockmodels on the initial network (possibly inferred using EMtree or VEMtree with r=0)
-#' @param k number of groups
-#' @param counts data
+#' @param Y count data
 #' @param sigma_obs original covariance matrix estimate
 #' @param MO original observed means estimate
 #' @param SO original observed marginal variances estimate
+#' @param k number of groups
+#' @param poisson boolean for the choice of model of blockmodel. If FALSE, runs bernoulli.
 #' @param alpha tempering parameter
 #'
 #' @return a list of possible cliques
 #' @export
-#'
-#' @examples
-init_blockmodels<-function(k, counts, sigma_obs, MO, SO, alpha=0.1){
-  init=initVEM(counts = counts,initviasigma=NULL, cov2cor(sigma_obs),MO,r = 0)
-  Wginit= init$Wginit; Winit= init$Winit; omegainit=init$omegainit ; MHinit=init$MHinit
+#' @importFrom blockmodels BM_bernoulli
+#' @importFrom EMtree EMtree
+#' @importFrom stats cov2cor
+#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+#' PLNfit<-norm_PLN(data$Y)
+#' MO<-PLNfit$MO
+#' SO<-PLNfit$SO
+#' sigma_obs=PLNfit$sigma_obs
+#' #-- initialize with blockmodels
+#' init_blockmodels(data$Y,sigma_obs, MO, SO, k=2 )
+init_blockmodels<-function(Y, sigma_obs, MO, SO, k=3,poisson=FALSE, alpha=0.1){
+  init=initVEM(Y = Y,cliqueList=NULL, cov2cor(sigma_obs),MO,r = 0)
   #--- fit VEMtree with 0 missing actor
-  resVEM0<- tryCatch(VEMtree(counts,MO,SO,MH=MHinit,omegainit,Winit,Wginit, eps=1e-3, alpha=alpha,
+  resVEM0<- tryCatch(VEMtree(Y,MO,SO,initList=init, eps=1e-3, alpha=alpha,
                              maxIter=100, plot=FALSE,print.hist=FALSE, verbatim = FALSE,trackJ=FALSE),
                      error=function(e){e}, finally={})
   if(length(resVEM0)>3){
     sbm.0 <- BM_bernoulli("SBM_sym",1*(resVEM0$Pg>0.5), plotting="", verbosity=0)
   }else{
-    p=ncol(counts)
+    p=ncol(Y)
     resEM0 = EMtree(cov2cor(sigma_obs))
     sbm.0 <- BM_bernoulli("SBM_sym",1*(resEM0$edges_prob>2/p), plotting="", verbosity=0)
   }
@@ -167,7 +212,7 @@ extractParamBM <- function(BMobject,Q){
 }
 
 
-#' initEM
+#' initOmega
 #'
 #'Initialize Sigma and Omega by taking the principal component of cliques as initial value for the hidden variables.
 #'  The PCA is done on the correaltion matrix, the variance of hidden variables are set to the empirical variances of the pca.
@@ -181,9 +226,12 @@ extractParamBM <- function(BMobject,Q){
 #' \item{K0: }{initial value of complete precision matrix ((p+r)x(p+r) matrix)}
 #' \item{clique: }{vector containing the indices of the nodes in the clique}}
 #' @export
-#'
-#' @examples
-initEM <- function(Sigma = NULL, cst=1.1, cliqueList) {
+#' @importFrom stats cov2cor
+#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+#' Sigma=data$Sigma
+#' initClique=FitSparsePCA(data$Y,r=1)$cliques
+#' initOmega(Sigma=Sigma, cliqueList=initClique)
+initOmega <- function(Sigma = NULL,  cliqueList,cst=1.1) {
   r=length(cliqueList) ; p=ncol(Sigma);H=(p+1):(p+r)
   Corr <- cov2cor(Sigma); sigma <- sqrt(diag(Sigma))
   coef <- matrix(0, p, r)
@@ -206,11 +254,10 @@ initEM <- function(Sigma = NULL, cst=1.1, cliqueList) {
 
 
 
-#' initVEM
+#' Initialize all parameters for the variational inference
 #'
-#'wraper to initialize all parameters for the variational inference
-#' @param counts count data matrix
-#' @param cliquelist list of initial neighbors for the missing actors
+#' @param Y count data matrix
+#' @param cliqueList list of initial neighbors for the missing actors
 #' @param sigma_obs estimated observed bloc of the variance-covariance matrix
 #' @param MO estimated mean values of the latent parameters corresponding to observed species
 #' @param r number of missing actors
@@ -223,19 +270,27 @@ initEM <- function(Sigma = NULL, cst=1.1, cliqueList) {
 #' \item{MHinit:}{ Mean values for the hidden latent Gaussian parameters}}
 #' @export
 #'
-#' @examples
-initVEM<-function(counts,cliquelist,sigma_obs,MO,r){
-  p=ncol(counts)
-  n=nrow(counts)
+#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+#' PLNfit<-norm_PLN(data$Y)
+#' MO<-PLNfit$MO
+#' sigma_obs=PLNfit$sigma_obs
+#' #-- find initial clique
+#' findclique=FitSparsePCA(data$Y,r=1)
+#' initClique=findclique$cliques
+#' #-- initialize the VEM
+#' initVEM(Y=data$Y,cliqueList=initClique,sigma_obs=sigma_obs, MO=MO,r=1 )
+initVEM<-function(Y,cliqueList,sigma_obs,MO,r){
+  p=ncol(Y)
+  n=nrow(Y)
   # Tree
   Wginit <- matrix(1, p+r, p+r); Wginit =Wginit / sum(Wginit)
   Winit <- matrix(1, p+r, p+r); Winit =Winit / sum(Winit)
   diag(Wginit) = 0;diag(Winit) = 0
-  # Z
+  # Gaussian layer U
   if(r!=0){
-    initial.param<-initEM(sigma_obs,n=n,cliqueList = (cliquelist),cst=1.05, pca=TRUE) # quick and dirty modif for initEM to take a covariance matrix as input
+    initial.param<-initOmega(sigma_obs,cliqueList = cliqueList,cst=1.05 )
     omegainit=initial.param$K0
-    MHinit<-sapply(cliquelist, function(clique){
+    MHinit<-sapply(cliqueList, function(clique){
       if(length(clique)>1){
         res=matrix(rowMeans(MO[,clique]), n, 1)
       }else{   res=matrix(MO[,clique], n, 1)}

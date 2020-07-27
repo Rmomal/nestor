@@ -2,14 +2,14 @@
 % Please edit documentation in R/Initialize.R
 \name{initVEM}
 \alias{initVEM}
-\title{initVEM}
+\title{Initialize all parameters for the variational inference}
 \usage{
-initVEM(counts, cliquelist, sigma_obs, MO, r)
+initVEM(Y, cliqueList, sigma_obs, MO, r)
 }
 \arguments{
-\item{counts}{count data matrix}
+\item{Y}{count data matrix}
 
-\item{cliquelist}{list of initial neighbors for the missing actors}
+\item{cliqueList}{list of initial neighbors for the missing actors}
 
 \item{sigma_obs}{estimated observed bloc of the variance-covariance matrix}
 
@@ -26,5 +26,16 @@ initVEM computes the following initial matrices:
 \item{MHinit:}{ Mean values for the hidden latent Gaussian parameters}}
 }
 \description{
-wraper to initialize all parameters for the variational inference
+Initialize all parameters for the variational inference
+}
+\examples{
+data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+PLNfit<-norm_PLN(data$Y)
+MO<-PLNfit$MO
+sigma_obs=PLNfit$sigma_obs
+#-- find initial clique
+findclique=FitSparsePCA(data$Y,r=1)
+initClique=findclique$cliques
+#-- initialize the VEM
+initVEM(Y=data$Y,cliqueList=initClique,sigma_obs=sigma_obs, MO=MO,r=1 )
 }

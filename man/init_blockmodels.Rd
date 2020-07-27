@@ -4,18 +4,21 @@
 \alias{init_blockmodels}
 \title{init_blockmodels}
 \usage{
-init_blockmodels(k, counts, sigma_obs, MO, SO, alpha = 0.1)
+init_blockmodels(Y, sigma_obs, MO, SO, k = 3, poisson = FALSE,
+  alpha = 0.1)
 }
 \arguments{
-\item{k}{number of groups}
-
-\item{counts}{data}
+\item{Y}{count data}
 
 \item{sigma_obs}{original covariance matrix estimate}
 
 \item{MO}{original observed means estimate}
 
 \item{SO}{original observed marginal variances estimate}
+
+\item{k}{number of groups}
+
+\item{poisson}{boolean for the choice of model of blockmodel. If FALSE, runs bernoulli.}
 
 \item{alpha}{tempering parameter}
 }
@@ -24,4 +27,13 @@ a list of possible cliques
 }
 \description{
 Find initial cliques using blockmodels on the initial network (possibly inferred using EMtree or VEMtree with r=0)
+}
+\examples{
+data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+PLNfit<-norm_PLN(data$Y)
+MO<-PLNfit$MO
+SO<-PLNfit$SO
+sigma_obs=PLNfit$sigma_obs
+#-- initialize with blockmodels
+init_blockmodels(data$Y,sigma_obs, MO, SO, k=2 )
 }

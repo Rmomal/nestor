@@ -27,3 +27,7 @@ boot_FitSparsePCA(Y, B, r, minV = 1, cores = 1, unique = TRUE)
 \description{
 Finds initial cliques using a sparse PCA on bootstraps sub-samples
 }
+\examples{
+data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+boot_FitSparsePCA(data$Y, B=20, r=1)
+}

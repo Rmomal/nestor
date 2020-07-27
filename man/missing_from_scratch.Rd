@@ -32,3 +32,10 @@ missing_from_scratch(n, p, r = 1, type, plot = FALSE, dens = 2/p)
 \description{
 Function to simulate data and parameters including missing actors. Setting r=1 is advised.
 }
+\examples{
+n=100
+p=10
+r=1
+type="scale-free"
+data=missing_from_scratch(n,p,r,type, plot=TRUE)
+}

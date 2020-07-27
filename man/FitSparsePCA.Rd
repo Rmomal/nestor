@@ -27,3 +27,11 @@ FitSparsePCA(Y, r = 1, minV = 1, alphaGrid = 10^(seq(-4, 0, by =
 \description{
 Fit sparse PCA on a grid of alpha
 }
+\examples{
+data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+TrueClique=data$TC
+findclique=FitSparsePCA(data$Y,r=1)
+initClique=findclique$cliques
+TrueClique
+initClique
+}
