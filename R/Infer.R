@@ -12,8 +12,8 @@
 #' @param verbatim controls verbosity
 #'
 #' @return The variational edge weights matrix
+#' @export
 #' @importFrom graphics par
-#' @nord
 computeWg<-function(Rho,Omega,W,r,n, alpha, hist=FALSE ){
   q=ncol(Rho); p=q-r; O = 1:p
   Wg<-matrix(0,q,q)
@@ -44,7 +44,7 @@ computeWg<-function(Rho,Omega,W,r,n, alpha, hist=FALSE ){
     return(sum(vec))
   })
 
-  return(list(Wg=Wg ))
+  return(Wg)
 }
 
 
@@ -56,8 +56,6 @@ computeWg<-function(Rho,Omega,W,r,n, alpha, hist=FALSE ){
 #'
 #' @return the market matrix filled with all the precision values common to all spanning trees
 #' @export
-#'
-#' @examples
 computeOmega<-function(Pg,Rho,p){
   q=ncol(Rho) ; hidden=(q!=p)
   # diagonal
@@ -137,7 +135,7 @@ F_Sym2Vec <- function(A.mat){
 #' @param W a weight matrix
 #' @param r the number of missing actors
 #' @return the Meila matrix
-#' @noRd
+#' @export
 exactMeila<-function (W,r){ # for edges weight beta
   p = nrow(W) ; index=1
   L = EMtree::Laplacian(W)[-index,-index]
@@ -149,7 +147,7 @@ exactMeila<-function (W,r){ # for edges weight beta
   )
   Mei = 0.5 * (Mei + t(Mei))
   if(sum(Mei<0)!=0) stop("unstable Laplacian")
-  return(Mei=Mei)
+  return(Mei)
 }
 
 #' Computes edges probability from weights W (Kirshner (07) formulas)
@@ -160,7 +158,7 @@ exactMeila<-function (W,r){ # for edges weight beta
 #' @param verbatim boolean controling verbosity
 #'
 #' @return matrix of edges probabilities
-#' @noRd
+#' @export
 Kirshner <- function(W,r, it1, verbatim=0){
   p = nrow(W);   L = EMtree::Laplacian(W)[-1,-1]
   K = inverse.gmp(L)
@@ -186,7 +184,7 @@ Kirshner <- function(W,r, it1, verbatim=0){
 #' @return \itemize{
 #' \item{det}{ exact log-determinant}
 #' \item{max.prec}{ boolean tracking the reach of maximal precision during computation}}
-#' @noRd
+#' @export
 logSumTree<-function(W){
   index=1;  max.prec=FALSE
   mat=EMtree::Laplacian(W)[-index, -index]
@@ -210,7 +208,6 @@ logSumTree<-function(W){
 #' @return a vector containing the different terms of the lower bound
 #' @export
 #' @importFrom stats cov2cor
-#' @examples
 LowerBound<-function(Pg ,Omega, M, S, W, Wg,p, logSTW, logSTWg){
   n=nrow(M) ; q=nrow(Omega) ; O=1:p ; r=q-p
   hidden = (q!=p)
@@ -253,8 +250,8 @@ LowerBound<-function(Pg ,Omega, M, S, W, Wg,p, logSTW, logSTWg){
 #' @param trackJ boolean for evaluating the lower bound at each parameter update
 #' @param hist boolean for printing edges weights histogram at each iteration
 #' @importFrom stats cov2cor
-#' @noRd
-VE<-function(MO,SO,SH,Omega,W,Wg,MH,Pg,logSTW,logSTWg, alpha,it1, verbatim,trackJ=FALSE, hist=FALSE){
+#' @export
+VEstep<-function(MO,SO,SH,Omega,W,Wg,MH,Pg,logSTW,logSTWg, alpha,it1, verbatim,trackJ=FALSE, hist=FALSE){
   #--Setting up
   n=nrow(MO); q=ncol(Omega) ;  p=ncol(MO);  O=1:ncol(MO); trim=FALSE ;
   hidden=(q!=p)
@@ -292,9 +289,7 @@ VE<-function(MO,SO,SH,Omega,W,Wg,MH,Pg,logSTW,logSTWg, alpha,it1, verbatim,track
     message("trim Rho")
     Rho[Rho>1]=1
     Rho[Rho<(-1)]=-1}
-  compWg= computeWg(Rho, Omega, W, r, n, alpha,  hist=hist)
-  Wg.new = compWg$Wg
-
+  Wg.new= computeWg(Rho, Omega, W, r, n, alpha,  hist=hist)
   logSTWg.tot=logSumTree(Wg.new)
   logSTWg.new=logSTWg.tot$det
   max.prec=logSTWg.tot$max.prec
@@ -334,7 +329,7 @@ VE<-function(MO,SO,SH,Omega,W,Wg,MH,Pg,logSTW,logSTWg, alpha,it1, verbatim,track
 #' @param logSTWg log-sum tree of the Wg matrix
 #' @param trackJ boolean for evaluating the lower bound at each parameter update
 #' @importFrom stats cov2cor
-#' @nord
+#' @export
 Mstep<-function(M, S, Pg, Omega,W, Wg, p,logSTW, logSTWg,  trackJ=FALSE){
   n=nrow(S)  ; O=1:p ; q=ncol(Omega) ; iterM=0 ; diff=1
   hidden=(q!=p)
@@ -445,7 +440,7 @@ nestor<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1,
     iter=iter+1
     if(verbatim) cat(paste0("\n Iter n°", iter))
     #--- VE
-    resVE<-VE(MO=MO,SO=SO,SH=SH,Omega=Omega,W=W,Wg=Wg,MH=MH,Pg=Pg,logSTW,logSTWg,
+    resVE<-VEstep(MO=MO,SO=SO,SH=SH,Omega=Omega,W=W,Wg=Wg,MH=MH,Pg=Pg,logSTW,logSTWg,
               it1=(iter==1),verbatim=verbatim, alpha=alpha, trackJ=trackJ, hist=print.hist)
     M=resVE$M
     S=resVE$S
@@ -486,7 +481,7 @@ nestor<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1,
     J<-c(J, Jiter)
   }
   ########################
-  resVE<-VE(MO=MO,SO=SO,SH=SH,Omega=Omega,W=W,Wg=Wg,logSTW,logSTWg,MH=MH,Pg=Pg, it1=(iter==1),
+  resVE<-VEstep(MO=MO,SO=SO,SH=SH,Omega=Omega,W=W,Wg=Wg,logSTW,logSTWg,MH=MH,Pg=Pg, it1=(iter==1),
             verbatim=verbatim, alpha=alpha, trackJ=trackJ, hist=print.hist)
   M=resVE$M
   S=resVE$S

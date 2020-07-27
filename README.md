@@ -23,7 +23,7 @@ devtools::install_github("Rmomal/nestor")
 Example
 -------
 
-`nestor`simulates data with the function `missing_from_scratch`, which requires the desired type of dependency structure (scale-free, erdos or cluster) and the number of missing actors `r`. Here is an example with `r=1`for the scale-free structure:
+`nestor`simulates data with the function `missing_from_scratch()`, which requires the desired type of dependency structure (scale-free, erdos or cluster) and the number of missing actors `r`. Here is an example with `r=1`for the scale-free structure:
 
 ``` r
 library(nestor)
@@ -41,7 +41,7 @@ data$TC
 #> [1] 1 2 3 6
 ```
 
-The data is then prepared for analysis with the first step of the procedure: fit the PLN model. The `norm_PLN`function is a wraper to `PLNmodels::PLN()` which normalizes all the necessary outputs, namely the means, variance and correlation matrices of the model latent Gaussian layer corresponding to observed species.
+The data is then prepared for analysis with the first step of the procedure: fit the PLN model. The `norm_PLN()`function is a wraper to `PLNmodels::PLN()` which normalizes all the necessary outputs, namely the means, variance and correlation matrices of the model latent Gaussian layer corresponding to observed species.
 
 ``` r
 PLNfit<-norm_PLN(data$Y)
@@ -61,13 +61,42 @@ sigma_obs=PLNfit$sigma_obs
 initClique= FitSparsePCA(data$Y,r=1)$cliques
 ```
 
-or a list of several possible cliques, for example using `complement_spca()`. `nestor` also provides with a bootstraped version of sPCA `boot_FitSparsePCA()`, and a procedure using SBM with `init_blockmodels()`.
+or a list of several possible cliques, for example using `complement_spca()`. The `nestor` package also provides with a bootstraped version of sPCA `boot_FitSparsePCA()`, and the function `init_blockmodels()` which uses package `blockmodels`.
 
 ``` r
 six_cliques= complement_spca(data$Y, k=3) 
+six_cliques
+#> [[1]]
+#> [[1]][[1]]
+#> [1] 3 6 8
+#> 
+#> 
+#> [[2]]
+#> [[2]][[1]]
+#> [1] 2 9
+#> 
+#> 
+#> [[3]]
+#> [[3]][[1]]
+#> [1]  9 10
+#> 
+#> 
+#> [[4]]
+#> [[4]][[1]]
+#> [1]  1  2  4  5  7  9 10
+#> 
+#> 
+#> [[5]]
+#> [[5]][[1]]
+#> [1]  1  3  4  5  6  7  8 10
+#> 
+#> 
+#> [[6]]
+#> [[6]][[1]]
+#> [1] 1 2 3 4 5 6 7 8
 ```
 
-Once an initial clique has been found, the algorithm can be initialized.This is the aim of the function `initVEM`, which initializes all required parameters. This function builds one initialization from one initial clique. In this example we run the oracle procedure: the initialization is done with the true clique.
+Once an initial clique has been found, the algorithm can be initialized.This is the aim of the function `initVEM()`, which initializes all required parameters. This function builds one initialization from one initial clique. In this example we run the oracle procedure: the initialization is done with the true clique.
 
 ``` r
 initList=initVEM(data$Y,cliqueList=data$TC,cov2cor(sigma_obs), MO,r=1 )
@@ -89,7 +118,7 @@ fit=nestor(data$Y, MO,SO, initList=initList,alpha=0.1,eps=1e-3,
            maxIter=30,verbatim = FALSE, trackJ=FALSE)
 ```
 
-This package contains several visualization functions. `plotPerf` gives a quick overview of the fit performance compared to initial graph:
+This package contains several visualization functions. `plotPerf()` gives a quick overview of the fit performance compared to initial graph:
 
 ``` r
 plotPerf(fit$Pg, data$G,r=1)
@@ -97,7 +126,7 @@ plotPerf(fit$Pg, data$G,r=1)
 
 <img src="man/figures/README-unnamed-chunk-10-1.png" width="80%" style="display: block; margin: auto;" />
 
-The convergence of `nestor` can be checked with the plotting function `plotConv`:
+The convergence of `nestor()` can be checked with the plotting function `plotConv()`:
 
 ``` r
 plotConv(nestorFit = fit)
@@ -105,7 +134,7 @@ plotConv(nestorFit = fit)
 
 <img src="man/figures/README-unnamed-chunk-11-1.png" width="80%" style="display: block; margin: auto;" />
 
-This package provides with a parllel procedure for the computation of several fits of `nestor` corresponding to a list of possible cliques, with the function `List.nestor()`. Below is an example with the list of four cliques previously obtained with the `complement_spca()` function:
+This package provides with a parllel procedure for the computation of several fits of `nestor()` corresponding to a list of possible cliques, with the function `List.nestor()`. Below is an example with the list of four cliques previously obtained with the `complement_spca()` function:
 
 ``` r
 fitList=List.nestor(six_cliques, data$Y,cov2cor(sigma_obs), MO,SO,r=1,eps=1e-3,
@@ -120,7 +149,7 @@ do.call(rbind,lapply(fitList, length))
 #> [6,]   12
 ```
 
-The object `fitList` is simply the list of all the `nestor` fits. This procedure aborts in case of degenerated behaviour, which happens when the provided clique is too far from truth. Wrong fits can be spotted by their ouput size, as above. We can know see the behaviour of the lowerbound final values with the AUC of each converged fit:
+The object `fitList` is simply the list of all the `nestor()` fits. This procedure aborts in case of degenerated behaviour, which happens when the provided clique is too far from truth. Wrong fits can be spotted by their ouput size, as above. We can know see the behaviour of the lowerbound final values with the AUC of each converged fit:
 
 ``` r
 do.call(rbind,lapply(fitList, function(vem){

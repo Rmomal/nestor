@@ -1,4 +1,11 @@
 destination: docs
+templates:
+  params:
+    bootswatch: cosmo
+
+right:
+    - icon: fa-github
+      href: https://github.com/Rmomal/nestor
 
 reference:
 - title: Main user functions
@@ -8,12 +15,21 @@ reference:
   - '`List.nestor`'
   - '`missing_from_scratch`'
   - '`norm_PLN`'
-- title: Tools
+  - '`initVEM`'
+- title: Computing functions
   desc:  ~
   contents:
-  - '`ppvtpr`'
-  - '`auc`'
-  - '`MLVSBM`'
+  - '`VEstep`'
+  - '`Mstep`'
+  - '`computeOmega`'
+  - '`computeWg`'
+  - '`exactMeila`'
+  - '`Kirshner`'
+  - '`logSumTree`'
+  - '`LowerBound`'
+  - '`initOmega`'
+  - '`inverse.gmp`'
+  - '`det.fractional`'
 - title: Clique initialization
   desc: ~
   contents:
@@ -27,4 +43,8 @@ reference:
   - '`plotPerf`'
   - '`plotConv`'
   - '`ggimage`'
-
+- title: Tools
+  desc:  ~
+  contents:
+  - '`ppvtpr`'
+  - '`auc`'
