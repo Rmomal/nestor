@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
 library(magrittr)
 library(ggplot2)
 library(tibble)
+library(EMtree)
 ```
 
 # nestor
@@ -42,7 +43,7 @@ devtools::install_github("Rmomal/nestor")
 ## Example
 
 `nestor`simulates data with the function `missing_from_scratch()`, which requires the desired type of dependency structure (scale-free, erdos or cluster) and the number of missing actors `r`. Here is an example with `r=1`for the scale-free structure:
-```{r, fig.width=4,out.width = "30%"}
+```{r, fig.width=3,out.width = "30%"}
 library(nestor)
 set.seed(1)
 data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)

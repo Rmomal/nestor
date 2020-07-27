@@ -33,11 +33,14 @@ missing_from_scratch<-function(n,p,r=1,type,plot=FALSE, dens=2/p){
   hidden=which(diag(omega)%in%sort(diag(omega), decreasing = TRUE)[1:r])[r]
   G=G[c(setdiff(1:(p+r), hidden), hidden),c(setdiff(1:(p+r), hidden), hidden)]
   diag(G)=0
-  trueClique=lapply(hidden, function(h){ which(omega[h,-h]!=0)})
-  group=1*(diag(omega)==diag(omega)[hidden][1])
+  trueClique=lapply((p+1):(p+r), function(h){ which(G[h,-h]!=0)})
+  #group=1*(diag(omega)==diag(omega)[hidden][1])
+  lab=ifelse(1:(p+r) %in% c(unlist(trueClique), (p+1):(p+r)), 1:(p+r), "")
+  groupes = 1*(1:(p+r) %in% c(unlist(trueClique), (p+1):(p+r)))
+  groupes[(p+1):(p+r)]=2
   if(plot){
-    g=EMtree::draw_network(1*(omega==1),groupes=group,layout="nicely",curv=0,nb=2,
-                   pal="black",nodes_label =1:(p+r))$G
+    g=EMtree::draw_network(G,groupes=groupes,layout="nicely",curv=0,nb=1,
+                           nodes_label =lab)$G
     print(g)
   }
   #compute final parameters R and Omega

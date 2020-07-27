@@ -27,6 +27,11 @@ Example
 
 ``` r
 library(nestor)
+#> 
+#> Attaching package: 'nestor'
+#> The following object is masked from 'package:EMtree':
+#> 
+#>     Kirshner
 set.seed(1)
 data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 ```
