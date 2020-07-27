@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fit sparse PCA on a grid of alpha — FitSparsePCA • nestor</title>
+<title>Select the k first components and their complement as initial cliques — complement_spca • nestor</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Fit sparse PCA on a grid of alpha — FitSparsePCA" />
-<meta property="og:description" content="Fit sparse PCA on a grid of alpha" />
+<meta property="og:title" content="Select the k first components and their complement as initial cliques — complement_spca" />
+<meta property="og:description" content="This function aims at efficiently exploring the space of likely cliques when only one missing actor is estimated." />
 
 
 
@@ -103,59 +103,54 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Fit sparse PCA on a grid of alpha</h1>
+    <h1>Select the k first components and their complement as initial cliques</h1>
     
-    <div class="hidden name"><code>FitSparsePCA.Rd</code></div>
+    <div class="hidden name"><code>complement_spca.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Fit sparse PCA on a grid of alpha</p>
+    <p>This function aims at efficiently exploring the space of likely cliques when only one missing actor is estimated.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>FitSparsePCA</span>(<span class='no'>Y</span>, <span class='kw'>r</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>minV</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>alphaGrid</span> <span class='kw'>=</span> <span class='fl'>10</span>^(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(-<span class='fl'>4</span>, <span class='fl'>0</span>, <span class='kw'>by</span> <span class='kw'>=</span>
-  <span class='fl'>0.1</span>)))</pre>
+    <pre class="usage"><span class='fu'>complement_spca</span>(<span class='no'>Y</span>, <span class='no'>k</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>Y</th>
-      <td><p>a data frame</p></td>
+      <td><p>count dataset</p></td>
     </tr>
     <tr>
-      <th>r</th>
-      <td><p>the number of missing actors</p></td>
-    </tr>
-    <tr>
-      <th>minV</th>
-      <td><p>the minimum number of neighbors for each missing actor</p></td>
-    </tr>
-    <tr>
-      <th>alphaGrid</th>
-      <td><p>the grid for alpha</p></td>
+      <th>k</th>
+      <td><p>number of principal components of sparse PCA to keep</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
-<ul>
-<li><p>sPcaOpt the optimal spca object</p></li>
-<li><p>alphaOpt the best alpha value among the provided grid</p></li>
-<li><p>loglik vector of log likelihood obtained for each value of alpha</p></li>
-<li><p>bic vecotr of BIC values</p></li>
-<li><p>cliques optimal clique of neighbors</p></li>
-</ul>
-
+    <p>a list of 2*k cliques</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>data</span><span class='kw'>=</span><span class='fu'><a href='missing_from_scratch.html'>missing_from_scratch</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>100</span>,<span class='kw'>p</span><span class='kw'>=</span><span class='fl'>10</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>,<span class='kw'>type</span><span class='kw'>=</span><span class='st'>"scale-free"</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='FitSparsePCA-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>TrueClique</span><span class='kw'>=</span><span class='no'>data</span>$<span class='no'>TC</span>
-<span class='no'>findclique</span><span class='kw'>=</span><span class='fu'>FitSparsePCA</span>(<span class='no'>data</span>$<span class='no'>Y</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>)
-<span class='no'>initClique</span><span class='kw'>=</span><span class='no'>findclique</span>$<span class='no'>cliques</span>
-<span class='no'>TrueClique</span></div><div class='output co'>#&gt; [[1]]
-#&gt; [1] 1 4 7 8 9
-#&gt; </div><div class='input'><span class='no'>initClique</span></div><div class='output co'>#&gt; [[1]]
-#&gt; [1]  4  8 10
+    <pre class="examples"><div class='input'><span class='no'>data</span><span class='kw'>=</span><span class='fu'><a href='missing_from_scratch.html'>missing_from_scratch</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>100</span>,<span class='kw'>p</span><span class='kw'>=</span><span class='fl'>10</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>,<span class='kw'>type</span><span class='kw'>=</span><span class='st'>"scale-free"</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='complement_spca-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>complement_spca</span>(<span class='no'>data</span>$<span class='no'>Y</span>,<span class='kw'>k</span><span class='kw'>=</span><span class='fl'>2</span>)</div><div class='output co'>#&gt; [[1]]
+#&gt; [[1]][[1]]
+#&gt; [1] 2 8
+#&gt; 
+#&gt; 
+#&gt; [[2]]
+#&gt; [[2]][[1]]
+#&gt; [1]  1  4  5  6  7  9 10
+#&gt; 
+#&gt; 
+#&gt; [[3]]
+#&gt; [[3]][[1]]
+#&gt; [1]  1  3  4  5  6  7  9 10
+#&gt; 
+#&gt; 
+#&gt; [[4]]
+#&gt; [[4]][[1]]
+#&gt; [1] 2 3 8
+#&gt; 
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

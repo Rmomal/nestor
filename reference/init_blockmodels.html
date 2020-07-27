@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>init_blockmodels — init_blockmodels • nestor</title>
+<title>Find initial cliques using blockmodels on the initial marginalized network — init_blockmodels • nestor</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="init_blockmodels — init_blockmodels" />
-<meta property="og:description" content="Find initial cliques using blockmodels on the initial network (possibly inferred using EMtree or VEMtree with r=0)" />
+<meta property="og:title" content="Find initial cliques using blockmodels on the initial marginalized network — init_blockmodels" />
+<meta property="og:description" content="Find initial cliques using blockmodels on the initial marginalized network" />
 
 
 
@@ -103,13 +103,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>init_blockmodels</h1>
+    <h1>Find initial cliques using blockmodels on the initial marginalized network</h1>
     
     <div class="hidden name"><code>init_blockmodels.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Find initial cliques using blockmodels on the initial network (possibly inferred using EMtree or VEMtree with r=0)</p>
+    <p>Find initial cliques using blockmodels on the initial marginalized network</p>
     </div>
 
     <pre class="usage"><span class='fu'>init_blockmodels</span>(<span class='no'>Y</span>, <span class='no'>sigma_obs</span>, <span class='no'>MO</span>, <span class='no'>SO</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>poisson</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
@@ -166,19 +166,19 @@
 <span class='no'>sigma_obs</span><span class='kw'>=</span><span class='no'>PLNfit</span>$<span class='no'>sigma_obs</span>
 <span class='co'>#-- initialize with blockmodels</span>
 <span class='fu'>init_blockmodels</span>(<span class='no'>data</span>$<span class='no'>Y</span>,<span class='no'>sigma_obs</span>, <span class='no'>MO</span>, <span class='no'>SO</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>2</span> )</div><div class='output co'>#&gt; 
-#&gt; Likelihoods: -12.94245 , -12.89614 , -12.896 , -12.89594 , 
-#&gt; Convergence took 0.26 secs  and  4  iterations.
-#&gt; Likelihood difference = 6.29921e-05 
-#&gt; Betas difference = 1.779993e-08
+#&gt; Likelihoods: -12.82422 , -12.77135 , -12.77132 , 
+#&gt; Convergence took 0.23 secs  and  3  iterations.
+#&gt; Likelihood difference = 2.819978e-05 
+#&gt; Betas difference = 8.656184e-08
 #&gt; </div><div class='output co'>#&gt; $cliqueList
 #&gt; $cliqueList[[1]]
 #&gt; $cliqueList[[1]][[1]]
-#&gt; [1]  1  2  3  5  6  7 10
+#&gt; [1]  1  3  4  6 10
 #&gt; 
 #&gt; 
 #&gt; $cliqueList[[2]]
 #&gt; $cliqueList[[2]][[1]]
-#&gt; [1] 4 8 9
+#&gt; [1] 2 5 7 8 9
 #&gt; 
 #&gt; 
 #&gt; </div></pre>

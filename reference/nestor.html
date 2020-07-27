@@ -113,7 +113,7 @@
     </div>
 
     <pre class="usage"><span class='fu'>nestor</span>(<span class='no'>Y</span>, <span class='no'>MO</span>, <span class='no'>SO</span>, <span class='no'>initList</span>, <span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>eps</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
-  <span class='kw'>verbatim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>print.hist</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>trackJ</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>verbatim</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>print.hist</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>trackJ</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -148,7 +148,7 @@
     </tr>
     <tr>
       <th>verbatim</th>
-      <td><p>boolean for verbosity</p></td>
+      <td><p>controls verbosity, between 0,1 and 2.</p></td>
     </tr>
     <tr>
       <th>print.hist</th>
@@ -193,11 +193,12 @@
 <span class='no'>initList</span><span class='kw'>=</span><span class='fu'><a href='initVEM.html'>initVEM</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>,<span class='kw'>cliqueList</span><span class='kw'>=</span><span class='no'>initClique</span>,<span class='no'>sigma_obs</span>, <span class='no'>MO</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span> )
 <span class='co'>#-- run core function nestor</span>
 <span class='no'>with_trackJ</span><span class='kw'>=</span><span class='fu'>nestor</span>(<span class='no'>data</span>$<span class='no'>Y</span>, <span class='no'>MO</span>,<span class='no'>SO</span>, <span class='kw'>initList</span><span class='kw'>=</span><span class='no'>initList</span>, <span class='kw'>maxIter</span><span class='kw'>=</span><span class='fl'>5</span>)</div><div class='output co'>#&gt; 
-#&gt;  Iter n°1 sumP=-2.17e-13
-#&gt;  Iter n°2 sumP=1.42e-14
-#&gt;  Iter n°3 sumP=7.11e-14 sumP=-3.55e-14
-#&gt; nestor ran in 0.198secs and 3 iterations.
-#&gt; Final weights difference: 72741094.2540323</div></pre>
+#&gt;  Iter n°1
+#&gt;  Iter n°2
+#&gt;  Iter n°3
+#&gt;  Iter n°4
+#&gt;  Iter n°5
+#&gt; nestor ran in 0.326secs and 5 iterations.</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

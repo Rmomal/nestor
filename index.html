@@ -64,8 +64,9 @@
 <a href="#nestor" class="anchor"></a>nestor</h1></div>
 <!-- badges: start -->
 
+<p>Network inference from Species counTs with missing actORs.</p>
 <blockquote>
-<p>nestor The goal of nestor is to infer network of species conditional dependencies from abundances while accounting for possible missing actors in the data.</p>
+<p><code>nestor</code> is an R package which aim is to infer network of species conditional dependencies from their abundances, while accounting for possible missing actors in the data.</p>
 </blockquote>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -77,12 +78,17 @@
 <div id="example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example" class="anchor"></a>Example</h2>
+<p><code>nestor</code>simulates data with the function <code>missing_from_scratch</code>, which requires the desired type of dependency structure (scale-free, erdos or cluster) and the number of missing actors <code>r</code>. Here is an example with <code>r=1</code>for the scale-free structure:</p>
 <div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">nestor</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tibble</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">7</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">1</span>)
 <span class="no">data</span><span class="kw">=</span><span class="fu"><a href="reference/missing_from_scratch.html">missing_from_scratch</a></span>(<span class="kw">n</span><span class="kw">=</span><span class="fl">100</span>,<span class="kw">p</span><span class="kw">=</span><span class="fl">10</span>,<span class="kw">r</span><span class="kw">=</span><span class="fl">1</span>,<span class="kw">type</span><span class="kw">=</span><span class="st">"scale-free"</span>, <span class="kw">plot</span><span class="kw">=</span><span class="fl">TRUE</span>)</pre></div>
-<p><img src="reference/figures/README-example-1.png" width="100%"></p>
-<div class="sourceCode" id="cb3"><pre class="r"><span class="no">PLNfit</span><span class="kw">&lt;-</span><span class="fu"><a href="reference/norm_PLN.html">norm_PLN</a></span>(<span class="no">data</span>$<span class="no">Y</span>)
+<p><img src="reference/figures/README-unnamed-chunk-3-1.png" width="30%" style="display: block; margin: auto;"></p>
+<p>The original clique of the missing actor neighbors is available in the value <code>TC</code>:</p>
+<div class="sourceCode" id="cb3"><pre class="r"><span class="no">data</span>$<span class="no">TC</span>
+<span class="co">#&gt; [[1]]</span>
+<span class="co">#&gt; [1] 1 2 3 6</span></pre></div>
+<p>The data is then prepared for analysis with the first step of the procedure: fit the PLN model. The <code>norm_PLN</code>function is a wraper to <code><a href="https://rdrr.io/pkg/PLNmodels/man/PLN.html">PLNmodels::PLN()</a></code> which normalizes all the necessary outputs, namely the means, variance and correlation matrices of the model latent Gaussian layer corresponding to observed species.</p>
+<div class="sourceCode" id="cb4"><pre class="r"><span class="no">PLNfit</span><span class="kw">&lt;-</span><span class="fu"><a href="reference/norm_PLN.html">norm_PLN</a></span>(<span class="no">data</span>$<span class="no">Y</span>)
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  Initialization...</span>
 <span class="co">#&gt;  Adjusting a PLN model with full covariance model</span>
@@ -90,46 +96,54 @@
 <span class="co">#&gt;  DONE!</span>
 <span class="no">MO</span><span class="kw">&lt;-</span><span class="no">PLNfit</span>$<span class="no">MO</span>
 <span class="no">SO</span><span class="kw">&lt;-</span><span class="no">PLNfit</span>$<span class="no">SO</span>
-<span class="no">sigma_obs</span><span class="kw">=</span><span class="no">PLNfit</span>$<span class="no">sigma_obs</span>
-<span class="no">data</span>$<span class="no">TC</span>
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt; [1]  1  4  5  6 10</span>
-<span class="co">#-- find initial clique</span>
-<span class="no">findclique</span><span class="kw">=</span> <span class="fu"><a href="reference/boot_FitSparsePCA.html">boot_FitSparsePCA</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span>(<span class="no">MO</span>),<span class="kw">B</span><span class="kw">=</span><span class="fl">100</span>,<span class="kw">r</span><span class="kw">=</span><span class="fl">1</span>, <span class="kw">cores</span><span class="kw">=</span><span class="fl">3</span>)
-<span class="no">initClique</span><span class="kw">=</span><span class="no">findclique</span>$<span class="no">cliqueList</span>
-
-<span class="co">#-- initialize the VEM</span>
-<span class="no">initList</span><span class="kw">=</span><span class="fu"><a href="reference/initVEM.html">initVEM</a></span>(<span class="no">data</span>$<span class="no">Y</span>,<span class="kw">cliqueList</span><span class="kw">=</span><span class="no">initClique</span><span class="kw">[[</span><span class="fl">1</span>]],<span class="no">sigma_obs</span>, <span class="no">MO</span>,<span class="kw">r</span><span class="kw">=</span><span class="fl">1</span> )
-<span class="co">#-- run one clique from cliqueList</span>
-<span class="no">fit</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/pkg/nestor/man/nestor-package.html">nestor</a></span>(<span class="no">data</span>$<span class="no">Y</span>, <span class="no">MO</span>,<span class="no">SO</span>, <span class="kw">initList</span><span class="kw">=</span><span class="no">initList</span>,<span class="kw">alpha</span><span class="kw">=</span><span class="fl">0.1</span>,<span class="kw">eps</span><span class="kw">=</span><span class="fl">1e-4</span>, <span class="kw">maxIter</span><span class="kw">=</span><span class="fl">30</span>, <span class="kw">trackJ</span><span class="kw">=</span><span class="fl">FALSE</span>)
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  Iter n°1 sumP=1.78e-14</span>
-<span class="co">#&gt;  Iter n°2 sumP=4.28e-12</span>
-<span class="co">#&gt;  Iter n°3 sumP=-1.3e-12</span>
-<span class="co">#&gt;  Iter n°4 sumP=-8.3e-12</span>
-<span class="co">#&gt;  Iter n°5 sumP=-1.56e-11</span>
-<span class="co">#&gt;  Iter n°6 / range(P-1&gt;0)= 3e-13 ; 3e-13 /  sumP=-3.25e-12</span>
-<span class="co">#&gt;  Iter n°7 sumP=-1.76e-12</span>
-<span class="co">#&gt;  Iter n°8 sumP=1.42e-12</span>
-<span class="co">#&gt;  Iter n°9 sumP=-9.14e-12</span>
-<span class="co">#&gt;  Iter n°10 sumP=-1.93e-12</span>
-<span class="co">#&gt;  Iter n°11 / range(P-1&gt;0)= 1e-12 ; 1e-12 /  sumP=1.16e-12</span>
-<span class="co">#&gt;  Iter n°12 / range(P-1&gt;0)= 2e-12 ; 2e-12 /  sumP=2.34e-12</span>
-<span class="co">#&gt;  Iter n°13 sumP=2.34e-13</span>
-<span class="co">#&gt;  Iter n°14 / range(P-1&gt;0)= 2e-12 ; 2e-12 /  sumP=2.84e-13</span>
-<span class="co">#&gt;  Iter n°15 / range(P-1&gt;0)= 2e-12 ; 2e-12 /  sumP=4.18e-12 / range(P-1&gt;0)= 2e-16 ; 3e-12 /  sumP=8.25e-12</span>
-<span class="co">#&gt; nestor ran in 1.056secs and 15 iterations.</span>
-<span class="co">#&gt; Final weights difference: 0</span>
-<span class="fu"><a href="reference/plotPerf.html">plotPerf</a></span>(<span class="no">fit</span>$<span class="no">Pg</span>, <span class="no">data</span>$<span class="no">G</span>,<span class="kw">r</span><span class="kw">=</span><span class="fl">1</span>)</pre></div>
-<p><img src="reference/figures/README-example-2.png" width="100%"></p>
-<div class="sourceCode" id="cb4"><pre class="r"><span class="fu"><a href="reference/plotConv.html">plotConv</a></span>(<span class="kw">nestorFit</span> <span class="kw">=</span> <span class="no">fit</span>)</pre></div>
-<p><img src="reference/figures/README-example-3.png" width="100%"></p>
-<div class="sourceCode" id="cb5"><pre class="r">
-# run all cliques
-# fitList=List.nestor(initClique, data$Y,sigma_obs, MO,SO,r=1,eps=1e-4, alpha=0.1)
-# do.call(rbind,lapply(fitList, function(vem){
-#  c(auc=auc(vem$Pg, data$G), J=tail(vem$lowbound$J,1))
-# })) %&gt;% as_tibble() %&gt;% ggplot(aes(J,auc))+geom_point()+theme_light()</pre></div>
+<span class="no">sigma_obs</span><span class="kw">=</span><span class="no">PLNfit</span>$<span class="no">sigma_obs</span></pre></div>
+<p><code>nestor</code> then needs to be initialized. This requires to find an initial clique of neighbors for the missing actor:</p>
+<div class="sourceCode" id="cb5"><pre class="r"><span class="no">initClique</span><span class="kw">=</span> <span class="fu"><a href="reference/FitSparsePCA.html">FitSparsePCA</a></span>(<span class="no">data</span>$<span class="no">Y</span>,<span class="kw">r</span><span class="kw">=</span><span class="fl">1</span>)$<span class="no">cliques</span></pre></div>
+<p>or a list of several possible cliques, for example using <code><a href="reference/complement_spca.html">complement_spca()</a></code>. <code>nestor</code> also provides with a bootstraped version of sPCA <code><a href="reference/boot_FitSparsePCA.html">boot_FitSparsePCA()</a></code>, and a procedure using SBM with <code><a href="reference/init_blockmodels.html">init_blockmodels()</a></code>.</p>
+<div class="sourceCode" id="cb6"><pre class="r"><span class="no">six_cliques</span><span class="kw">=</span> <span class="fu"><a href="reference/complement_spca.html">complement_spca</a></span>(<span class="no">data</span>$<span class="no">Y</span>, <span class="kw">k</span><span class="kw">=</span><span class="fl">3</span>)</pre></div>
+<p>Once an initial clique has been found, the algorithm can be initialized.This is the aim of the function <code>initVEM</code>, which initializes all required parameters. This function builds one initialization from one initial clique. In this example we run the oracle procedure: the initialization is done with the true clique.</p>
+<div class="sourceCode" id="cb7"><pre class="r"><span class="no">initList</span><span class="kw">=</span><span class="fu"><a href="reference/initVEM.html">initVEM</a></span>(<span class="no">data</span>$<span class="no">Y</span>,<span class="kw">cliqueList</span><span class="kw">=</span><span class="no">data</span>$<span class="no">TC</span>,<span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cov2cor</a></span>(<span class="no">sigma_obs</span>), <span class="no">MO</span>,<span class="kw">r</span><span class="kw">=</span><span class="fl">1</span> )
+<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">initList</span>)
+<span class="co">#&gt; List of 4</span>
+<span class="co">#&gt;  $ Wginit   : num [1:11, 1:11] 0 0.00826 0.00826 0.00826 0.00826 ...</span>
+<span class="co">#&gt;  $ Winit    : num [1:11, 1:11] 0 0.00826 0.00826 0.00826 0.00826 ...</span>
+<span class="co">#&gt;  $ omegainit: num [1:11, 1:11] 3.4633 1.2964 1.9354 0.7364 -0.0652 ...</span>
+<span class="co">#&gt;   ..- attr(*, "dimnames")=List of 2</span>
+<span class="co">#&gt;   .. ..$ : chr [1:11] "Y1" "Y2" "Y3" "Y4" ...</span>
+<span class="co">#&gt;   .. ..$ : chr [1:11] "Y1" "Y2" "Y3" "Y4" ...</span>
+<span class="co">#&gt;  $ MHinit   : num [1:100, 1] 0.368 0.248 -0.404 -0.802 -1.893 ...</span></pre></div>
+<p>The core function <code><a href="https://rdrr.io/pkg/nestor/man/nestor-package.html">nestor()</a></code> can now be run as follows:</p>
+<div class="sourceCode" id="cb8"><pre class="r"><span class="no">fit</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/pkg/nestor/man/nestor-package.html">nestor</a></span>(<span class="no">data</span>$<span class="no">Y</span>, <span class="no">MO</span>,<span class="no">SO</span>, <span class="kw">initList</span><span class="kw">=</span><span class="no">initList</span>,<span class="kw">alpha</span><span class="kw">=</span><span class="fl">0.1</span>,<span class="kw">eps</span><span class="kw">=</span><span class="fl">1e-3</span>,
+           <span class="kw">maxIter</span><span class="kw">=</span><span class="fl">30</span>,<span class="kw">verbatim</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">trackJ</span><span class="kw">=</span><span class="fl">FALSE</span>)</pre></div>
+<p>This package contains several visualization functions. <code>plotPerf</code> gives a quick overview of the fit performance compared to initial graph:</p>
+<div class="sourceCode" id="cb9"><pre class="r"><span class="fu"><a href="reference/plotPerf.html">plotPerf</a></span>(<span class="no">fit</span>$<span class="no">Pg</span>, <span class="no">data</span>$<span class="no">G</span>,<span class="kw">r</span><span class="kw">=</span><span class="fl">1</span>)</pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-10-1.png" width="80%" style="display: block; margin: auto;"></p>
+<p>The convergence of <code>nestor</code> can be checked with the plotting function <code>plotConv</code>:</p>
+<div class="sourceCode" id="cb10"><pre class="r"><span class="fu"><a href="reference/plotConv.html">plotConv</a></span>(<span class="kw">nestorFit</span> <span class="kw">=</span> <span class="no">fit</span>)</pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-11-1.png" width="80%" style="display: block; margin: auto;"></p>
+<p>This package provides with a parllel procedure for the computation of several fits of <code>nestor</code> corresponding to a list of possible cliques, with the function <code><a href="reference/List.nestor.html">List.nestor()</a></code>. Below is an example with the list of four cliques previously obtained with the <code><a href="reference/complement_spca.html">complement_spca()</a></code> function:</p>
+<div class="sourceCode" id="cb11"><pre class="r"><span class="no">fitList</span><span class="kw">=</span><span class="fu"><a href="reference/List.nestor.html">List.nestor</a></span>(<span class="no">six_cliques</span>, <span class="no">data</span>$<span class="no">Y</span>,<span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cov2cor</a></span>(<span class="no">sigma_obs</span>), <span class="no">MO</span>,<span class="no">SO</span>,<span class="kw">r</span><span class="kw">=</span><span class="fl">1</span>,<span class="kw">eps</span><span class="kw">=</span><span class="fl">1e-3</span>,
+                    <span class="kw">maxIter</span> <span class="kw">=</span> <span class="fl">50</span>, <span class="kw">alpha</span><span class="kw">=</span><span class="fl">0.1</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span>(<span class="no">rbind</span>,<span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(<span class="no">fitList</span>, <span class="no">length</span>))
+<span class="co">#&gt;      [,1]</span>
+<span class="co">#&gt; [1,]    3</span>
+<span class="co">#&gt; [2,]    3</span>
+<span class="co">#&gt; [3,]   12</span>
+<span class="co">#&gt; [4,]   12</span>
+<span class="co">#&gt; [5,]    3</span>
+<span class="co">#&gt; [6,]   12</span></pre></div>
+<p>The object <code>fitList</code> is simply the list of all the <code>nestor</code> fits. This procedure aborts in case of degenerated behaviour, which happens when the provided clique is too far from truth. Wrong fits can be spotted by their ouput size, as above. We can know see the behaviour of the lowerbound final values with the AUC of each converged fit:</p>
+<div class="sourceCode" id="cb12"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span>(<span class="no">rbind</span>,<span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(<span class="no">fitList</span>, <span class="kw">function</span>(<span class="no">vem</span>){
+  <span class="kw">if</span>(<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">vem</span>)<span class="kw">&gt;</span><span class="fl">4</span>){
+    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw">auc</span><span class="kw">=</span><span class="fu"><a href="reference/auc.html">auc</a></span>(<span class="no">vem</span>$<span class="no">Pg</span>, <span class="no">data</span>$<span class="no">G</span>), <span class="kw">J</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span>(<span class="no">vem</span>$<span class="no">lowbound</span>$<span class="no">J</span>,<span class="fl">1</span>))
+  }
+})) <span class="kw">%&gt;%</span> <span class="fu">as_tibble</span>()
+<span class="co">#&gt; # A tibble: 3 x 2</span>
+<span class="co">#&gt;     auc     J</span>
+<span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1  0.69 -587.</span>
+<span class="co">#&gt; 2  0.67 -500.</span>
+<span class="co">#&gt; 3  0.77 -498.</span></pre></div>
 </div>
 </div>
   </div>
@@ -153,7 +167,6 @@
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://travis-ci.org/Rmomal/nestor"><img src="https://travis-ci.org/Rmomal/nestor.svg?branch=master" alt="Travis build status"></a></li>
-<li><a href="https://codecov.io/gh/Rmomal/nestor?branch=master"><img src="https://codecov.io/gh/Rmomal/nestor/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
 </div>
 </div>
