@@ -9,7 +9,7 @@ initVEM(Y, cliqueList, sigma_obs, MO, r)
 \arguments{
 \item{Y}{count data matrix}
 
-\item{cliqueList}{list of initial neighbors for the missing actors}
+\item{cliqueList}{list of size r of initial neighbors for each missing actor}
 
 \item{sigma_obs}{estimated observed bloc of the variance-covariance matrix}
 

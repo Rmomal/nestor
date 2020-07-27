@@ -2,7 +2,7 @@
 % Please edit documentation in R/Initialize.R
 \name{init_blockmodels}
 \alias{init_blockmodels}
-\title{init_blockmodels}
+\title{Find initial cliques using blockmodels on the initial marginalized network}
 \usage{
 init_blockmodels(Y, sigma_obs, MO, SO, k = 3, poisson = FALSE,
   alpha = 0.1, cores = 1)
@@ -28,7 +28,7 @@ init_blockmodels(Y, sigma_obs, MO, SO, k = 3, poisson = FALSE,
 a list of possible cliques
 }
 \description{
-Find initial cliques using blockmodels on the initial network (possibly inferred using EMtree or VEMtree with r=0)
+Find initial cliques using blockmodels on the initial marginalized network
 }
 \examples{
 data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)

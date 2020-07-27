@@ -2,7 +2,7 @@
 % Please edit documentation in R/Initialize.R
 \name{FitSparsePCA}
 \alias{FitSparsePCA}
-\title{FitSparsePCA}
+\title{Fit sparse PCA on a grid of alpha}
 \usage{
 FitSparsePCA(Y, r = 1, minV = 1, alphaGrid = 10^(seq(-4, 0, by =
   0.1)))

@@ -5,7 +5,7 @@
 \title{Core function of nestor.}
 \usage{
 nestor(Y, MO, SO, initList, maxIter = 20, eps = 0.01, alpha = 0.1,
-  verbatim = TRUE, print.hist = FALSE, trackJ = FALSE)
+  verbatim = 1, print.hist = FALSE, trackJ = FALSE)
 }
 \arguments{
 \item{Y}{count dataset}
@@ -22,7 +22,7 @@ nestor(Y, MO, SO, initList, maxIter = 20, eps = 0.01, alpha = 0.1,
 
 \item{alpha}{tempering parameter, default to 0.1}
 
-\item{verbatim}{boolean for verbosity}
+\item{verbatim}{controls verbosity, between 0,1 and 2.}
 
 \item{print.hist}{prints edges weights histograms at each step if TRUE}
 

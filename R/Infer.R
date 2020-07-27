@@ -1,9 +1,7 @@
 #=====
 # VE step
 
-#' computeWg
-#'
-#'Central function for the update of the variational edges weights inside the VEM.
+#' updates the variational edges weights inside the VEM.
 #' @param Rho Correlation matrix
 #' @param Omega Market matrix filled with all the precision values common to all spanning trees
 #' @param W Edge weight matrix
@@ -16,8 +14,8 @@
 #' @return The variational edge weights matrix
 #' @importFrom graphics par
 #' @nord
-computeWg<-function(Rho,Omega,W,r,n, alpha, hist=FALSE, verbatim=FALSE ){
-  q=ncol(Rho); p=q-r; O = 1:p ;   binf=exp(-20) ; bsup=exp(30)
+computeWg<-function(Rho,Omega,W,r,n, alpha, hist=FALSE ){
+  q=ncol(Rho); p=q-r; O = 1:p
   Wg<-matrix(0,q,q)
   logWg<-matrix(0,q,q)
   if(r!=0){   H = (p+1):q   }
@@ -49,13 +47,9 @@ computeWg<-function(Rho,Omega,W,r,n, alpha, hist=FALSE, verbatim=FALSE ){
   return(list(Wg=Wg ))
 }
 
-#=====
-# M step
 
 
-#' computeOmega
-#'
-#'Update of the precision terms
+#' Updates the precision terms
 #' @param Pg Edge probability matrix
 #' @param Rho Correlation matrix
 #' @param p number of observed species
@@ -80,10 +74,6 @@ computeOmega<-function(Pg,Rho,p){
   }
   return(Omega)
 }
-
-
-
-
 
 # Lowerbound correction
 # part_JPLN<-function(mat_var,EhZZ,n, var=TRUE){
@@ -120,6 +110,7 @@ computeOmega<-function(Pg,Rho,p){
 #   delta=norm(sigTilde-EgOm, type="F")
 #   return(diffJPLN)
 # }
+
 #' Makes a symmetric matrix from the vector made of its lower tirangular part
 #'
 #' @param A.vec
@@ -170,7 +161,7 @@ exactMeila<-function (W,r){ # for edges weight beta
 #'
 #' @return matrix of edges probabilities
 #' @noRd
-Kirshner <- function(W,r, it1, verbatim=FALSE){
+Kirshner <- function(W,r, it1, verbatim=0){
   p = nrow(W);   L = EMtree::Laplacian(W)[-1,-1]
   K = inverse.gmp(L)
   K =  rbind(c(0, diag(K)),
@@ -181,7 +172,7 @@ Kirshner <- function(W,r, it1, verbatim=FALSE){
   if(!it1){ # allow instabilities at first iteration
     if(sum(P<(-1e-10))!=0){ stop("Instabilities leading to neg. proba") }
   }
-  if(verbatim){
+  if(verbatim==2){
     if(length(P[P>1])!=0) cat(paste0(" / range(P-1>0)= ",min(signif(P[P>1]-1,1))," ; ", max(signif(P[P>1]-1,1))," / "))
   }
   P[P<1e-16]=0 # numerical zero
@@ -205,9 +196,7 @@ logSumTree<-function(W){
 }
 
 
-#' LowerBound
-#'
-#'Computes the lower bound.
+#' Computes the lower bound.
 #' @param Pg Edge probability matrix (qxq)
 #' @param Omega market matrix with precision values (qxq)
 #' @param M Matrix of variational means (nxq)
@@ -303,7 +292,7 @@ VE<-function(MO,SO,SH,Omega,W,Wg,MH,Pg,logSTW,logSTWg, alpha,it1, verbatim,track
     message("trim Rho")
     Rho[Rho>1]=1
     Rho[Rho<(-1)]=-1}
-  compWg= computeWg(Rho, Omega, W, r, n, alpha,  hist=hist, verbatim=verbatim)
+  compWg= computeWg(Rho, Omega, W, r, n, alpha,  hist=hist)
   Wg.new = compWg$Wg
 
   logSTWg.tot=logSumTree(Wg.new)
@@ -318,7 +307,7 @@ VE<-function(MO,SO,SH,Omega,W,Wg,MH,Pg,logSTW,logSTWg, alpha,it1, verbatim,track
   }
   Pg.new=Kirshner(Wg.new,r, it1=it1,verbatim=verbatim)
   sumP=signif(sum(Pg.new)-2*(q-1),3)
-  if(verbatim) cat(paste0(" sumP=", sumP))
+  if(verbatim==2) cat(paste0(" sumP=", sumP))
   if(trackJ) LB2=c(LowerBound(Pg = Pg.new, Omega=Omega, M=M, S=S,W=W, Wg=Wg.new,p, logSTW=logSTW,logSTWg=logSTWg.new),"Wg")
 
   Wg=Wg.new ;  Pg=Pg.new;  logSTWg=logSTWg.new
@@ -397,7 +386,7 @@ Mstep<-function(M, S, Pg, Omega,W, Wg, p,logSTW, logSTWg,  trackJ=FALSE){
 #' @param maxIter maximun number of iterations
 #' @param eps convergence precision parameter
 #' @param alpha tempering parameter, default to 0.1
-#' @param verbatim boolean for verbosity
+#' @param verbatim controls verbosity, between 0,1 and 2.
 #' @param print.hist prints edges weights histograms at each step if TRUE
 #' @param trackJ computes the lower bound at each parameter update if TRUE. Otherwise, the lower bound is only computed at each new VE step.
 #'
@@ -430,7 +419,7 @@ Mstep<-function(M, S, Pg, Omega,W, Wg, p,logSTW, logSTWg,  trackJ=FALSE){
 #' initList=initVEM(data$Y,cliqueList=initClique,sigma_obs, MO,r=1 )
 #' #-- run core function nestor
 #' with_trackJ=nestor(data$Y, MO,SO, initList=initList, maxIter=5)
-nestor<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=TRUE,
+nestor<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1,
                    print.hist=FALSE, trackJ=FALSE){
   n=nrow(MO);  p=ncol(MO);  O=1:ncol(MO)
   MH=initList$MHinit;omegainit=initList$omegainit
@@ -528,8 +517,7 @@ nestor<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=TRUE
 
   t2=Sys.time()
   time=t2-t1
-  if(verbatim) cat(paste0("\nnestor ran in ",round(time,3), attr(time, "units")," and ", iter," iterations.",
-                          "\nFinal weights difference: ",round(diffW[iter],7)))
+  if(verbatim!=0) cat(paste0("\nnestor ran in ",round(time,3), attr(time, "units")," and ", iter," iterations."))
 
   return(list(M=M,S=S,Pg=Pg,Wg=Wg,W=W,Omega=Omega, lowbound=lowbound, features=features,
               finalIter=iter, time=time,max.prec=max.prec))

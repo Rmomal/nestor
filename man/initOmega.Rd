@@ -2,7 +2,7 @@
 % Please edit documentation in R/Initialize.R
 \name{initOmega}
 \alias{initOmega}
-\title{initOmega}
+\title{Initialize Sigma and Omega using an initial clique of neighbors of the missing actor}
 \usage{
 initOmega(Sigma = NULL, cliqueList, cst = 1.1)
 }

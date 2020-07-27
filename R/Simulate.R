@@ -1,7 +1,5 @@
 
-#' missing_from_scratch
-#'
-#'Function to simulate data and parameters including missing actors. Setting r=1 is advised.
+#' Simulate data and parameters including missing actors.
 #' @param n number of samples
 #' @param p number of observed species
 #' @param r number of missing actors

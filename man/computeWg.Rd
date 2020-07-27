@@ -2,9 +2,9 @@
 % Please edit documentation in R/Infer.R
 \name{computeWg}
 \alias{computeWg}
-\title{computeWg}
+\title{updates the variational edges weights inside the VEM.}
 \usage{
-computeWg(Rho, Omega, W, r, n, alpha, hist = FALSE, verbatim = FALSE)
+computeWg(Rho, Omega, W, r, n, alpha, hist = FALSE)
 }
 \arguments{
 \item{Rho}{Correlation matrix}
@@ -27,5 +27,5 @@ computeWg(Rho, Omega, W, r, n, alpha, hist = FALSE, verbatim = FALSE)
 The variational edge weights matrix
 }
 \description{
-Central function for the update of the variational edges weights inside the VEM.
+updates the variational edges weights inside the VEM.
 }

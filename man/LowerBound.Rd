@@ -2,7 +2,7 @@
 % Please edit documentation in R/Infer.R
 \name{LowerBound}
 \alias{LowerBound}
-\title{LowerBound}
+\title{Computes the lower bound.}
 \usage{
 LowerBound(Pg, Omega, M, S, W, Wg, p, logSTW, logSTWg)
 }

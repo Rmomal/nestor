@@ -6,7 +6,7 @@
 #' @export
 #' @importFrom reshape2 melt
 #' @import ggplot2
-#' @examples Sigma=data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)$Sigma
+#' @examples Sigma=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=FALSE)$Sigma
 #' ggimage(Sigma)
 ggimage<-function(data){
   melted_data <- reshape2::melt(data)
@@ -121,6 +121,7 @@ plotPerf<-function(P,G,r,thresh=0.5){
 }
 
 #' Plot function for nestor convergence
+#'
 #' @param nestorFit a fit from the nestor() function
 #' @return visualiaztion of nestor convergence
 #' @export

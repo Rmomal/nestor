@@ -2,7 +2,7 @@
 % Please edit documentation in R/Initialize.R
 \name{boot_FitSparsePCA}
 \alias{boot_FitSparsePCA}
-\title{boot_FitSparsePCA}
+\title{Finds initial cliques using a sparse PCA on bootstraps sub-samples}
 \usage{
 boot_FitSparsePCA(Y, B, r, minV = 1, cores = 1, unique = TRUE)
 }

@@ -1,5 +1,3 @@
-#' FitSparsePCA
-#'
 #' Fit sparse PCA on a grid of alpha
 #' @param Y a data frame
 #' @param r the number of missing actors
@@ -66,9 +64,26 @@ FitSparsePCA <- function(Y, r=1,minV=1, alphaGrid=10^(seq(-4, 0, by=.1))){
   return(list(sPcaOpt=sPcaOpt,  alphaOpt=alphaOpt, loglik=loglik, bic=bic, cliques=cliques))
 }
 
-#' boot_FitSparsePCA
+#' Select the k first components and their complement as initial cliques
 #'
-#' Finds initial cliques using a sparse PCA on bootstraps sub-samples
+#'This function aims at efficiently exploring the space of likely cliques when only one missing actor is estimated.
+#' @param Y count dataset
+#' @param k number of principal components of sparse PCA to keep
+#'
+#' @return a list of 2*k cliques
+#' @export
+#'
+#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+#' complement_spca(data$Y,k=2)
+complement_spca<-function(Y,k){
+  p=ncol(Y)
+  cliques_spca<-FitSparsePCA(Y, r=k)$cliques
+  complement=lapply(cliques_spca, function(clique){setdiff(1:p,clique)})
+  four_clique=lapply(c(cliques_spca,complement), function(cl) list(cl))
+  return(four_clique)
+}
+
+#'Finds initial cliques using a sparse PCA on bootstraps sub-samples
 #'
 #' @param Y data
 #' @param B number of bootstrap samples
@@ -100,18 +115,16 @@ boot_FitSparsePCA<-function(Y, B,r, minV=1,cores=1, unique=TRUE){
   return(list(cliqueList=cliqueList,nb_occ=nb_occ) )
 }
 
-#' norm_PLN
-#'
 #' Runs PLN function from the PLNmodels package and normalized the outputs
 #' @param Y count dataset
 #'
 #' @return \itemize{
 #' \item{MO}{ Normalized means}
 #' \item{SO}{ Normalized marginal variances}
-#' \item{sigma_obs}{Vairance-covariance matrix Sigma as estimated by PLNmodels}}
+#' \item{sigma_obs}{correlation matrix computed from the variance-covariance matrix estimated by PLNmodels}}
 #' @export
 #' @importFrom PLNmodels PLN
-#'
+#' @importFrom stats cov2cor
 #' @examples  data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 #' norm_PLN(data$Y)
 norm_PLN<-function(Y){
@@ -120,7 +133,7 @@ norm_PLN<-function(Y){
   PLNfit<-PLN(Y~1)
   MO<-PLNfit$var_par$M
   SO<-PLNfit$var_par$S
-  sigma_obs=PLNfit$model_par$Sigma
+  sigma_obs=cov2cor(PLNfit$model_par$Sigma)
   #-- normalize the PLN outputs
   D=diag(sigma_obs)
   matsig=(matrix(rep(1/sqrt(D),n),n,p, byrow = TRUE))
@@ -128,9 +141,7 @@ norm_PLN<-function(Y){
   SO=SO*matsig^2
   return(list(MO=MO, SO=SO, sigma_obs=sigma_obs))
 }
-#' init_blockmodels
-#'
-#'Find initial cliques using blockmodels on the initial network (possibly inferred using EMtree or VEMtree with r=0)
+#' Find initial cliques using blockmodels on the initial marginalized network
 #' @param Y count data
 #' @param sigma_obs original covariance matrix estimate
 #' @param MO original observed means estimate
@@ -174,9 +185,7 @@ init_blockmodels<-function(Y, sigma_obs, MO, SO, k=3,poisson=FALSE, alpha=0.1, c
   })
   return(clique)
 }
-#' extractParamBM
-#'
-#'internal function for initialization with blockmodels
+#' internal function for initialization with blockmodels
 #' @param BMobject object from blickmodels
 #' @param k number of desired groups
 #' @noRd
@@ -210,9 +219,9 @@ extractParamBM <- function(BMobject,k){
 }
 
 
-#' initOmega
+#'  Initialize Sigma and Omega using an initial clique of neighbors of the missing actor
 #'
-#'Initialize Sigma and Omega by taking the principal component of cliques as initial value for the hidden variables.
+#'  Initialize Sigma and Omega by taking the principal component of cliques as initial value for the hidden variables.
 #'  The PCA is done on the correaltion matrix, the variance of hidden variables are set to the empirical variances of the pca.
 #'  The corresponding precision term in omega is set to 1 for identifiability reasons.
 #' @param Sigma variance-covariance matrix (p x p)
@@ -255,7 +264,7 @@ initOmega <- function(Sigma = NULL,  cliqueList,cst=1.1) {
 #' Initialize all parameters for the variational inference
 #'
 #' @param Y count data matrix
-#' @param cliqueList list of initial neighbors for the missing actors
+#' @param cliqueList list of size r of initial neighbors for each missing actor
 #' @param sigma_obs estimated observed bloc of the variance-covariance matrix
 #' @param MO estimated mean values of the latent parameters corresponding to observed species
 #' @param r number of missing actors

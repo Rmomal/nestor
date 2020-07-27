@@ -2,7 +2,7 @@
 % Please edit documentation in R/Initialize.R
 \name{norm_PLN}
 \alias{norm_PLN}
-\title{norm_PLN}
+\title{Runs PLN function from the PLNmodels package and normalized the outputs}
 \usage{
 norm_PLN(Y)
 }
@@ -13,7 +13,7 @@ norm_PLN(Y)
 \itemize{
 \item{MO}{ Normalized means}
 \item{SO}{ Normalized marginal variances}
-\item{sigma_obs}{Vairance-covariance matrix Sigma as estimated by PLNmodels}}
+\item{sigma_obs}{correlation matrix computed from the variance-covariance matrix estimated by PLNmodels}}
 }
 \description{
 Runs PLN function from the PLNmodels package and normalized the outputs

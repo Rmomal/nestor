@@ -2,7 +2,7 @@
 % Please edit documentation in R/Simulate.R
 \name{missing_from_scratch}
 \alias{missing_from_scratch}
-\title{missing_from_scratch}
+\title{Simulate data and parameters including missing actors.}
 \usage{
 missing_from_scratch(n, p, r = 1, type, plot = FALSE, dens = 2/p)
 }
@@ -30,7 +30,7 @@ missing_from_scratch(n, p, r = 1, type, plot = FALSE, dens = 2/p)
 \item{H:}{  Indexes corresponding to missing actors in the original data}}
 }
 \description{
-Function to simulate data and parameters including missing actors. Setting r=1 is advised.
+Simulate data and parameters including missing actors.
 }
 \examples{
 n=100

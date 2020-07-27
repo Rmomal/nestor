@@ -16,6 +16,6 @@ a heatmap
 ggplot heatmap
 }
 \examples{
-Sigma=data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)$Sigma
+Sigma=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=FALSE)$Sigma
 ggimage(Sigma)
 }

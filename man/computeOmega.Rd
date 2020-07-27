@@ -2,7 +2,7 @@
 % Please edit documentation in R/Infer.R
 \name{computeOmega}
 \alias{computeOmega}
-\title{computeOmega}
+\title{Updates the precision terms}
 \usage{
 computeOmega(Pg, Rho, p)
 }
@@ -17,5 +17,5 @@ computeOmega(Pg, Rho, p)
 the market matrix filled with all the precision values common to all spanning trees
 }
 \description{
-Update of the precision terms
+Updates the precision terms
 }
