@@ -413,7 +413,8 @@ Mstep<-function(M, S, Pg, Omega,W, Wg, p,logSTW, logSTWg,  trackJ=FALSE){
 #' #-- initialize the VEM
 #' initList=initVEM(data$Y,cliqueList=initClique,sigma_obs, MO,r=1 )
 #' #-- run core function nestor
-#' with_trackJ=nestor(data$Y, MO,SO, initList=initList, maxIter=5)
+#' fit=nestor(data$Y, MO,SO, initList=initList, maxIter=5,verbatim=1)
+#' str(fit)
 nestor<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1,
                    print.hist=FALSE, trackJ=FALSE){
   n=nrow(MO);  p=ncol(MO);  O=1:ncol(MO)
@@ -438,7 +439,7 @@ nestor<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1,
 
   while(  (diffOmega[iter] > eps) &&   (iter < maxIter) || iter<2 ){
     iter=iter+1
-    if(verbatim) cat(paste0("\n Iter n°", iter))
+    if(verbatim==2) cat(paste0("\n Iter n°", iter))
     #--- VE
     resVE<-VEstep(MO=MO,SO=SO,SH=SH,Omega=Omega,W=W,Wg=Wg,MH=MH,Pg=Pg,logSTW,logSTWg,
               it1=(iter==1),verbatim=verbatim, alpha=alpha, trackJ=trackJ, hist=print.hist)
@@ -548,7 +549,9 @@ nestor<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1,
 #' cliqueList=findcliqueList$cliqueList
 #' length(cliqueList)
 #' #-- run List.nestor
-#' List.nestor(cliqueList,data$Y, sigma_obs, MO,SO, r=1)
+#' fitList=List.nestor(cliqueList,data$Y, sigma_obs, MO,SO, r=1)
+#' length(fitList)
+#' str(fitList[[1]])
 List.nestor<-function(cliqueList, Y, sigma_obs, MO,SO, r,alpha=0.1, cores=1,maxIter=20,eps=1e-3, trackJ=FALSE){
   p=ncol(Y) ; O=1:p ; n=nrow(Y)
   #--- run all initialisations with parallel computation
@@ -557,7 +560,7 @@ List.nestor<-function(cliqueList, Y, sigma_obs, MO,SO, r,alpha=0.1, cores=1,maxI
     init=initVEM(Y = Y, cliqueList=c, sigma_obs,MO,r = r)
    #run nestor
     VEM<- tryCatch({nestor(Y=Y,MO=MO,SO=SO,initList=init, eps=eps, alpha=alpha,maxIter=maxIter,
-                            verbatim = FALSE, print.hist=FALSE, trackJ=trackJ)},
+                            verbatim = 0, print.hist=FALSE, trackJ=trackJ)},
                    error=function(e){e},finally={})
     VEM$clique=c
     return(VEM)

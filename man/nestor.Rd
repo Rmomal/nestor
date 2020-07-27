@@ -56,5 +56,6 @@ initClique=data$TC
 #-- initialize the VEM
 initList=initVEM(data$Y,cliqueList=initClique,sigma_obs, MO,r=1 )
 #-- run core function nestor
-with_trackJ=nestor(data$Y, MO,SO, initList=initList, maxIter=5)
+fit=nestor(data$Y, MO,SO, initList=initList, maxIter=5,verbatim=1)
+str(fit)
 }

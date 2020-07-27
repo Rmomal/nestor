@@ -20,5 +20,6 @@ Runs PLN function from the PLNmodels package and normalized the outputs
 }
 \examples{
  data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
-norm_PLN(data$Y)
+normPLNfit<-norm_PLN(data$Y)
+str(normPLNfit)
 }

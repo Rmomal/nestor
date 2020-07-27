@@ -37,5 +37,6 @@ sigma_obs=PLNfit$sigma_obs
 findclique=FitSparsePCA(data$Y,r=1)
 initClique=findclique$cliques
 #-- initialize the VEM
-initVEM(Y=data$Y,cliqueList=initClique,sigma_obs=sigma_obs, MO=MO,r=1 )
+initList=initVEM(Y=data$Y,cliqueList=initClique,sigma_obs=sigma_obs, MO=MO,r=1 )
+str(initList)
 }

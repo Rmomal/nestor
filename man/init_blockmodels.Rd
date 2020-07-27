@@ -32,6 +32,7 @@ Find initial cliques using blockmodels on the initial marginalized network
 }
 \examples{
 data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+data$TC
 PLNfit<-norm_PLN(data$Y)
 MO<-PLNfit$MO
 SO<-PLNfit$SO

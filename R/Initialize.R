@@ -74,6 +74,7 @@ FitSparsePCA <- function(Y, r=1,minV=1, alphaGrid=10^(seq(-4, 0, by=.1))){
 #' @export
 #'
 #' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+#' data$TC
 #' complement_spca(data$Y,k=2)
 complement_spca<-function(Y,k){
   p=ncol(Y)
@@ -98,7 +99,7 @@ complement_spca<-function(Y,k){
 #' @export
 #' @importFrom parallel mclapply
 #' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
-#' boot_FitSparsePCA(data$Y, B=20, r=1)
+#' boot_FitSparsePCA(data$Y, B=100, r=1)
 boot_FitSparsePCA<-function(Y, B,r, minV=1,cores=1, unique=TRUE){
   cliqueList<-mclapply(1:B, function(x){
     n=nrow(Y); v=0.8; n.sample=round(0.8*n, 0)
@@ -126,7 +127,8 @@ boot_FitSparsePCA<-function(Y, B,r, minV=1,cores=1, unique=TRUE){
 #' @importFrom PLNmodels PLN
 #' @importFrom stats cov2cor
 #' @examples  data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
-#' norm_PLN(data$Y)
+#' normPLNfit<-norm_PLN(data$Y)
+#' str(normPLNfit)
 norm_PLN<-function(Y){
   n=nrow(Y)
   p=ncol(Y)
@@ -157,6 +159,7 @@ norm_PLN<-function(Y){
 #' @importFrom EMtree EMtree
 #' @importFrom stats cov2cor
 #' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+#' data$TC
 #' PLNfit<-norm_PLN(data$Y)
 #' MO<-PLNfit$MO
 #' SO<-PLNfit$SO
@@ -285,7 +288,8 @@ initOmega <- function(Sigma = NULL,  cliqueList,cst=1.1) {
 #' findclique=FitSparsePCA(data$Y,r=1)
 #' initClique=findclique$cliques
 #' #-- initialize the VEM
-#' initVEM(Y=data$Y,cliqueList=initClique,sigma_obs=sigma_obs, MO=MO,r=1 )
+#' initList=initVEM(Y=data$Y,cliqueList=initClique,sigma_obs=sigma_obs, MO=MO,r=1 )
+#' str(initList)
 initVEM<-function(Y,cliqueList,sigma_obs,MO,r){
   p=ncol(Y)
   n=nrow(Y)

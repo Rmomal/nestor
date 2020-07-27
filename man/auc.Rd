@@ -24,7 +24,7 @@ sigma_obs=PLNfit$sigma_obs
 initClique=data$TC
 #-- initialize the VEM
 initList=initVEM(data$Y,cliqueList=initClique,sigma_obs, MO,r=1 )
-nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3)
+nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1)
 #-- obtain criteria
 auc(nestorFit$Pg,data$G)
 }

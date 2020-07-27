@@ -19,5 +19,6 @@ This function aims at efficiently exploring the space of likely cliques when onl
 }
 \examples{
 data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+data$TC
 complement_spca(data$Y,k=2)
 }

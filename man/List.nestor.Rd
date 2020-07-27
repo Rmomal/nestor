@@ -47,5 +47,7 @@ findcliqueList=boot_FitSparsePCA(data$Y, B=5, r=1)
 cliqueList=findcliqueList$cliqueList
 length(cliqueList)
 #-- run List.nestor
-List.nestor(cliqueList,data$Y, sigma_obs, MO,SO, r=1)
+fitList=List.nestor(cliqueList,data$Y, sigma_obs, MO,SO, r=1)
+length(fitList)
+str(fitList[[1]])
 }

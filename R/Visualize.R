@@ -30,7 +30,7 @@ ggimage<-function(data){
 #' initClique=data$TC
 #' #-- initialize the VEM
 #' initList=initVEM(data$Y,cliqueList=initClique,sigma_obs, MO,r=1 )
-#' nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3)
+#' nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1)
 #' #-- obtain criteria
 #' auc(nestorFit$Pg,data$G)
 auc<-function(pred,label){ #require(ROCR)
@@ -66,7 +66,7 @@ auc<-function(pred,label){ #require(ROCR)
 #' initClique=data$TC
 #' #-- initialize the VEM
 #' initList=initVEM(data$Y,cliqueList=initClique,sigma_obs, MO,r=1 )
-#' nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3 )
+#' nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1 )
 #' #-- obtain criteria
 #' ppvtpr(nestorFit$Pg,r=1, data$G)
 ppvtpr<-function(probs,G,r, thresh=0.5){
@@ -103,7 +103,7 @@ ppvtpr<-function(probs,G,r, thresh=0.5){
 #' initClique=data$TC
 #' #-- initialize the VEM
 #' initList=initVEM(data$Y,cliqueList=initClique,sigma_obs, MO,r=1 )
-#' nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3 )
+#' nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1 )
 #' #-- obtain criteria
 #' plotPerf(nestorFit$Pg, data$G,r=1)
 plotPerf<-function(P,G,r,thresh=0.5){
@@ -138,7 +138,7 @@ plotPerf<-function(P,G,r,thresh=0.5){
 #' initClique=data$TC
 #' #-- initialize the VEM
 #' initList=initVEM(data$Y,cliqueList=initClique,sigma_obs, MO,r=1 )
-#' nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3 )
+#' nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3 , verbatim=1)
 #' #-- obtain criteria
 #' plotConv(nestorFit)
 plotConv<-function(nestorFit){
