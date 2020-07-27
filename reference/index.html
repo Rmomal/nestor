@@ -149,11 +149,17 @@
           <p><code><a href="norm_PLN.html">norm_PLN()</a></code> </p>
         </td>
         <td><p>Runs PLN function from the PLNmodels package and normalized the outputs</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="initVEM.html">initVEM()</a></code> </p>
+        </td>
+        <td><p>Initialize all parameters for the variational inference</p></td>
       </tr>
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-tools" class="hasAnchor"><a href="#section-tools" class="anchor"></a>Tools</h2>
+          <h2 id="section-computing-functions" class="hasAnchor"><a href="#section-computing-functions" class="anchor"></a>Computing functions</h2>
           <p class="section-desc"></p>
         </th>
       </tr>
@@ -165,15 +171,69 @@
       <tr>
         
         <td>
-          <p><code><a href="ppvtpr.html">ppvtpr()</a></code> </p>
+          <p><code><a href="VEstep.html">VEstep()</a></code> </p>
         </td>
-        <td><p>Computes precision and recall statistics separating observed from hidden variables, and (FPR,FNR) for hidden variables .</p></td>
+        <td><p>Computes the variational expectation step of the algorithm</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="auc.html">auc()</a></code> </p>
+          <p><code><a href="Mstep.html">Mstep()</a></code> </p>
         </td>
-        <td><p>wraper of auc from ROCR</p></td>
+        <td><p>Computes the maximization step of the algorithm</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="computeOmega.html">computeOmega()</a></code> </p>
+        </td>
+        <td><p>Updates the precision terms</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="computeWg.html">computeWg()</a></code> </p>
+        </td>
+        <td><p>updates the variational edges weights inside the VEM.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="exactMeila.html">exactMeila()</a></code> </p>
+        </td>
+        <td><p>Calculates the Meila matrix using exact computation</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="Kirshner.html">Kirshner()</a></code> </p>
+        </td>
+        <td><p>Computes edges probability from weights W (Kirshner (07) formulas)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="logSumTree.html">logSumTree()</a></code> </p>
+        </td>
+        <td><p>exact computation of matrix tree log determinant</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="LowerBound.html">LowerBound()</a></code> </p>
+        </td>
+        <td><p>Computes the lower bound.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="initOmega.html">initOmega()</a></code> </p>
+        </td>
+        <td><p>Initialize Sigma and Omega using an initial clique of neighbors of the missing actor</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="inverse.gmp.html">inverse.gmp()</a></code> </p>
+        </td>
+        <td><p>Computes exact inverses using gmp package</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="det.fractional.html">det.fractional()</a></code> </p>
+        </td>
+        <td><p>Exact log-determinant computation</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -242,6 +302,31 @@
           <p><code><a href="ggimage.html">ggimage()</a></code> </p>
         </td>
         <td><p>ggplot heatmap</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-tools" class="hasAnchor"><a href="#section-tools" class="anchor"></a>Tools</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="ppvtpr.html">ppvtpr()</a></code> </p>
+        </td>
+        <td><p>Computes precision and recall statistics separating observed from hidden variables, and (FPR,FNR) for hidden variables .</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="auc.html">auc()</a></code> </p>
+        </td>
+        <td><p>wraper of auc from ROCR</p></td>
       </tr>
     </tbody>
     </table>
