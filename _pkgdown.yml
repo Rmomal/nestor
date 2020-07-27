@@ -1,2 +1,30 @@
 destination: docs
 
+reference:
+- title: Main user functions
+  desc: ~
+  contents:
+  - '`nestor`'
+  - '`List.nestor`'
+  - '`missing_from_scratch`'
+  - '`norm_PLN`'
+- title: Tools
+  desc:  ~
+  contents:
+  - '`ppvtpr`'
+  - '`auc`'
+  - '`MLVSBM`'
+- title: Clique initialization
+  desc: ~
+  contents:
+  - '`FitSparsePCA`'
+  - '`boot_FitSparsePCA`'
+  - '`complement_spca`'
+  - '`init_blockmodels`'
+- title: Visualizatoins
+  desc: ~
+  contents:
+  - '`plotPerf`'
+  - '`plotConv`'
+  - '`ggimage`'
+

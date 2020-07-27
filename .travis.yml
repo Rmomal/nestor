@@ -6,13 +6,6 @@ warnings_are_errors: false
 r_check_args: --as-cran
 matrix:
   include:
-    - os: osx
-      r: bioc-release
-      addons:
-        homebrew:
-          packages:
-            -gcc
-          update: true
     - os: linux
       r: bioc-release
       r_packages:
