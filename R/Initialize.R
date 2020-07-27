@@ -138,6 +138,7 @@ norm_PLN<-function(Y){
 #' @param k number of groups
 #' @param poisson boolean for the choice of model of blockmodel. If FALSE, runs bernoulli.
 #' @param alpha tempering parameter
+#' @param cores number of cores
 #'
 #' @return a list of possible cliques
 #' @export
@@ -151,18 +152,18 @@ norm_PLN<-function(Y){
 #' sigma_obs=PLNfit$sigma_obs
 #' #-- initialize with blockmodels
 #' init_blockmodels(data$Y,sigma_obs, MO, SO, k=2 )
-init_blockmodels<-function(Y, sigma_obs, MO, SO, k=3,poisson=FALSE, alpha=0.1){
+init_blockmodels<-function(Y, sigma_obs, MO, SO, k=3,poisson=FALSE, alpha=0.1, cores=1){
   init=initVEM(Y = Y,cliqueList=NULL, cov2cor(sigma_obs),MO,r = 0)
   #--- fit VEMtree with 0 missing actor
   resVEM0<- tryCatch(VEMtree(Y,MO,SO,initList=init, eps=1e-3, alpha=alpha,
                              maxIter=100, plot=FALSE,print.hist=FALSE, verbatim = FALSE,trackJ=FALSE),
                      error=function(e){e}, finally={})
   if(length(resVEM0)>3){
-    sbm.0 <- BM_bernoulli("SBM_sym",1*(resVEM0$Pg>0.5), plotting="", verbosity=0)
+    sbm.0 <- BM_bernoulli("SBM_sym",1*(resVEM0$Pg>0.5), plotting="", verbosity=0,ncores=cores)
   }else{
     p=ncol(Y)
     resEM0 = EMtree(cov2cor(sigma_obs))
-    sbm.0 <- BM_bernoulli("SBM_sym",1*(resEM0$edges_prob>2/p), plotting="", verbosity=0)
+    sbm.0 <- BM_bernoulli("SBM_sym",1*(resEM0$edges_prob>2/p), plotting="", verbosity=0,ncores=1)
   }
   sbm.0$estimate()
   paramEstimSBMPoisson <- extractParamBM(sbm.0,k)
@@ -176,31 +177,28 @@ init_blockmodels<-function(Y, sigma_obs, MO, SO, k=3,poisson=FALSE, alpha=0.1){
 #' extractParamBM
 #'
 #'internal function for initialization with blockmodels
-#' @param BMobject
-#' @param Q
-#'
-#' @return
-#'
-#' @examples
-extractParamBM <- function(BMobject,Q){
+#' @param BMobject object from blickmodels
+#' @param k number of desired groups
+#' @noRd
+extractParamBM <- function(BMobject,k){
   model <- BMobject$model_name
   membership_name <-  BMobject$membership_name
   res <- list()
-  if (model == 'bernoulli') { res$alpha <- BMobject$model_parameters[Q][[1]]$pi}
-  if (model == 'bernoulli_multiplex') { res$alpha <- BMobject$model_parameters[Q][[1]]$pi}
+  if (model == 'bernoulli') { res$alpha <- BMobject$model_parameters[k][[1]]$pi}
+  if (model == 'bernoulli_multiplex') { res$alpha <- BMobject$model_parameters[k][[1]]$pi}
   if ((membership_name == 'SBM') |  (membership_name == 'SBM_sym')) {
-    res$tau <-  BMobject$memberships[[Q]]$Z
+    res$tau <-  BMobject$memberships[[k]]$Z
     res$Z <- apply(res$tau, 1, which.max)
-    n <- nrow(BMobject$memberships[[Q]]$Z)
-    res$pi <-  colSums(BMobject$memberships[[Q]]$Z)/n
-    res$Q <- length(res$pi)
+    n <- nrow(BMobject$memberships[[k]]$Z)
+    res$pi <-  colSums(BMobject$memberships[[k]]$Z)/n
+    res$k <- length(res$pi)
   }
   ########## ordering
   if ((membership_name == 'SBM') |  (membership_name == 'SBM_sym')) {
     o <- switch(model,
                 poisson = order(res$lambda %*% matrix(res$pi,ncol = 1),decreasing = TRUE),
                 bernoulli  =  order(res$alpha %*% matrix(res$pi,ncol = 1),decreasing = TRUE),
-                1:res$Q
+                1:res$k
     )
     res$pi <- res$pi[o]
     res$alpha <- res$alpha[o,o]

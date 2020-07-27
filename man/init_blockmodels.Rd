@@ -5,7 +5,7 @@
 \title{init_blockmodels}
 \usage{
 init_blockmodels(Y, sigma_obs, MO, SO, k = 3, poisson = FALSE,
-  alpha = 0.1)
+  alpha = 0.1, cores = 1)
 }
 \arguments{
 \item{Y}{count data}
@@ -21,6 +21,8 @@ init_blockmodels(Y, sigma_obs, MO, SO, k = 3, poisson = FALSE,
 \item{poisson}{boolean for the choice of model of blockmodel. If FALSE, runs bernoulli.}
 
 \item{alpha}{tempering parameter}
+
+\item{cores}{number of cores}
 }
 \value{
 a list of possible cliques

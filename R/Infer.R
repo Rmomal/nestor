@@ -14,9 +14,8 @@
 #' @param verbatim controls verbosity
 #'
 #' @return The variational edge weights matrix
-#' @export
-#'
-#' @examples
+#' @importFrom graphics par
+#' @nord
 computeWg<-function(Rho,Omega,W,r,n, alpha, hist=FALSE, verbatim=FALSE ){
   q=ncol(Rho); p=q-r; O = 1:p ;   binf=exp(-20) ; bsup=exp(30)
   Wg<-matrix(0,q,q)
@@ -31,7 +30,7 @@ computeWg<-function(Rho,Omega,W,r,n, alpha, hist=FALSE, verbatim=FALSE ){
   gammaO=logWg[O,O]
   if(r!=0) gammaOH=logWg[O,H]
   if(hist){
-    par(mfrow=c(2,1))
+    graphics::par(mfrow=c(2,1))
     hist(gammaO, breaks=20,main="O")
     hist(gammaOH, breaks=20,main="OH")
   }
@@ -197,7 +196,7 @@ Kirshner <- function(W,r, it1, verbatim=FALSE){
 #' \item{det}{ exact log-determinant}
 #' \item{max.prec}{ boolean tracking the reach of maximal precision during computation}}
 #' @noRd
-logSumTree<-function(W){#
+logSumTree<-function(W){
   index=1;  max.prec=FALSE
   mat=EMtree::Laplacian(W)[-index, -index]
   output=det.fractional(mat, log=TRUE)
@@ -333,7 +332,7 @@ VE<-function(MO,SO,SH,Omega,W,Wg,MH,Pg,logSTW,logSTWg, alpha,it1, verbatim,track
 }
 
 #===========
-#' Title
+#' Computes the maximization step of the algorithm
 #'
 #' @param M matrix of means
 #' @param S matrix of marginal variances
@@ -399,7 +398,6 @@ Mstep<-function(M, S, Pg, Omega,W, Wg, p,logSTW, logSTWg,  trackJ=FALSE){
 #' @param eps convergence precision parameter
 #' @param alpha tempering parameter, default to 0.1
 #' @param verbatim boolean for verbosity
-#' @param plot plots parameters convergence and lower bound trajectory if TRUE
 #' @param print.hist prints edges weights histograms at each step if TRUE
 #' @param trackJ computes the lower bound at each parameter update if TRUE. Otherwise, the lower bound is only computed at each new VE step.
 #'
@@ -563,8 +561,9 @@ nestor<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=TRUE
 #' SO<-PLNfit$SO
 #' sigma_obs=PLNfit$sigma_obs
 #' #-- find a list of initial cliques
-#' findcliqueList=boot_FitSparsePCA(data$Y, B=10, r=1)
+#' findcliqueList=boot_FitSparsePCA(data$Y, B=5, r=1)
 #' cliqueList=findcliqueList$cliqueList
+#' length(cliqueList)
 #' #-- run List.nestor
 #' List.nestor(cliqueList,data$Y, sigma_obs, MO,SO, r=1)
 List.nestor<-function(cliqueList, Y, sigma_obs, MO,SO, r,alpha=0.1, cores=1,maxIter=20,eps=1e-3, trackJ=FALSE){

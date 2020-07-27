@@ -27,8 +27,6 @@ nestor(Y, MO, SO, initList, maxIter = 20, eps = 0.01, alpha = 0.1,
 \item{print.hist}{prints edges weights histograms at each step if TRUE}
 
 \item{trackJ}{computes the lower bound at each parameter update if TRUE. Otherwise, the lower bound is only computed at each new VE step.}
-
-\item{plot}{plots parameters convergence and lower bound trajectory if TRUE}
 }
 \value{
 \itemize{

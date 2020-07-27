@@ -2,7 +2,7 @@
 % Please edit documentation in R/Infer.R
 \name{Mstep}
 \alias{Mstep}
-\title{Title}
+\title{Computes the maximization step of the algorithm}
 \usage{
 Mstep(M, S, Pg, Omega, W, Wg, p, logSTW, logSTWg, trackJ = FALSE)
 }
@@ -28,5 +28,5 @@ Mstep(M, S, Pg, Omega, W, Wg, p, logSTW, logSTWg, trackJ = FALSE)
 \item{trackJ}{boolean for evaluating the lower bound at each parameter update}
 }
 \description{
-Title
+Computes the maximization step of the algorithm
 }

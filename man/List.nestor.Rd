@@ -43,8 +43,9 @@ MO<-PLNfit$MO
 SO<-PLNfit$SO
 sigma_obs=PLNfit$sigma_obs
 #-- find a list of initial cliques
-findcliqueList=boot_FitSparsePCA(data$Y, B=10, r=1)
+findcliqueList=boot_FitSparsePCA(data$Y, B=5, r=1)
 cliqueList=findcliqueList$cliqueList
+length(cliqueList)
 #-- run List.nestor
 List.nestor(cliqueList,data$Y, sigma_obs, MO,SO, r=1)
 }

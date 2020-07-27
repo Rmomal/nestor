@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
 [![Codecov test coverage](https://codecov.io/gh/Rmomal/nestor/branch/master/graph/badge.svg)](https://codecov.io/gh/Rmomal/nestor?branch=master)
 <!-- badges: end -->
 
+> nestor 
 The goal of nestor is to infer network of species conditional dependencies from abundances while accounting for possible missing actors in the data.
 
 ## Installation
@@ -33,8 +34,10 @@ devtools::install_github("Rmomal/nestor")
 
 ## Example
 
-```{r example, eval=FALSE}
+```{r example}
 library(nestor)
+library(tibble)
+set.seed(7)
 data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 PLNfit<-norm_PLN(data$Y)
 MO<-PLNfit$MO
@@ -42,14 +45,20 @@ SO<-PLNfit$SO
 sigma_obs=PLNfit$sigma_obs
 data$TC
 #-- find initial clique
-findclique=init_blockmodels(data$Y,sigma_obs, MO, SO, k=3 )
+findclique= boot_FitSparsePCA(scale(MO),B=100,r=1, cores=3)
 initClique=findclique$cliqueList
+ 
 #-- initialize the VEM
-initList=initVEM(data$Y,cliquelist=initClique[[2]],sigma_obs, MO,r=1 )
+initList=initVEM(data$Y,cliqueList=initClique[[1]],sigma_obs, MO,r=1 )
 #-- run one clique from cliqueList
-fit=nestor(data$Y, MO,SO, initList=initList,alpha=0.2, maxIter=15, plot=TRUE, trackJ=FALSE)
-fit$Pg
+fit=nestor(data$Y, MO,SO, initList=initList,alpha=0.1,eps=1e-4, maxIter=30, trackJ=FALSE)
+plotPerf(fit$Pg, data$G,r=1)
+plotConv(nestorFit = fit)
+
 # run all cliques
-List.nestor(initClique, data$Y,sigma_obs, MO,SO,r=1)
+# fitList=List.nestor(initClique, data$Y,sigma_obs, MO,SO,r=1,eps=1e-4, alpha=0.1)
+# do.call(rbind,lapply(fitList, function(vem){
+#  c(auc=auc(vem$Pg, data$G), J=tail(vem$lowbound$J,1))
+# })) %>% as_tibble() %>% ggplot(aes(J,auc))+geom_point()+theme_light()
 ```
 

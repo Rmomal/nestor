@@ -141,7 +141,7 @@ plotPerf<-function(P,G,r,thresh=0.5){
 #' #-- obtain criteria
 #' plotConv(nestorFit)
 plotConv<-function(nestorFit){
-  trackJ=(nrow(nestorFit$lowbound)!=nestorFit$finalIter)
+  trackJ=(nrow(nestorFit$lowbound)>(2*nestorFit$finalIter))
   mytheme.dark <-function(legend){
     list= list(theme_light(), scale_color_brewer(legend,palette="Dark2"),
                scale_fill_brewer(legend,palette="Dark2"),
@@ -161,7 +161,7 @@ plotConv<-function(nestorFit){
       g2<- nestorFit$lowbound %>% tibble::rowid_to_column() %>%  tidyr::gather(key,value,-rowid,-parameter) %>%
         ggplot2::ggplot(aes(rowid,value, group=key))+geom_line()+geom_point(aes(color=as.factor(parameter)), size=2, alpha=0.8)+
         facet_wrap(~key, scales="free")+  labs(x="sub-iteration",y="", title="Lower bound and components")+mytheme.dark("")
-    }else{ g2<- lowbound %>% rowid_to_column() %>%
+    }else{ g2<- nestorFit$lowbound %>% rowid_to_column() %>%
       ggplot2::ggplot(aes(rowid,J ))+geom_line()+geom_point(aes(color=as.factor(parameter)),size=2, alpha=0.8)+
       labs(x="iteration",y="", title="Lower bound")+mytheme+ scale_color_manual("",values="#2976d6")+
       guides(color=FALSE)}

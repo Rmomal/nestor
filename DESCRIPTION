@@ -31,7 +31,10 @@ Imports:
     gridExtra,
     magrittr,
     tibble,
-    reshape2
+    reshape2,
+    gmp,
+    stringr,
+    graphics
 Suggests: 
     covr
 Remotes: git::https://github.com/Rmomal/EMtree

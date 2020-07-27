@@ -10,7 +10,7 @@ pivot.fractional <- function(A, trace=FALSE, inverse=TRUE) {
   det.factors<-rep("1",n+1) # La derniere case est pour le signe (suivant
   # le nombre de permutation des lignes
 
-  for (i in 1:(n)) { # on considère le ième pivot
+  for (i in 1:(n)) { # on considere le ieme pivot
     if(trace){cat("\n - ITÉRATION",i)}
 
     # VÉRIFICATION DE L'EXISTENCE D'UN PIVOT NON NUL DANS LA COLONE COURANTE
@@ -22,7 +22,7 @@ pivot.fractional <- function(A, trace=FALSE, inverse=TRUE) {
         if (trace) {cat("\n\t+ Échange des lignes",i,j)}
         A[c(i,j),] <- A[c(j,i),] # échange des ligne i et j
         det.factors[n+1]<-rcdd::qxq(det.factors[n+1],"-1")
-      } else { # sinon on n'a pas trouvé de pivot non nul: on s'arrête là
+      } else { # sinon on n'a pas trouve de pivot non nul: on s'arrete la
         return(A)
       }
     }
@@ -101,7 +101,7 @@ det.fractional<-function(A,log=TRUE){
   return(output)
 }
 
-#ne pas charger gmp
+
 inverse.gmp<-function(A){
   p<-ncol(A)
   A.inv<-matrix(as.double(solve(gmp::as.bigq(A))),p,p)

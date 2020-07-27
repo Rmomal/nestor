@@ -24,6 +24,9 @@ usethis::use_package("gridExtra")
 usethis::use_package("magrittr")
 usethis::use_package("tibble")
 usethis::use_package("reshape2")
+usethis::use_package("gmp")
+usethis::use_package("stringr")
+usethis::use_package("graphics")
 # readme
 usethis::use_readme_rmd()
 #git link
