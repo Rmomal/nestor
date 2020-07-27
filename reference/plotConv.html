@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>extractParamBM — extractParamBM • nestor</title>
+<title>Plot function for nestor convergence — plotConv • nestor</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="extractParamBM — extractParamBM" />
-<meta property="og:description" content="internal function for initialization with blockmodels" />
+<meta property="og:title" content="Plot function for nestor convergence — plotConv" />
+<meta property="og:description" content="Plot function for nestor convergence" />
 
 
 
@@ -103,27 +103,50 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>extractParamBM</h1>
+    <h1>Plot function for nestor convergence</h1>
     
-    <div class="hidden name"><code>extractParamBM.Rd</code></div>
+    <div class="hidden name"><code>plotConv.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>internal function for initialization with blockmodels</p>
+    <p>Plot function for nestor convergence</p>
     </div>
 
-    <pre class="usage"><span class='fu'>extractParamBM</span>(<span class='no'>BMobject</span>, <span class='no'>Q</span>)</pre>
+    <pre class="usage"><span class='fu'>plotConv</span>(<span class='no'>nestorFit</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>Q</th>
-      <td></td>
+      <th>nestorFit</th>
+      <td><p>a fit from the nestor() function</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    <p>visualiaztion of nestor convergence</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>data</span><span class='kw'>=</span><span class='fu'><a href='missing_from_scratch.html'>missing_from_scratch</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>100</span>,<span class='kw'>p</span><span class='kw'>=</span><span class='fl'>10</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>,<span class='kw'>type</span><span class='kw'>=</span><span class='st'>"scale-free"</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
+<span class='no'>PLNfit</span><span class='kw'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>)</div><div class='output co'>#&gt; 
+#&gt;  Initialization...
+#&gt;  Adjusting a PLN model with full covariance model
+#&gt;  Post-treatments...
+#&gt;  DONE!</div><div class='input'><span class='no'>MO</span><span class='kw'>&lt;-</span><span class='no'>PLNfit</span>$<span class='no'>MO</span>
+<span class='no'>SO</span><span class='kw'>&lt;-</span><span class='no'>PLNfit</span>$<span class='no'>SO</span>
+<span class='no'>sigma_obs</span><span class='kw'>=</span><span class='no'>PLNfit</span>$<span class='no'>sigma_obs</span>
+<span class='co'>#-- use true clique for example</span>
+<span class='no'>initClique</span><span class='kw'>=</span><span class='no'>data</span>$<span class='no'>TC</span>
+<span class='co'>#-- initialize the VEM</span>
+<span class='no'>initList</span><span class='kw'>=</span><span class='fu'><a href='initVEM.html'>initVEM</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>,<span class='kw'>cliqueList</span><span class='kw'>=</span><span class='no'>initClique</span>,<span class='no'>sigma_obs</span>, <span class='no'>MO</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span> )
+<span class='no'>nestorFit</span><span class='kw'>=</span><span class='fu'>nestor</span>(<span class='no'>data</span>$<span class='no'>Y</span>, <span class='no'>MO</span>,<span class='no'>SO</span>, <span class='kw'>initList</span><span class='kw'>=</span><span class='no'>initList</span>, <span class='kw'>maxIter</span><span class='kw'>=</span><span class='fl'>3</span> )</div><div class='output co'>#&gt; 
+#&gt;  Iter n°1 sumP=-3.23e-12
+#&gt;  Iter n°2 sumP=2.74e-13
+#&gt;  Iter n°3 sumP=2.13e-14 sumP=1.49e-13
+#&gt; nestor ran in 0.202secs and 3 iterations.
+#&gt; Final weights difference: 73175219.4339577</div><div class='input'><span class='co'>#-- obtain criteria</span>
+<span class='fu'>plotConv</span>(<span class='no'>nestorFit</span>)</div><div class='img'><img src='plotConv-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

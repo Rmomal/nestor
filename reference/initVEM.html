@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>initVEM — initVEM • nestor</title>
+<title>Initialize all parameters for the variational inference — initVEM • nestor</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="initVEM — initVEM" />
-<meta property="og:description" content="wraper to initialize all parameters for the variational inference" />
+<meta property="og:title" content="Initialize all parameters for the variational inference — initVEM" />
+<meta property="og:description" content="Initialize all parameters for the variational inference" />
 
 
 
@@ -103,26 +103,26 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>initVEM</h1>
+    <h1>Initialize all parameters for the variational inference</h1>
     
     <div class="hidden name"><code>initVEM.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>wraper to initialize all parameters for the variational inference</p>
+    <p>Initialize all parameters for the variational inference</p>
     </div>
 
-    <pre class="usage"><span class='fu'>initVEM</span>(<span class='no'>counts</span>, <span class='no'>cliquelist</span>, <span class='no'>sigma_obs</span>, <span class='no'>MO</span>, <span class='no'>r</span>)</pre>
+    <pre class="usage"><span class='fu'>initVEM</span>(<span class='no'>Y</span>, <span class='no'>cliqueList</span>, <span class='no'>sigma_obs</span>, <span class='no'>MO</span>, <span class='no'>r</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>counts</th>
+      <th>Y</th>
       <td><p>count data matrix</p></td>
     </tr>
     <tr>
-      <th>cliquelist</th>
+      <th>cliqueList</th>
       <td><p>list of initial neighbors for the missing actors</p></td>
     </tr>
     <tr>
@@ -149,6 +149,210 @@
 </ul>
 
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>data</span><span class='kw'>=</span><span class='fu'><a href='missing_from_scratch.html'>missing_from_scratch</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>100</span>,<span class='kw'>p</span><span class='kw'>=</span><span class='fl'>10</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>,<span class='kw'>type</span><span class='kw'>=</span><span class='st'>"scale-free"</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='initVEM-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>PLNfit</span><span class='kw'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>)</div><div class='output co'>#&gt; 
+#&gt;  Initialization...
+#&gt;  Adjusting a PLN model with full covariance model
+#&gt;  Post-treatments...
+#&gt;  DONE!</div><div class='input'><span class='no'>MO</span><span class='kw'>&lt;-</span><span class='no'>PLNfit</span>$<span class='no'>MO</span>
+<span class='no'>sigma_obs</span><span class='kw'>=</span><span class='no'>PLNfit</span>$<span class='no'>sigma_obs</span>
+<span class='co'>#-- find initial clique</span>
+<span class='no'>findclique</span><span class='kw'>=</span><span class='fu'><a href='FitSparsePCA.html'>FitSparsePCA</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>)
+<span class='no'>initClique</span><span class='kw'>=</span><span class='no'>findclique</span>$<span class='no'>cliques</span>
+<span class='co'>#-- initialize the VEM</span>
+<span class='fu'>initVEM</span>(<span class='kw'>Y</span><span class='kw'>=</span><span class='no'>data</span>$<span class='no'>Y</span>,<span class='kw'>cliqueList</span><span class='kw'>=</span><span class='no'>initClique</span>,<span class='kw'>sigma_obs</span><span class='kw'>=</span><span class='no'>sigma_obs</span>, <span class='kw'>MO</span><span class='kw'>=</span><span class='no'>MO</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span> )</div><div class='output co'>#&gt; $Wginit
+#&gt;              [,1]        [,2]        [,3]        [,4]        [,5]        [,6]
+#&gt;  [1,] 0.000000000 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [2,] 0.008264463 0.000000000 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [3,] 0.008264463 0.008264463 0.000000000 0.008264463 0.008264463 0.008264463
+#&gt;  [4,] 0.008264463 0.008264463 0.008264463 0.000000000 0.008264463 0.008264463
+#&gt;  [5,] 0.008264463 0.008264463 0.008264463 0.008264463 0.000000000 0.008264463
+#&gt;  [6,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463 0.000000000
+#&gt;  [7,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [8,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [9,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt; [10,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt; [11,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;              [,7]        [,8]        [,9]       [,10]       [,11]
+#&gt;  [1,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [2,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [3,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [4,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [5,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [6,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [7,] 0.000000000 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [8,] 0.008264463 0.000000000 0.008264463 0.008264463 0.008264463
+#&gt;  [9,] 0.008264463 0.008264463 0.000000000 0.008264463 0.008264463
+#&gt; [10,] 0.008264463 0.008264463 0.008264463 0.000000000 0.008264463
+#&gt; [11,] 0.008264463 0.008264463 0.008264463 0.008264463 0.000000000
+#&gt; 
+#&gt; $Winit
+#&gt;              [,1]        [,2]        [,3]        [,4]        [,5]        [,6]
+#&gt;  [1,] 0.000000000 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [2,] 0.008264463 0.000000000 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [3,] 0.008264463 0.008264463 0.000000000 0.008264463 0.008264463 0.008264463
+#&gt;  [4,] 0.008264463 0.008264463 0.008264463 0.000000000 0.008264463 0.008264463
+#&gt;  [5,] 0.008264463 0.008264463 0.008264463 0.008264463 0.000000000 0.008264463
+#&gt;  [6,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463 0.000000000
+#&gt;  [7,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [8,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [9,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt; [10,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt; [11,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;              [,7]        [,8]        [,9]       [,10]       [,11]
+#&gt;  [1,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [2,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [3,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [4,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [5,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [6,] 0.008264463 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [7,] 0.000000000 0.008264463 0.008264463 0.008264463 0.008264463
+#&gt;  [8,] 0.008264463 0.000000000 0.008264463 0.008264463 0.008264463
+#&gt;  [9,] 0.008264463 0.008264463 0.000000000 0.008264463 0.008264463
+#&gt; [10,] 0.008264463 0.008264463 0.008264463 0.000000000 0.008264463
+#&gt; [11,] 0.008264463 0.008264463 0.008264463 0.008264463 0.000000000
+#&gt; 
+#&gt; $omegainit
+#&gt;                Y1            Y2            Y3            Y4            Y5
+#&gt; Y1   1.747006e+00  7.252212e-01  1.169504e-01  2.843853e-01 -8.419350e-02
+#&gt; Y2   7.252212e-01  3.481795e+00 -3.171333e-01 -4.117795e-01  9.246697e-01
+#&gt; Y3   1.169504e-01 -3.171333e-01  3.266944e+00 -4.777389e-03  3.290333e-01
+#&gt; Y4   2.843853e-01 -4.117795e-01 -4.777389e-03  2.556723e+00 -1.212985e-01
+#&gt; Y5  -8.419350e-02  9.246697e-01  3.290333e-01 -1.212985e-01  1.572518e+00
+#&gt; Y6  -3.663386e-01  1.747845e+00 -2.186727e-01 -3.945678e-01  1.214661e-01
+#&gt; Y7   1.993079e-01 -4.544803e-01  1.151620e-01  1.642802e+00 -1.480259e-01
+#&gt; Y8   1.213876e-01  7.024202e-02  2.493038e+00  1.635117e-01  2.638548e-01
+#&gt; Y9  -2.026871e-01  2.048347e-01 -1.844469e-01 -6.481317e-01 -2.699313e-01
+#&gt; Y10  1.706475e-01 -2.439574e-01  1.061920e-01 -3.774949e-02  1.191343e-01
+#&gt;     -3.228907e-16  1.740688e-15 -8.465336e-15 -5.205136e-15 -1.989305e-16
+#&gt;                Y6          Y7           Y8            Y9           Y10
+#&gt; Y1  -3.663386e-01   0.1993079   0.12138755 -2.026871e-01  1.706475e-01
+#&gt; Y2   1.747845e+00  -0.4544803   0.07024202  2.048347e-01 -2.439574e-01
+#&gt; Y3  -2.186727e-01   0.1151620   2.49303783 -1.844469e-01  1.061920e-01
+#&gt; Y4  -3.945678e-01   1.6428020   0.16351171 -6.481317e-01 -3.774949e-02
+#&gt; Y5   1.214661e-01  -0.1480259   0.26385479 -2.699313e-01  1.191343e-01
+#&gt; Y6   2.611768e+00  -0.3178252  -0.10636206  7.662231e-01 -2.402625e-01
+#&gt; Y7  -3.178252e-01   9.6421637   7.21972353 -4.552767e-01  1.989150e-01
+#&gt; Y8  -1.063621e-01   7.2197235  10.67290307  2.734004e-02  3.080499e-01
+#&gt; Y9   7.662231e-01  -0.4552767   0.02734004  1.780205e+00 -6.530745e-01
+#&gt; Y10 -2.402625e-01   0.1989150   0.30804990 -6.530745e-01  1.548201e+00
+#&gt;      1.812907e-15 -10.4637517 -10.46375169  2.802504e-15  3.156017e-16
+#&gt;                  
+#&gt; Y1  -1.303925e-15
+#&gt; Y2   1.805032e-15
+#&gt; Y3  -1.160618e-15
+#&gt; Y4  -7.358080e-15
+#&gt; Y5   5.603884e-16
+#&gt; Y6   2.265762e-15
+#&gt; Y7  -1.046375e+01
+#&gt; Y8  -1.046375e+01
+#&gt; Y9   2.900370e-15
+#&gt; Y10 -1.198382e-15
+#&gt;      1.479798e+01
+#&gt; 
+#&gt; $MHinit
+#&gt;               [,1]
+#&gt;   [1,] -1.64768541
+#&gt;   [2,] -0.39628630
+#&gt;   [3,]  1.24219514
+#&gt;   [4,] -1.01661605
+#&gt;   [5,] -0.07919685
+#&gt;   [6,]  1.70108099
+#&gt;   [7,]  0.88828975
+#&gt;   [8,]  0.24227194
+#&gt;   [9,] -0.52906782
+#&gt;  [10,] -0.31418824
+#&gt;  [11,] -0.04023951
+#&gt;  [12,] -0.87414851
+#&gt;  [13,]  0.29356096
+#&gt;  [14,] -1.62227574
+#&gt;  [15,]  0.64609653
+#&gt;  [16,]  2.09399005
+#&gt;  [17,] -0.45636948
+#&gt;  [18,] -0.62877296
+#&gt;  [19,] -1.55328677
+#&gt;  [20,] -0.48182342
+#&gt;  [21,] -0.86757077
+#&gt;  [22,] -0.37688328
+#&gt;  [23,] -0.82992606
+#&gt;  [24,] -0.47614345
+#&gt;  [25,]  1.03707891
+#&gt;  [26,] -0.74037553
+#&gt;  [27,] -0.29168503
+#&gt;  [28,] -1.79686190
+#&gt;  [29,] -0.10327493
+#&gt;  [30,] -1.21616827
+#&gt;  [31,]  0.32053738
+#&gt;  [32,]  0.32371190
+#&gt;  [33,]  0.86821272
+#&gt;  [34,]  0.58030841
+#&gt;  [35,] -0.24407573
+#&gt;  [36,] -0.73254821
+#&gt;  [37,] -0.64815571
+#&gt;  [38,] -0.44031093
+#&gt;  [39,] -0.62310263
+#&gt;  [40,] -0.89326345
+#&gt;  [41,] -0.13521129
+#&gt;  [42,] -0.56354405
+#&gt;  [43,]  0.24940850
+#&gt;  [44,]  0.18981843
+#&gt;  [45,] -0.53791909
+#&gt;  [46,] -0.23933868
+#&gt;  [47,]  0.43160988
+#&gt;  [48,] -0.10630570
+#&gt;  [49,]  0.57830129
+#&gt;  [50,] -0.12747934
+#&gt;  [51,]  1.26107915
+#&gt;  [52,] -1.25467785
+#&gt;  [53,]  0.36488369
+#&gt;  [54,] -1.04895100
+#&gt;  [55,]  0.49096654
+#&gt;  [56,]  0.63052277
+#&gt;  [57,]  0.50175944
+#&gt;  [58,] -0.76478252
+#&gt;  [59,] -0.89433315
+#&gt;  [60,]  0.10285578
+#&gt;  [61,] -0.13184232
+#&gt;  [62,]  0.59645111
+#&gt;  [63,] -0.03089217
+#&gt;  [64,]  0.51853286
+#&gt;  [65,]  0.54801672
+#&gt;  [66,]  0.28070971
+#&gt;  [67,] -1.43363088
+#&gt;  [68,] -0.63038858
+#&gt;  [69,]  1.65892535
+#&gt;  [70,] -0.40483989
+#&gt;  [71,] -0.51526552
+#&gt;  [72,]  1.68718515
+#&gt;  [73,] -0.17553056
+#&gt;  [74,] -0.26089618
+#&gt;  [75,] -0.83084041
+#&gt;  [76,]  0.46113033
+#&gt;  [77,]  0.13635399
+#&gt;  [78,]  0.50528024
+#&gt;  [79,] -0.34194113
+#&gt;  [80,]  0.12063984
+#&gt;  [81,]  1.16343737
+#&gt;  [82,] -0.30935266
+#&gt;  [83,]  1.04317458
+#&gt;  [84,]  0.71106778
+#&gt;  [85,] -0.45463538
+#&gt;  [86,] -0.02054149
+#&gt;  [87,] -0.49942075
+#&gt;  [88,]  1.14040011
+#&gt;  [89,]  0.83220209
+#&gt;  [90,]  2.00139066
+#&gt;  [91,] -0.66894531
+#&gt;  [92,]  0.87330742
+#&gt;  [93,]  0.01590066
+#&gt;  [94,]  0.32655747
+#&gt;  [95,]  0.41023995
+#&gt;  [96,]  0.60979700
+#&gt;  [97,] -0.61646016
+#&gt;  [98,] -0.70507329
+#&gt;  [99,]  0.08487835
+#&gt; [100,]  0.20002750
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>initEM — initEM • nestor</title>
+<title>Computes the maximization step of the algorithm — Mstep • nestor</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,8 @@
 
 
 
-<meta property="og:title" content="initEM — initEM" />
-<meta property="og:description" content="Initialize Sigma and Omega by taking the principal component of cliques as initial value for the hidden variables.
-The PCA is done on the correaltion matrix, the variance of hidden variables are set to the empirical variances of the pca.
-The corresponding precision term in omega is set to 1 for identifiability reasons." />
+<meta property="og:title" content="Computes the maximization step of the algorithm — Mstep" />
+<meta property="og:description" content="Computes the maximization step of the algorithm" />
 
 
 
@@ -105,44 +103,61 @@ The corresponding precision term in omega is set to 1 for identifiability reason
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>initEM</h1>
+    <h1>Computes the maximization step of the algorithm</h1>
     
-    <div class="hidden name"><code>initEM.Rd</code></div>
+    <div class="hidden name"><code>Mstep.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Initialize Sigma and Omega by taking the principal component of cliques as initial value for the hidden variables.
-The PCA is done on the correaltion matrix, the variance of hidden variables are set to the empirical variances of the pca.
-The corresponding precision term in omega is set to 1 for identifiability reasons.</p>
+    <p>Computes the maximization step of the algorithm</p>
     </div>
 
-    <pre class="usage"><span class='fu'>initEM</span>(<span class='kw'>Sigma</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cst</span> <span class='kw'>=</span> <span class='fl'>1.1</span>, <span class='no'>cliqueList</span>)</pre>
+    <pre class="usage"><span class='fu'>Mstep</span>(<span class='no'>M</span>, <span class='no'>S</span>, <span class='no'>Pg</span>, <span class='no'>Omega</span>, <span class='no'>W</span>, <span class='no'>Wg</span>, <span class='no'>p</span>, <span class='no'>logSTW</span>, <span class='no'>logSTWg</span>, <span class='kw'>trackJ</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>Sigma</th>
-      <td><p>variance-covariance matrix (p x p)</p></td>
+      <th>M</th>
+      <td><p>matrix of means</p></td>
     </tr>
     <tr>
-      <th>cst</th>
-      <td><p>small constant for positive definiteness</p></td>
+      <th>S</th>
+      <td><p>matrix of marginal variances</p></td>
     </tr>
     <tr>
-      <th>cliqueList</th>
-      <td><p>list of found cliques, given as vectorss of nodes indices</p></td>
+      <th>Pg</th>
+      <td><p>matrix of edges probabilities</p></td>
+    </tr>
+    <tr>
+      <th>Omega</th>
+      <td><p>matrix gathering the precision terms</p></td>
+    </tr>
+    <tr>
+      <th>W</th>
+      <td><p>edges weights matrix</p></td>
+    </tr>
+    <tr>
+      <th>Wg</th>
+      <td><p>variational weights matrix</p></td>
+    </tr>
+    <tr>
+      <th>p</th>
+      <td><p>number of observed species</p></td>
+    </tr>
+    <tr>
+      <th>logSTW</th>
+      <td><p>log-sum tree of the W matrix</p></td>
+    </tr>
+    <tr>
+      <th>logSTWg</th>
+      <td><p>log-sum tree of the Wg matrix</p></td>
+    </tr>
+    <tr>
+      <th>trackJ</th>
+      <td><p>boolean for evaluating the lower bound at each parameter update</p></td>
     </tr>
     </table>
-
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    
-<ul>
-<li><p>Sigma0: initial value of complete covariance matrix ((p+r)x(p+r) matrix)</p></li>
-<li><p>K0: initial value of complete precision matrix ((p+r)x(p+r) matrix)</p></li>
-<li><p>clique: vector containing the indices of the nodes in the clique</p></li>
-</ul>
 
 
   </div>

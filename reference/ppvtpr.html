@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>computeWg — computeWg • nestor</title>
+<title>Computes precision and recall statistics separating observed from hidden variables, and (FPR,FNR) for hidden variables . — ppvtpr • nestor</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="computeWg — computeWg" />
-<meta property="og:description" content="Central function for the update of the variational edges weights inside the VEM." />
+<meta property="og:title" content="Computes precision and recall statistics separating observed from hidden variables, and (FPR,FNR) for hidden variables . — ppvtpr" />
+<meta property="og:description" content="Computes precision and recall statistics separating observed from hidden variables, and (FPR,FNR) for hidden variables ." />
 
 
 
@@ -103,58 +103,96 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>computeWg</h1>
+    <h1>Computes precision and recall statistics separating observed from hidden variables, and (FPR,FNR) for hidden variables .</h1>
     
-    <div class="hidden name"><code>computeWg.Rd</code></div>
+    <div class="hidden name"><code>ppvtpr.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Central function for the update of the variational edges weights inside the VEM.</p>
+    <p>Computes precision and recall statistics separating observed from hidden variables, and (FPR,FNR) for hidden variables .</p>
     </div>
 
-    <pre class="usage"><span class='fu'>computeWg</span>(<span class='no'>Rho</span>, <span class='no'>Omega</span>, <span class='no'>W</span>, <span class='no'>r</span>, <span class='no'>n</span>, <span class='no'>alpha</span>, <span class='kw'>hist</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbatim</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>ppvtpr</span>(<span class='no'>probs</span>, <span class='no'>G</span>, <span class='no'>r</span>, <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>Rho</th>
-      <td><p>Correlation matrix</p></td>
+      <th>probs</th>
+      <td><p>matrix of estimated edges probabilities</p></td>
     </tr>
     <tr>
-      <th>Omega</th>
-      <td><p>Market matrix filled with all the precision values common to all spanning trees</p></td>
-    </tr>
-    <tr>
-      <th>W</th>
-      <td><p>Edge weight matrix</p></td>
+      <th>G</th>
+      <td><p>original graph</p></td>
     </tr>
     <tr>
       <th>r</th>
       <td><p>number of missing actors</p></td>
     </tr>
     <tr>
-      <th>n</th>
-      <td><p>number of samples</p></td>
-    </tr>
-    <tr>
-      <th>alpha</th>
-      <td><p>tempering parameter</p></td>
-    </tr>
-    <tr>
-      <th>hist</th>
-      <td><p>should the histogram of the log-values of OO blocs and OH blocs be printed ?</p></td>
-    </tr>
-    <tr>
-      <th>verbatim</th>
-      <td><p>controls verbosity</p></td>
+      <th>thresh</th>
+      <td><p>required threshold for criteria computations, default to 0.5</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The variational edge weights matrix</p>
+    
+<ul>
+<li><p>PPV Precision of the whole data</p></li>
+<li><p>PPVH Precision regarding observed data</p></li>
+<li><p>PPVO Precision regarding hidden data</p></li>
+<li><p>TPR Recall of the whole data</p></li>
+<li><p>TPRH Recall regarding observed data</p></li>
+<li><p>TPRO Recall regarding hidden data</p></li>
+<li><p>FPRH False Positive Rate of hidden data</p></li>
+<li><p>FNRH False Negative Rate of hidden data</p></li>
+</ul>
 
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>data</span><span class='kw'>=</span><span class='fu'><a href='missing_from_scratch.html'>missing_from_scratch</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>100</span>,<span class='kw'>p</span><span class='kw'>=</span><span class='fl'>10</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>,<span class='kw'>type</span><span class='kw'>=</span><span class='st'>"scale-free"</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
+<span class='no'>PLNfit</span><span class='kw'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>)</div><div class='output co'>#&gt; 
+#&gt;  Initialization...
+#&gt;  Adjusting a PLN model with full covariance model
+#&gt;  Post-treatments...
+#&gt;  DONE!</div><div class='input'><span class='no'>MO</span><span class='kw'>&lt;-</span><span class='no'>PLNfit</span>$<span class='no'>MO</span>
+<span class='no'>SO</span><span class='kw'>&lt;-</span><span class='no'>PLNfit</span>$<span class='no'>SO</span>
+<span class='no'>sigma_obs</span><span class='kw'>=</span><span class='no'>PLNfit</span>$<span class='no'>sigma_obs</span>
+<span class='co'>#-- use true clique for example</span>
+<span class='no'>initClique</span><span class='kw'>=</span><span class='no'>data</span>$<span class='no'>TC</span>
+<span class='co'>#-- initialize the VEM</span>
+<span class='no'>initList</span><span class='kw'>=</span><span class='fu'><a href='initVEM.html'>initVEM</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>,<span class='kw'>cliqueList</span><span class='kw'>=</span><span class='no'>initClique</span>,<span class='no'>sigma_obs</span>, <span class='no'>MO</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span> )
+<span class='no'>nestorFit</span><span class='kw'>=</span><span class='fu'>nestor</span>(<span class='no'>data</span>$<span class='no'>Y</span>, <span class='no'>MO</span>,<span class='no'>SO</span>, <span class='kw'>initList</span><span class='kw'>=</span><span class='no'>initList</span>, <span class='kw'>maxIter</span><span class='kw'>=</span><span class='fl'>3</span> )</div><div class='output co'>#&gt; 
+#&gt;  Iter n°1 sumP=-3.5e-10
+#&gt;  Iter n°2 sumP=1.33e-11
+#&gt;  Iter n°3 sumP=-7.64e-12 sumP=-3.88e-11
+#&gt; nestor ran in 0.216secs and 3 iterations.
+#&gt; Final weights difference: 108745286.680112</div><div class='input'><span class='co'>#-- obtain criteria</span>
+<span class='fu'>ppvtpr</span>(<span class='no'>nestorFit</span>$<span class='no'>Pg</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>, <span class='no'>data</span>$<span class='no'>G</span>)</div><div class='output co'>#&gt; $PPV
+#&gt; [1] 1
+#&gt; 
+#&gt; $PPVH
+#&gt; [1] 1
+#&gt; 
+#&gt; $PPVO
+#&gt; [1] 1
+#&gt; 
+#&gt; $TPR
+#&gt; [1] 1
+#&gt; 
+#&gt; $TPRH
+#&gt; [1] 1
+#&gt; 
+#&gt; $TPRO
+#&gt; [1] 1
+#&gt; 
+#&gt; $FPRH
+#&gt; [1] 0
+#&gt; 
+#&gt; $FNRH
+#&gt; [1] 0
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

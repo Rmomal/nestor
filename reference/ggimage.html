@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>computeWg — computeWg • nestor</title>
+<title>ggplot heatmap — ggimage • nestor</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="computeWg — computeWg" />
-<meta property="og:description" content="Central function for the update of the variational edges weights inside the VEM." />
+<meta property="og:title" content="ggplot heatmap — ggimage" />
+<meta property="og:description" content="ggplot heatmap" />
 
 
 
@@ -103,58 +103,32 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>computeWg</h1>
+    <h1>ggplot heatmap</h1>
     
-    <div class="hidden name"><code>computeWg.Rd</code></div>
+    <div class="hidden name"><code>ggimage.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Central function for the update of the variational edges weights inside the VEM.</p>
+    <p>ggplot heatmap</p>
     </div>
 
-    <pre class="usage"><span class='fu'>computeWg</span>(<span class='no'>Rho</span>, <span class='no'>Omega</span>, <span class='no'>W</span>, <span class='no'>r</span>, <span class='no'>n</span>, <span class='no'>alpha</span>, <span class='kw'>hist</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbatim</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>ggimage</span>(<span class='no'>data</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>Rho</th>
-      <td><p>Correlation matrix</p></td>
-    </tr>
-    <tr>
-      <th>Omega</th>
-      <td><p>Market matrix filled with all the precision values common to all spanning trees</p></td>
-    </tr>
-    <tr>
-      <th>W</th>
-      <td><p>Edge weight matrix</p></td>
-    </tr>
-    <tr>
-      <th>r</th>
-      <td><p>number of missing actors</p></td>
-    </tr>
-    <tr>
-      <th>n</th>
-      <td><p>number of samples</p></td>
-    </tr>
-    <tr>
-      <th>alpha</th>
-      <td><p>tempering parameter</p></td>
-    </tr>
-    <tr>
-      <th>hist</th>
-      <td><p>should the histogram of the log-values of OO blocs and OH blocs be printed ?</p></td>
-    </tr>
-    <tr>
-      <th>verbatim</th>
-      <td><p>controls verbosity</p></td>
+      <th>data</th>
+      <td><p>input matrix</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The variational edge weights matrix</p>
+    <p>a heatmap</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>Sigma</span><span class='kw'>=</span><span class='no'>data</span><span class='kw'>=</span><span class='fu'><a href='missing_from_scratch.html'>missing_from_scratch</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>100</span>,<span class='kw'>p</span><span class='kw'>=</span><span class='fl'>10</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>,<span class='kw'>type</span><span class='kw'>=</span><span class='st'>"scale-free"</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>TRUE</span>)$<span class='no'>Sigma</span></div><div class='img'><img src='ggimage-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>ggimage</span>(<span class='no'>Sigma</span>)</div><div class='img'><img src='ggimage-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

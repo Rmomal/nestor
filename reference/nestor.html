@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>init_blockmodels — init_blockmodels • nestor</title>
+<title>Core function of nestor. — nestor • nestor</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="init_blockmodels — init_blockmodels" />
-<meta property="og:description" content="Find initial cliques using blockmodels on the initial network (possibly inferred using EMtree or VEMtree with r=0)" />
+<meta property="og:title" content="Core function of nestor. — nestor" />
+<meta property="og:description" content="Core function of nestor." />
 
 
 
@@ -103,85 +103,101 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>init_blockmodels</h1>
+    <h1>Core function of nestor.</h1>
     
-    <div class="hidden name"><code>init_blockmodels.Rd</code></div>
+    <div class="hidden name"><code>nestor.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Find initial cliques using blockmodels on the initial network (possibly inferred using EMtree or VEMtree with r=0)</p>
+    <p>Core function of nestor.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>init_blockmodels</span>(<span class='no'>Y</span>, <span class='no'>sigma_obs</span>, <span class='no'>MO</span>, <span class='no'>SO</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>poisson</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    <pre class="usage"><span class='fu'>nestor</span>(<span class='no'>Y</span>, <span class='no'>MO</span>, <span class='no'>SO</span>, <span class='no'>initList</span>, <span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>eps</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
+  <span class='kw'>verbatim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>print.hist</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>trackJ</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>Y</th>
-      <td><p>count data</p></td>
-    </tr>
-    <tr>
-      <th>sigma_obs</th>
-      <td><p>original covariance matrix estimate</p></td>
+      <td><p>count dataset</p></td>
     </tr>
     <tr>
       <th>MO</th>
-      <td><p>original observed means estimate</p></td>
+      <td><p>estimated means from norm_PLN</p></td>
     </tr>
     <tr>
       <th>SO</th>
-      <td><p>original observed marginal variances estimate</p></td>
+      <td><p>estimated marginal vairances from norm_PLN</p></td>
     </tr>
     <tr>
-      <th>k</th>
-      <td><p>number of groups</p></td>
+      <th>initList</th>
+      <td><p>result from initVEM</p></td>
     </tr>
     <tr>
-      <th>poisson</th>
-      <td><p>boolean for the choice of model of blockmodel. If FALSE, runs bernoulli.</p></td>
+      <th>maxIter</th>
+      <td><p>maximun number of iterations</p></td>
+    </tr>
+    <tr>
+      <th>eps</th>
+      <td><p>convergence precision parameter</p></td>
     </tr>
     <tr>
       <th>alpha</th>
-      <td><p>tempering parameter</p></td>
+      <td><p>tempering parameter, default to 0.1</p></td>
     </tr>
     <tr>
-      <th>cores</th>
-      <td><p>number of cores</p></td>
+      <th>verbatim</th>
+      <td><p>boolean for verbosity</p></td>
+    </tr>
+    <tr>
+      <th>print.hist</th>
+      <td><p>prints edges weights histograms at each step if TRUE</p></td>
+    </tr>
+    <tr>
+      <th>trackJ</th>
+      <td><p>computes the lower bound at each parameter update if TRUE. Otherwise, the lower bound is only computed at each new VE step.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list of possible cliques</p>
+    
+<ul>
+<li><p>M estimated means</p></li>
+<li><p>S estimated marginal variances</p></li>
+<li><p>Pg edges probabilities</p></li>
+<li><p>Wgedges variational weights</p></li>
+<li><p>W edges weights</p></li>
+<li><p>Omega market matrix filled with precision terms common to all spanning trees</p></li>
+<li><p>lowbound table containing the lowerbound trajectory</p></li>
+<li><p>features table containing the parametes trajectory</p></li>
+<li><p>finalIter number of iterations until convergence was reached</p></li>
+<li><p>time running time of the VEM</p></li>
+<li><p>max.prec boolean for reach of maximal precision reached during the VEM fit</p></li>
+</ul>
+
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>data</span><span class='kw'>=</span><span class='fu'><a href='missing_from_scratch.html'>missing_from_scratch</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>100</span>,<span class='kw'>p</span><span class='kw'>=</span><span class='fl'>10</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>,<span class='kw'>type</span><span class='kw'>=</span><span class='st'>"scale-free"</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='init_blockmodels-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>PLNfit</span><span class='kw'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>)</div><div class='output co'>#&gt; 
+    <pre class="examples"><div class='input'><span class='no'>data</span><span class='kw'>=</span><span class='fu'><a href='missing_from_scratch.html'>missing_from_scratch</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>100</span>,<span class='kw'>p</span><span class='kw'>=</span><span class='fl'>10</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>,<span class='kw'>type</span><span class='kw'>=</span><span class='st'>"scale-free"</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
+<span class='no'>PLNfit</span><span class='kw'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>)</div><div class='output co'>#&gt; 
 #&gt;  Initialization...
 #&gt;  Adjusting a PLN model with full covariance model
 #&gt;  Post-treatments...
 #&gt;  DONE!</div><div class='input'><span class='no'>MO</span><span class='kw'>&lt;-</span><span class='no'>PLNfit</span>$<span class='no'>MO</span>
 <span class='no'>SO</span><span class='kw'>&lt;-</span><span class='no'>PLNfit</span>$<span class='no'>SO</span>
 <span class='no'>sigma_obs</span><span class='kw'>=</span><span class='no'>PLNfit</span>$<span class='no'>sigma_obs</span>
-<span class='co'>#-- initialize with blockmodels</span>
-<span class='fu'>init_blockmodels</span>(<span class='no'>data</span>$<span class='no'>Y</span>,<span class='no'>sigma_obs</span>, <span class='no'>MO</span>, <span class='no'>SO</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>2</span> )</div><div class='output co'>#&gt; 
-#&gt; Likelihoods: -12.94245 , -12.89614 , -12.896 , -12.89594 , 
-#&gt; Convergence took 0.26 secs  and  4  iterations.
-#&gt; Likelihood difference = 6.29921e-05 
-#&gt; Betas difference = 1.779993e-08
-#&gt; </div><div class='output co'>#&gt; $cliqueList
-#&gt; $cliqueList[[1]]
-#&gt; $cliqueList[[1]][[1]]
-#&gt; [1]  1  2  3  5  6  7 10
-#&gt; 
-#&gt; 
-#&gt; $cliqueList[[2]]
-#&gt; $cliqueList[[2]][[1]]
-#&gt; [1] 4 8 9
-#&gt; 
-#&gt; 
-#&gt; </div></pre>
+<span class='co'>#-- initialize with true clique for example</span>
+<span class='no'>initClique</span><span class='kw'>=</span><span class='no'>data</span>$<span class='no'>TC</span>
+<span class='co'>#-- initialize the VEM</span>
+<span class='no'>initList</span><span class='kw'>=</span><span class='fu'><a href='initVEM.html'>initVEM</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>,<span class='kw'>cliqueList</span><span class='kw'>=</span><span class='no'>initClique</span>,<span class='no'>sigma_obs</span>, <span class='no'>MO</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span> )
+<span class='co'>#-- run core function nestor</span>
+<span class='no'>with_trackJ</span><span class='kw'>=</span><span class='fu'>nestor</span>(<span class='no'>data</span>$<span class='no'>Y</span>, <span class='no'>MO</span>,<span class='no'>SO</span>, <span class='kw'>initList</span><span class='kw'>=</span><span class='no'>initList</span>, <span class='kw'>maxIter</span><span class='kw'>=</span><span class='fl'>5</span>)</div><div class='output co'>#&gt; 
+#&gt;  Iter n°1 sumP=-2.17e-13
+#&gt;  Iter n°2 sumP=1.42e-14
+#&gt;  Iter n°3 sumP=7.11e-14 sumP=-3.55e-14
+#&gt; nestor ran in 0.198secs and 3 iterations.
+#&gt; Final weights difference: 72741094.2540323</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
