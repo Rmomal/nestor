@@ -162,7 +162,18 @@
 <span class='no'>p</span><span class='kw'>=</span><span class='fl'>10</span>
 <span class='no'>r</span><span class='kw'>=</span><span class='fl'>1</span>
 <span class='no'>type</span><span class='kw'>=</span><span class='st'>"scale-free"</span>
-<span class='no'>data</span><span class='kw'>=</span><span class='fu'>missing_from_scratch</span>(<span class='no'>n</span>,<span class='no'>p</span>,<span class='no'>r</span>,<span class='no'>type</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='missing_from_scratch-1.png' alt='' width='700' height='433' /></div></pre>
+<span class='no'>data</span><span class='kw'>=</span><span class='fu'>missing_from_scratch</span>(<span class='no'>n</span>,<span class='no'>p</span>,<span class='no'>r</span>,<span class='no'>type</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='missing_from_scratch-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>data</span>)</div><div class='output co'>#&gt; List of 7
+#&gt;  $ Y    : int [1:100, 1:10] 5 14 7 8 1 39 6 95 18 14 ...
+#&gt;  $ UH   : num [1:100] 0.11 -0.508 1.11 0.319 0.607 ...
+#&gt;  $ Sigma: num [1:10, 1:10] 0.978 0.409 0.269 -0.245 0.409 ...
+#&gt;  $ Omega: num [1:11, 1:11] 3.23 8.08e-01 -2.58e-16 7.34e-16 4.22e-16 ...
+#&gt;  $ G    : num [1:11, 1:11] 0 0 0 0 0 1 0 0 0 1 ...
+#&gt;   ..- attr(*, "dimnames")=List of 2
+#&gt;   .. ..$ : NULL
+#&gt;   .. ..$ : NULL
+#&gt;  $ TC   :List of 1
+#&gt;   ..$ : int [1:5] 1 2 3 5 7
+#&gt;  $ H    : int 2</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

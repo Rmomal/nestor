@@ -140,11 +140,8 @@
 <span class='no'>initClique</span><span class='kw'>=</span><span class='no'>data</span>$<span class='no'>TC</span>
 <span class='co'>#-- initialize the VEM</span>
 <span class='no'>initList</span><span class='kw'>=</span><span class='fu'><a href='initVEM.html'>initVEM</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>,<span class='kw'>cliqueList</span><span class='kw'>=</span><span class='no'>initClique</span>,<span class='no'>sigma_obs</span>, <span class='no'>MO</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span> )
-<span class='no'>nestorFit</span><span class='kw'>=</span><span class='fu'>nestor</span>(<span class='no'>data</span>$<span class='no'>Y</span>, <span class='no'>MO</span>,<span class='no'>SO</span>, <span class='kw'>initList</span><span class='kw'>=</span><span class='no'>initList</span>, <span class='kw'>maxIter</span><span class='kw'>=</span><span class='fl'>3</span> )</div><div class='output co'>#&gt; 
-#&gt;  Iter n°1
-#&gt;  Iter n°2
-#&gt;  Iter n°3
-#&gt; nestor ran in 0.201secs and 3 iterations.</div><div class='input'><span class='co'>#-- obtain criteria</span>
+<span class='no'>nestorFit</span><span class='kw'>=</span><span class='fu'>nestor</span>(<span class='no'>data</span>$<span class='no'>Y</span>, <span class='no'>MO</span>,<span class='no'>SO</span>, <span class='kw'>initList</span><span class='kw'>=</span><span class='no'>initList</span>, <span class='kw'>maxIter</span><span class='kw'>=</span><span class='fl'>3</span> , <span class='kw'>verbatim</span><span class='kw'>=</span><span class='fl'>1</span>)</div><div class='output co'>#&gt; 
+#&gt; nestor ran in 0.198secs and 3 iterations.</div><div class='input'><span class='co'>#-- obtain criteria</span>
 <span class='fu'>plotConv</span>(<span class='no'>nestorFit</span>)</div><div class='img'><img src='plotConv-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

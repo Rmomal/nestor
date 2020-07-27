@@ -192,13 +192,29 @@
 <span class='co'>#-- initialize the VEM</span>
 <span class='no'>initList</span><span class='kw'>=</span><span class='fu'><a href='initVEM.html'>initVEM</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>,<span class='kw'>cliqueList</span><span class='kw'>=</span><span class='no'>initClique</span>,<span class='no'>sigma_obs</span>, <span class='no'>MO</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span> )
 <span class='co'>#-- run core function nestor</span>
-<span class='no'>with_trackJ</span><span class='kw'>=</span><span class='fu'>nestor</span>(<span class='no'>data</span>$<span class='no'>Y</span>, <span class='no'>MO</span>,<span class='no'>SO</span>, <span class='kw'>initList</span><span class='kw'>=</span><span class='no'>initList</span>, <span class='kw'>maxIter</span><span class='kw'>=</span><span class='fl'>5</span>)</div><div class='output co'>#&gt; 
-#&gt;  Iter n°1
-#&gt;  Iter n°2
-#&gt;  Iter n°3
-#&gt;  Iter n°4
-#&gt;  Iter n°5
-#&gt; nestor ran in 0.332secs and 5 iterations.</div></pre>
+<span class='no'>fit</span><span class='kw'>=</span><span class='fu'>nestor</span>(<span class='no'>data</span>$<span class='no'>Y</span>, <span class='no'>MO</span>,<span class='no'>SO</span>, <span class='kw'>initList</span><span class='kw'>=</span><span class='no'>initList</span>, <span class='kw'>maxIter</span><span class='kw'>=</span><span class='fl'>5</span>,<span class='kw'>verbatim</span><span class='kw'>=</span><span class='fl'>1</span>)</div><div class='output co'>#&gt; 
+#&gt; nestor ran in 0.231secs and 4 iterations.</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; List of 11
+#&gt;  $ M        : num [1:100, 1:11] -1.752 -0.192 1.166 0.491 -0.207 ...
+#&gt;  $ S        : num [1:100, 1:11] 0.2226 0.1037 0.0357 0.0629 0.1047 ...
+#&gt;  $ Pg       : num [1:11, 1:11] 0.00 1.00 1.00 2.38e-11 2.04e-09 ...
+#&gt;  $ Wg       : num [1:11, 1:11] 0.00 4.97e+08 2.68e+09 2.48e-04 9.87e-01 ...
+#&gt;  $ W        : num [1:11, 1:11] 0.00 5.57e+07 6.50e+07 7.60e-04 6.19e-02 ...
+#&gt;  $ Omega    : num [1:11, 1:11] 2.897 0.814 0.946 -0.295 -0.462 ...
+#&gt;  $ lowbound :'data.frame':	5 obs. of  5 variables:
+#&gt;   ..$ J        : num [1:5] -705 -695 -695 -694 -694
+#&gt;   ..$ T1       : num [1:5] -1009 -1036 -1041 -1042 -1042
+#&gt;   ..$ T2       : num [1:5] -4.82e-01 -3.49e-02 -2.80e-03 -2.14e-04 -1.65e-05
+#&gt;   ..$ T3       : num [1:5] 304 341 347 348 348
+#&gt;   ..$ parameter: chr [1:5] "complete" "complete" "complete" "complete" ...
+#&gt;  $ features :'data.frame':	4 obs. of  4 variables:
+#&gt;   ..$ diffPg   : num [1:4] 0.5 0.3839 0.05363 0.00511
+#&gt;   ..$ diffW    : num [1:4] 10350 292975 1274221 7073573
+#&gt;   ..$ diffOmega: num [1:4] 0.47288 0.10749 0.01478 0.00914
+#&gt;   ..$ diffWg   : num [1:4] 1.24e+10 2.44e+07 6.87e+08 2.86e+09
+#&gt;  $ finalIter: num 4
+#&gt;  $ time     : 'difftime' num 0.231389045715332
+#&gt;   ..- attr(*, "units")= chr "secs"
+#&gt;  $ max.prec : logi FALSE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
