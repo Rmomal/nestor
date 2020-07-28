@@ -1,9 +1,10 @@
 destination: docs
 templates:
   params:
-    bootswatch: cosmo
+    bootswatch: readable
 
-right:
+navbar:
+  right:
     - icon: fa-github
       href: https://github.com/Rmomal/nestor
 
