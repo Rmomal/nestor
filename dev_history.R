@@ -5,7 +5,7 @@ usethis::use_roxygen_md()
 devtools::document()
 #description and dependences
 usethis::edit_file("DESCRIPTION")
-usethis::use_mit_license("Raphaelle Momal")
+usethis::use_gpl3_license("Raphaelle Momal")
 usethis::use_package("MASS")
 usethis::use_package("parallel")
 usethis::use_package("ROCR")

@@ -1,42 +1,54 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-nestor
-======
+nestor: Network inference from Species counTs with missing actORs.
+==================================================================
 
 <!-- badges: start -->
 [![Travis build status](https://travis-ci.org/Rmomal/nestor.svg?branch=master)](https://travis-ci.org/Rmomal/nestor) <!-- [![Codecov test coverage](https://codecov.io/gh/Rmomal/nestor/branch/master/graph/badge.svg)](https://codecov.io/gh/Rmomal/nestor?branch=master) --> <!-- badges: end -->
 
-Network inference from Species counTs with missing actORs.
-
-> `nestor` is an R package which aim is to infer network of species conditional dependencies from their abundances, while accounting for possible missing actors in the data.
+> `nestor` is an R package for the inference of species interaction networks from their observed abundances, while accounting for possible unobserved missing actors in the data. It is an implementation of the tree-based VEM algorithm described in the preprint <http://arxiv.org/abs/2007.14299>.
 
 Installation
 ------------
 
+### EMtree dependency
+
+`nestor` uses functions from the R package `EMtree` which development version is available from [GitHub](https://github.com/)
+
+``` r
+devtools::install_github("Rmomal/EMtree")
+```
+
+### CRAN dependencies
+
+``` r
+required_CRAN <- c("utils", "stats", "ROCR","graphics", "mvtnorm", "parallel", 
+                   "gridExtra", "reshape2"  ,"ggplot2", "magrittr", "dplyr", 
+                   "tidyr", "tibble", "blockmodels", "mclust", "PLNmodels")
+not_installed_CRAN <- setdiff(required_CRAN, rownames(installed.packages()))
+if (length(not_installed_CRAN) > 0) install.packages(not_installed_CRAN)
+```
+
+### Installation of `nestor`
+
 You can install the development version from [GitHub](https://github.com/) with:
 
 ``` r
-install.packages("devtools")
 devtools::install_github("Rmomal/nestor")
 ```
 
-Example
--------
+Usage
+-----
 
 `nestor`simulates data with the function `missing_from_scratch()`, which requires the desired type of dependency structure (scale-free, erdos or cluster) and the number of missing actors `r`. Here is an example with `r=1`for the scale-free structure:
 
 ``` r
 library(nestor)
-#> 
-#> Attaching package: 'nestor'
-#> The following object is masked from 'package:EMtree':
-#> 
-#>     Kirshner
 set.seed(1)
 data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="30%" style="display: block; margin: auto;" />
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="30%" style="display: block; margin: auto;" />
 
 The original clique of the missing actor neighbors is available in the value `TC`:
 
@@ -129,7 +141,7 @@ This package contains several visualization functions. `plotPerf()` gives a quic
 plotPerf(fit$Pg, data$G,r=1)
 ```
 
-<img src="man/figures/README-unnamed-chunk-10-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="man/figures/README-unnamed-chunk-12-1.png" width="80%" style="display: block; margin: auto;" />
 
 The convergence of `nestor()` can be checked with the plotting function `plotConv()`:
 
@@ -137,7 +149,7 @@ The convergence of `nestor()` can be checked with the plotting function `plotCon
 plotConv(nestorFit = fit)
 ```
 
-<img src="man/figures/README-unnamed-chunk-11-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="man/figures/README-unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" />
 
 This package provides with a parllel procedure for the computation of several fits of `nestor()` corresponding to a list of possible cliques, with the function `List.nestor()`. Below is an example with the list of four cliques previously obtained with the `complement_spca()` function:
 

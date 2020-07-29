@@ -1,9 +1,8 @@
 destination: docs
-templates:
-  params:
-    bootswatch: readable
+
 
 navbar:
+  type: inverse
   right:
     - icon: fa-github
       href: https://github.com/Rmomal/nestor
