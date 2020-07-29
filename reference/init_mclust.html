@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Exact computation of the determinant using the Gauss pivot method — pivot.fractional • nestor</title>
+<title>Find initial cliques using mclust on the estimated correlation matrix — init_mclust • nestor</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Exact computation of the determinant using the Gauss pivot method — pivot.fractional" />
-<meta property="og:description" content="Exact computation of the determinant using the Gauss pivot method" />
+<meta property="og:title" content="Find initial cliques using mclust on the estimated correlation matrix — init_mclust" />
+<meta property="og:description" content="Find initial cliques using mclust on the estimated correlation matrix" />
 
 
 
@@ -79,10 +79,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+  <a>
+    <span class="fa fa-home"></span>
      
   </a>
+</li>
+<li>
+  <a href="../index.html">Home</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -108,44 +111,54 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Exact computation of the determinant using the Gauss pivot method</h1>
+    <h1>Find initial cliques using mclust on the estimated correlation matrix</h1>
     
-    <div class="hidden name"><code>pivot.fractional.Rd</code></div>
+    <div class="hidden name"><code>init_mclust.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Exact computation of the determinant using the Gauss pivot method</p>
+    <p>Find initial cliques using mclust on the estimated correlation matrix</p>
     </div>
 
-    <pre class="usage"><span class='fu'>pivot.fractional</span>(<span class='no'>A</span>, <span class='kw'>trace</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>inverse</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>init_mclust</span>(<span class='no'>Sigma</span>, <span class='no'>r</span>, <span class='kw'>n.noise</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>A</th>
-      <td><p>a square positive definite matrix</p></td>
+      <th>Sigma</th>
+      <td><p>Estimated correlation matrix from observed counts (pxp)</p></td>
     </tr>
     <tr>
-      <th>trace</th>
-      <td><p>verbosity</p></td>
+      <th>r</th>
+      <td><p>number of missing actors</p></td>
     </tr>
     <tr>
-      <th>inverse</th>
-      <td><p>compute inverse matrix</p></td>
+      <th>n.noise</th>
+      <td><p>quantity of noise for mclust, set to 3*p by default.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
-<ul>
-<li><p>A the original matrix</p></li>
-<li><p>det.factors factors of the determinant</p></li>
-<li><p>A.inv inverse of A if computed</p></li>
-</ul>
+    <p>A list of size r, with initial cliques of neighbors for each missing actor.</p>
 
-
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>data</span><span class='kw'>=</span><span class='fu'><a href='missing_from_scratch.html'>missing_from_scratch</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>100</span>,<span class='kw'>p</span><span class='kw'>=</span><span class='fl'>10</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>,<span class='kw'>type</span><span class='kw'>=</span><span class='st'>"scale-free"</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='init_mclust-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>PLNfit</span><span class='kw'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>)</div><div class='output co'>#&gt; 
+#&gt;  Initialization...
+#&gt;  Adjusting a PLN model with full covariance model
+#&gt;  Post-treatments...
+#&gt;  DONE!</div><div class='input'><span class='no'>Sigma_hat</span><span class='kw'>=</span><span class='no'>PLNfit</span>$<span class='no'>sigma_obs</span>
+<span class='co'>#-- original true clique</span>
+<span class='no'>data</span>$<span class='no'>TC</span></div><div class='output co'>#&gt; [[1]]
+#&gt; [1] 1 2 3 5 7
+#&gt; </div><div class='input'><span class='co'>#-- clique found by mclust</span>
+<span class='no'>clique_mclust</span><span class='kw'>=</span><span class='fu'>init_mclust</span>(<span class='no'>Sigma_hat</span>, <span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: `data_frame()` is deprecated as of tibble 1.1.0.</span>
+#&gt; <span class='warning'>Please use `tibble()` instead.</span>
+#&gt; <span class='warning'>This warning is displayed once every 8 hours.</span>
+#&gt; <span class='warning'>Call `lifecycle::last_warnings()` to see where this warning was generated.</span></div><div class='input'><span class='no'>clique_mclust</span></div><div class='output co'>#&gt; [[1]]
+#&gt; integer(0)
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
