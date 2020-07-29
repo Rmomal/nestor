@@ -36,12 +36,12 @@ missing_from_scratch<-function(n,p,r=1,type,plot=FALSE, dens=2/p){
   diag(G)=0
   trueClique=lapply((p+1):(p+r), function(h){ which(G[h,-h]!=0)})
   #group=1*(diag(omega)==diag(omega)[hidden][1])
-  lab=ifelse(1:(p+r) %in% c(unlist(trueClique), (p+1):(p+r)), 1:(p+r), "")
+  labs=ifelse(1:(p+r) %in% c(unlist(trueClique), (p+1):(p+r)), 1:(p+r), "")
   groupes = 1*(1:(p+r) %in% c(unlist(trueClique), (p+1):(p+r)))
   groupes[(p+1):(p+r)]=2
   if(plot){
-    g=EMtree::draw_network(G,groupes=groupes,layout="nicely",curv=0,nb=1,
-                           nodes_label =lab)$G
+    g=EMtree::draw_network(G,groupes=groupes,layout="nicely",curv=0,btw_rank=1,
+                           nodes_size = c(2,5,6),pal_edges = "#31374f", nodes_label =labs)$G
     print(g)
   }
   #compute final parameters R and Omega

@@ -234,7 +234,10 @@ extractParamBM <- function(BMobject,k){
 #' @importFrom dplyr mutate select
 #' @export
 #'
-#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=FALSE)
+#' EMtree::draw_network(data$G,layout="nicely",curv=0,btw_rank=1,groupes=c(rep(1,10),2),
+#'  nodes_size=c(5,5),nodes_label=1:11, pal_nodes= c("#adc9e0","#e7bd42"),
+#'  pal_edges = "#31374f")$G
 #' PLNfit<-norm_PLN(data$Y)
 #' Sigma_hat=PLNfit$sigma_obs
 #' #-- original true clique
@@ -242,8 +245,9 @@ extractParamBM <- function(BMobject,k){
 #' #-- clique found by mclust
 #' clique_mclust=init_mclust(Sigma_hat, r=1)
 #' clique_mclust
+
 init_mclust<-function(Sigma,r, n.noise=NULL){
-  p=ncol(Sigma)
+  p=ncol(Sigma) ; ok=FALSE
   if(is.null(n.noise)) n.noise=3*p
   # extract PCA axes
   Scomp=stats::prcomp(Sigma,scale. = TRUE)
@@ -253,29 +257,33 @@ init_mclust<-function(Sigma,r, n.noise=NULL){
   datapolar_half=datapolar %>% dplyr::mutate(theta2=ifelse(theta>pi,theta-pi,theta)) %>%
     dplyr::select(r,theta2)
   colnames(datapolar_half)[1]="radius"
-  # add noise in polar coords
-  radius <- sqrt(stats::runif(n.noise))
-  theta2 <- stats::runif(n.noise, 0, pi)
-  datapolarall=rbind(datapolar_half,cbind(radius,theta2))
-  # back transform to cartesian coordinates
-  newdata=useful::pol2cart(datapolarall$radius,datapolarall$theta2)[,1:2]
-  noiseInit<-sample(c(T,F), size=ncol(Sigma), replace=T, prob=c(3, 1))
-  # run mclust to find r groups among noise
-  clust= tryCatch({
-    mclust::Mclust(data=newdata, initialization = list(noise=noiseInit),  G=r, verbose = FALSE)
-  }, error = function(e) {#if mclust fails, draw new noise data
-    message("new noise")
+  while(!ok){
+    # add noise in polar coords
     radius <- sqrt(stats::runif(n.noise))
     theta2 <- stats::runif(n.noise, 0, pi)
     datapolarall=rbind(datapolar_half,cbind(radius,theta2))
+    # back transform to cartesian coordinates
     newdata=useful::pol2cart(datapolarall$radius,datapolarall$theta2)[,1:2]
-    mclust::Mclust(data=newdata, initialization = list(noise=noiseInit),  G=r, verbose = FALSE)
-  }, finally = { })
-  # extract probable memberships and build final list of cliques
-  groups<-mclust::map(clust$z)[1:p]
-  cliques<-lapply(1:r, function(c){
-    which(groups==c)
-  })
+    noiseInit<-sample(c(T,F), size=ncol(Sigma), replace=T, prob=c(3, 1))
+    # run mclust to find r groups among noise
+    clust= tryCatch({
+      mclust::Mclust(data=newdata, initialization = list(noise=noiseInit),  G=r, verbose = FALSE)
+    }, error = function(e) {#if mclust fails, draw new noise data
+      message("new noise")
+      radius <- sqrt(stats::runif(n.noise))
+      theta2 <- stats::runif(n.noise, 0, pi)
+      datapolarall=rbind(datapolar_half,cbind(radius,theta2))
+      newdata=useful::pol2cart(datapolarall$radius,datapolarall$theta2)[,1:2]
+      mclust::Mclust(data=newdata, initialization = list(noise=noiseInit),  G=r, verbose = FALSE)
+    }, finally = { })
+    # extract probable memberships and build final list of cliques
+    groups<-mclust::map(clust$z)[1:p]
+    cliques<-lapply(1:r, function(c){
+      indices= which(groups==c)
+      if(length(indices)>2) ok<<-TRUE
+      return(indices)
+    })
+  }
 
   return(cliques)
 }
