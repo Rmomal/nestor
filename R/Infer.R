@@ -9,7 +9,6 @@
 #' @param n number of samples
 #' @param alpha tempering parameter
 #' @param hist should the histogram of the log-values of OO blocs and OH blocs be printed ?
-#' @param verbatim controls verbosity
 #'
 #' @return The variational edge weights matrix
 #' @export
@@ -77,7 +76,7 @@ computeOmega<-function(Pg,Rho,p){
 # part_JPLN<-function(mat_var,EhZZ,n, var=TRUE){
 #   if(var){
 #     partJPLN=-n*0.5*(det.fractional(mat_var, log=TRUE)) - 0.5*sum(EhZZ*solve(mat_var))
-#   }else{# si on donne une matrice de précision
+#   }else{# si on donne une matrice de precision
 #     partJPLN=n*0.5*(det.fractional(mat_var, log=TRUE)) - 0.5*sum(EhZZ*(mat_var))
 #   }
 #   return(partJPLN)

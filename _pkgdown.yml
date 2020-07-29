@@ -3,6 +3,16 @@ destination: docs
 
 navbar:
   type: inverse
+  left:
+    - icon: fa-home
+    - text: "Home"
+      href: index.html
+    - text: "Reference"
+      href: "reference/index.html"
+#    - text: "Vignettes"
+#      menu:
+#      - text: "Fatala fishes"
+#        href: articles/Fatala_Net.html
   right:
     - icon: fa-github
       href: https://github.com/Rmomal/nestor
@@ -30,6 +40,7 @@ reference:
   - '`initOmega`'
   - '`inverse.gmp`'
   - '`det.fractional`'
+  - '`alphaMax`'
 - title: Clique initialization
   desc: ~
   contents:
@@ -37,14 +48,14 @@ reference:
   - '`boot_FitSparsePCA`'
   - '`complement_spca`'
   - '`init_blockmodels`'
-- title: Visualizatoins
+  - '`init_mclust`'
+- title: Visualizations and tools
   desc: ~
   contents:
   - '`plotPerf`'
   - '`plotConv`'
   - '`ggimage`'
-- title: Tools
-  desc:  ~
-  contents:
   - '`ppvtpr`'
   - '`auc`'
+
+

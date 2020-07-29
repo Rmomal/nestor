@@ -27,6 +27,8 @@ usethis::use_package("reshape2")
 usethis::use_package("gmp")
 usethis::use_package("stringr")
 usethis::use_package("graphics")
+usethis::use_package("mclust")
+usethis::use_package("useful")
 # readme
 usethis::use_readme_rmd()
 #git link
@@ -58,3 +60,5 @@ openssl::write_ssh(pub_key) # for git key
 devtools::document() # then build and restart
 devtools::run_examples()
 devtools::check()
+#usethis::use_vignette("Fatala_Net","Fatala fishes")
+pkgdown::build_site()

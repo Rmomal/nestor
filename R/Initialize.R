@@ -221,6 +221,64 @@ extractParamBM <- function(BMobject,k){
   return(res)
 }
 
+#' Find initial cliques using mclust on the estimated correlation matrix
+#'
+#' @param Sigma Estimated correlation matrix from observed counts (pxp)
+#' @param r number of missing actors
+#' @param n.noise quantity of noise for mclust, set to 3*p by default.
+#'
+#' @return A list of size r, with initial cliques of neighbors for each missing actor.
+#' @importFrom stats prcomp runif
+#' @importFrom useful cart2pol pol2cart
+#' @importFrom mclust Mclust map mclustBIC
+#' @importFrom dplyr mutate select
+#' @export
+#'
+#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+#' PLNfit<-norm_PLN(data$Y)
+#' Sigma_hat=PLNfit$sigma_obs
+#' #-- original true clique
+#' data$TC
+#' #-- clique found by mclust
+#' clique_mclust=init_mclust(Sigma_hat, r=1)
+#' clique_mclust
+init_mclust<-function(Sigma,r, n.noise=NULL){
+  p=ncol(Sigma)
+  if(is.null(n.noise)) n.noise=3*p
+  # extract PCA axes
+  Scomp=stats::prcomp(Sigma,scale. = TRUE)
+  data=data.frame(Scomp$rotation[,1:2]%*%diag(Scomp$sdev[1:2]))
+  # transform to polar coordinates in half polar circle
+  datapolar=useful::cart2pol(x=data[,1],y=data[,2])[,1:2]
+  datapolar_half=datapolar %>% dplyr::mutate(theta2=ifelse(theta>pi,theta-pi,theta)) %>%
+    dplyr::select(r,theta2)
+  colnames(datapolar_half)[1]="radius"
+  # add noise in polar coords
+  radius <- sqrt(stats::runif(n.noise))
+  theta2 <- stats::runif(n.noise, 0, pi)
+  datapolarall=rbind(datapolar_half,cbind(radius,theta2))
+  # back transform to cartesian coordinates
+  newdata=useful::pol2cart(datapolarall$radius,datapolarall$theta2)[,1:2]
+  noiseInit<-sample(c(T,F), size=ncol(Sigma), replace=T, prob=c(3, 1))
+  # run mclust to find r groups among noise
+  clust= tryCatch({
+    mclust::Mclust(data=newdata, initialization = list(noise=noiseInit),  G=r, verbose = FALSE)
+  }, error = function(e) {#if mclust fails, draw new noise data
+    message("new noise")
+    radius <- sqrt(stats::runif(n.noise))
+    theta2 <- stats::runif(n.noise, 0, pi)
+    datapolarall=rbind(datapolar_half,cbind(radius,theta2))
+    newdata=useful::pol2cart(datapolarall$radius,datapolarall$theta2)[,1:2]
+    mclust::Mclust(data=newdata, initialization = list(noise=noiseInit),  G=r, verbose = FALSE)
+  }, finally = { })
+  # extract probable memberships and build final list of cliques
+  groups<-mclust::map(clust$z)[1:p]
+  cliques<-lapply(1:r, function(c){
+    which(groups==c)
+  })
+
+  return(cliques)
+}
 
 #'  Initialize Sigma and Omega using an initial clique of neighbors of the missing actor
 #'
@@ -313,4 +371,24 @@ initVEM<-function(Y,cliqueList,sigma_obs,MO,r){
     MHinit=NULL
   }
   return(list(Wginit= Wginit, Winit= Winit, omegainit=omegainit,MHinit=MHinit))
+}
+
+#' Heuristic for an upper value of tempering parameter alpha
+#'
+#' @param q Total number of variables (observed and unobserved)
+#' @param n Number of samples
+#' @param sup_val maximal value of the complete estimated correlation matrix. 0.8 by default.
+#' @param delta Maximal value allowed for a determinant. Set to the maximal machine precision by default
+#'
+#' @return
+#' @export
+#'
+#' @examples q=15
+#' n=50
+#' alphaMax(q,n)
+alphaMax<-function(q,n,sup_val=0.8,delta=.Machine$double.xmax){
+  x=sup_val
+  C= -0.5*log(1-x^2)+x^2/(1-x^2)
+  max_value=((1/(q-1))*log(delta)-log(q-1))/(C*n)
+  return(max_value)
 }

@@ -20,8 +20,6 @@ computeWg(Rho, Omega, W, r, n, alpha, hist = FALSE)
 \item{alpha}{tempering parameter}
 
 \item{hist}{should the histogram of the log-values of OO blocs and OH blocs be printed ?}
-
-\item{verbatim}{controls verbosity}
 }
 \value{
 The variational edge weights matrix

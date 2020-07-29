@@ -8,11 +8,11 @@
 #' \item{A}{ the original matrix}
 #' \item{det.factors}{ factors of the determinant}
 #' \item{A.inv}{ inverse of A if computed}}
-#' @nodr
+#' @noRd
 pivot.fractional <- function(A, trace=FALSE, inverse=TRUE) {
   A<-rcdd::d2q(as.matrix(A))
   # trace: afficher ou pas la progression
-  if (trace){cat("\nPIVOT DE GAUSS POUR ÉCHELONNER UNE MATRICE")}
+  if (trace){cat("\nPIVOT DE GAUSS POUR ECHELONNER UNE MATRICE")}
   n <- nrow(A) # nombre de ligne de A
   if (inverse) {
     A<-cbind(A,diag(rep(1,n)))
@@ -24,14 +24,14 @@ pivot.fractional <- function(A, trace=FALSE, inverse=TRUE) {
   for (i in 1:(n)) { # on considere le ieme pivot
     if(trace){cat("\n - ITERATION",i)}
 
-    # VÉRIFICATION DE L'EXISTENCE D'UN PIVOT NON NUL DANS LA COLONE COURANTE
+    # VERIFICATION DE L'EXISTENCE D'UN PIVOT NON NUL DANS LA COLONE COURANTE
     if (A[i,i] == "0") { # est-ce que le pivot est nul ?
-      # Le nouveau pivot candidat est le plus grand élément dans le reste de la colonne
+      # Le nouveau pivot candidat est le plus grand element dans le reste de la colonne
       A.coli<-rcdd::qabs(A[(i+1):n,i])
       j <- which(rcdd::qmax(A.coli)==A.coli) + i
-      if (A[j,i] != "0") { # si cet élément est non nul, on peut s'en servir comme pivot
+      if (A[j,i] != "0") { # si cet element est non nul, on peut s'en servir comme pivot
         if (trace) {cat("\n\t+ Echange des lignes",i,j)}
-        A[c(i,j),] <- A[c(j,i),] # échange des ligne i et j
+        A[c(i,j),] <- A[c(j,i),] # echange des ligne i et j
         det.factors[n+1]<-rcdd::qxq(det.factors[n+1],"-1")
       } else { # sinon on n'a pas trouve de pivot non nul: on s'arrete la
         return(A)
@@ -50,7 +50,7 @@ pivot.fractional <- function(A, trace=FALSE, inverse=TRUE) {
     }
     # AFFICHAGE DE L'ETAT COURANT DU SYSTEME
     if (trace) {
-      cat("\n\t+ Etat du système:\n")
+      cat("\n\t+ Etat du systeme:\n")
       print(A)
     }
   }
@@ -68,7 +68,7 @@ pivot.fractional <- function(A, trace=FALSE, inverse=TRUE) {
 #' Get numerator and denominators
 #'
 #' @param factors
-#' @nord
+#' @noRd
 logprod<-function(factors){
   list.of.frac<-stringr::str_split(factors,"/")
   nd<-matrix(unlist(lapply(list.of.frac,function(x){

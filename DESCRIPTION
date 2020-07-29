@@ -34,7 +34,9 @@ Imports:
     reshape2,
     gmp,
     stringr,
-    graphics
+    graphics,
+    mclust,
+    useful
 Suggests: 
     covr
 Remotes: git::https://github.com/Rmomal/EMtree
