@@ -201,7 +201,7 @@
 <span class='no'>initList</span><span class='kw'>=</span><span class='fu'><a href='initVEM.html'>initVEM</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>,<span class='kw'>cliqueList</span><span class='kw'>=</span><span class='no'>initClique</span>,<span class='no'>sigma_obs</span>, <span class='no'>MO</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span> )
 <span class='co'>#-- run core function nestor</span>
 <span class='no'>fit</span><span class='kw'>=</span><span class='fu'>nestor</span>(<span class='no'>data</span>$<span class='no'>Y</span>, <span class='no'>MO</span>,<span class='no'>SO</span>, <span class='kw'>initList</span><span class='kw'>=</span><span class='no'>initList</span>, <span class='kw'>maxIter</span><span class='kw'>=</span><span class='fl'>5</span>,<span class='kw'>verbatim</span><span class='kw'>=</span><span class='fl'>1</span>)</div><div class='output co'>#&gt; 
-#&gt; nestor ran in 0.322secs and 5 iterations.</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; List of 11
+#&gt; nestor ran in 0.328secs and 5 iterations.</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; List of 11
 #&gt;  $ M        : num [1:100, 1:11] -0.656 -0.955 -0.54 -0.573 -0.364 ...
 #&gt;  $ S        : num [1:100, 1:11] 0.155 0.182 0.144 0.147 0.129 ...
 #&gt;  $ Pg       : num [1:11, 1:11] 0.00 2.56e-11 1.00 5.82e-11 1.83e-10 ...
@@ -220,7 +220,7 @@
 #&gt;   ..$ diffOmega: num [1:5] 0.6851 0.1626 0.1057 0.062 0.0361
 #&gt;   ..$ diffWg   : num [1:5] 1.75e+08 6.08e+12 2.33e+14 7.41e+15 4.07e+16
 #&gt;  $ finalIter: num 5
-#&gt;  $ time     : 'difftime' num 0.321714401245117
+#&gt;  $ time     : 'difftime' num 0.328060865402222
 #&gt;   ..- attr(*, "units")= chr "secs"
 #&gt;  $ max.prec : logi FALSE</div></pre>
   </div>
