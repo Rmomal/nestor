@@ -61,7 +61,7 @@
   <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -198,7 +198,7 @@
 <span class='no'>initList</span><span class='kw'>=</span><span class='fu'><a href='initVEM.html'>initVEM</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>,<span class='kw'>cliqueList</span><span class='kw'>=</span><span class='no'>initClique</span>,<span class='no'>sigma_obs</span>, <span class='no'>MO</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span> )
 <span class='co'>#-- run core function nestor</span>
 <span class='no'>fit</span><span class='kw'>=</span><span class='fu'>nestor</span>(<span class='no'>data</span>$<span class='no'>Y</span>, <span class='no'>MO</span>,<span class='no'>SO</span>, <span class='kw'>initList</span><span class='kw'>=</span><span class='no'>initList</span>, <span class='kw'>maxIter</span><span class='kw'>=</span><span class='fl'>5</span>,<span class='kw'>verbatim</span><span class='kw'>=</span><span class='fl'>1</span>)</div><div class='output co'>#&gt; 
-#&gt; nestor ran in 0.254secs and 4 iterations.</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; List of 11
+#&gt; nestor ran in 0.238secs and 4 iterations.</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; List of 11
 #&gt;  $ M        : num [1:100, 1:11] -1.752 -0.192 1.166 0.491 -0.207 ...
 #&gt;  $ S        : num [1:100, 1:11] 0.2226 0.1037 0.0357 0.0629 0.1047 ...
 #&gt;  $ Pg       : num [1:11, 1:11] 0.00 1.00 1.00 2.38e-11 2.04e-09 ...
@@ -217,7 +217,7 @@
 #&gt;   ..$ diffOmega: num [1:4] 0.47288 0.10749 0.01478 0.00914
 #&gt;   ..$ diffWg   : num [1:4] 1.24e+10 2.44e+07 6.87e+08 2.86e+09
 #&gt;  $ finalIter: num 4
-#&gt;  $ time     : 'difftime' num 0.253628492355347
+#&gt;  $ time     : 'difftime' num 0.237630844116211
 #&gt;   ..- attr(*, "units")= chr "secs"
 #&gt;  $ max.prec : logi FALSE</div></pre>
   </div>
