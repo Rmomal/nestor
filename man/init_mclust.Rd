@@ -20,12 +20,12 @@ A list of size r, with initial cliques of neighbors for each missing actor.
 Find initial cliques using mclust on the estimated correlation matrix
 }
 \examples{
-data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=FALSE)
+data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
 EMtree::draw_network(data$G,layout="nicely",curv=0,btw_rank=1,groupes=c(rep(1,10),2),
  nodes_size=c(5,5),nodes_label=1:11, pal_nodes= c("#adc9e0","#e7bd42"),
  pal_edges = "#31374f")$G
 PLNfit<-norm_PLN(data$Y)
-Sigma_hat=PLNfit$sigma_obs
+Sigma_hat=PLNfit$sigma_O
 #-- original true clique
 data$TC
 #-- clique found by mclust

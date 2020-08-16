@@ -22,9 +22,9 @@
 #' p=10
 #' r=1
 #' type="scale-free"
-#' data=missing_from_scratch(n,p,r,type, plot=TRUE)
+#' data=generate_missing_data(n,p,r,type, plot=TRUE)
 #' str(data)
-missing_from_scratch<-function(n,p,r=1,type,plot=FALSE, dens=2/p){
+generate_missing_data<-function(n,p,r=1,type,plot=FALSE, dens=2/p){
   #generate a graph and data Y and U
   norm_data=EMtree::data_from_scratch(type = type,p = p+r,n = n,norm=TRUE,signed = FALSE,dens = dens,v = 0)
   omega=norm_data$omega

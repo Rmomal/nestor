@@ -18,7 +18,7 @@ a list of 2*k cliques
 This function aims at efficiently exploring the space of likely cliques when only one missing actor is estimated.
 }
 \examples{
-data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 data$TC
 complement_spca(data$Y,k=2)
 }

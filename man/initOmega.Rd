@@ -25,7 +25,7 @@ The PCA is done on the correaltion matrix, the variance of hidden variables are 
 The corresponding precision term in omega is set to 1 for identifiability reasons.
 }
 \examples{
-data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 Sigma=data$Sigma
 initClique=FitSparsePCA(data$Y,r=1)$cliques
 initOmega(Sigma=Sigma, cliqueList=initClique)

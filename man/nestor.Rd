@@ -46,15 +46,15 @@ nestor(Y, MO, SO, initList, maxIter = 20, eps = 0.01, alpha = 0.1,
 Core function of nestor.
 }
 \examples{
-data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=FALSE)
+data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
 PLNfit<-norm_PLN(data$Y)
 MO<-PLNfit$MO
 SO<-PLNfit$SO
-sigma_obs=PLNfit$sigma_obs
+sigma_O=PLNfit$sigma_O
 #-- initialize with true clique for example
 initClique=data$TC
 #-- initialize the VEM
-initList=initVEM(data$Y,cliqueList=initClique,sigma_obs, MO,r=1 )
+initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
 #-- run core function nestor
 fit=nestor(data$Y, MO,SO, initList=initList, maxIter=5,verbatim=1)
 str(fit)

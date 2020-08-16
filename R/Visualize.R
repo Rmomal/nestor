@@ -6,7 +6,7 @@
 #' @export
 #' @importFrom reshape2 melt
 #' @import ggplot2
-#' @examples Sigma=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=FALSE)$Sigma
+#' @examples Sigma=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)$Sigma
 #' ggimage(Sigma)
 ggimage<-function(data){
   melted_data <- reshape2::melt(data)
@@ -21,15 +21,15 @@ ggimage<-function(data){
 #' @return
 #' @export
 #' @importFrom ROCR prediction performance
-#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=FALSE)
+#' @examples data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
 #' PLNfit<-norm_PLN(data$Y)
 #' MO<-PLNfit$MO
 #' SO<-PLNfit$SO
-#' sigma_obs=PLNfit$sigma_obs
+#' sigma_O=PLNfit$sigma_O
 #' #-- use true clique for example
 #' initClique=data$TC
 #' #-- initialize the VEM
-#' initList=initVEM(data$Y,cliqueList=initClique,sigma_obs, MO,r=1 )
+#' initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
 #' nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1)
 #' #-- obtain criteria
 #' auc(nestorFit$Pg,data$G)
@@ -57,15 +57,15 @@ auc<-function(pred,label){ #require(ROCR)
 #' }
 #' @export
 #'
-#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=FALSE)
+#' @examples data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
 #' PLNfit<-norm_PLN(data$Y)
 #' MO<-PLNfit$MO
 #' SO<-PLNfit$SO
-#' sigma_obs=PLNfit$sigma_obs
+#' sigma_O=PLNfit$sigma_O
 #' #-- use true clique for example
 #' initClique=data$TC
 #' #-- initialize the VEM
-#' initList=initVEM(data$Y,cliqueList=initClique,sigma_obs, MO,r=1 )
+#' initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
 #' nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1 )
 #' #-- obtain criteria
 #' ppvtpr(nestorFit$Pg,r=1, data$G)
@@ -94,15 +94,15 @@ ppvtpr<-function(probs,G,r, thresh=0.5){
 #'
 #' @return two heatmaps with performance criteria computed for the specified threshold as title.
 #' @export
-#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=FALSE)
+#' @examples data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
 #' PLNfit<-norm_PLN(data$Y)
 #' MO<-PLNfit$MO
 #' SO<-PLNfit$SO
-#' sigma_obs=PLNfit$sigma_obs
+#' sigma_O=PLNfit$sigma_O
 #' #-- use true clique for example
 #' initClique=data$TC
 #' #-- initialize the VEM
-#' initList=initVEM(data$Y,cliqueList=initClique,sigma_obs, MO,r=1 )
+#' initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
 #' nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1 )
 #' #-- obtain criteria
 #' plotPerf(nestorFit$Pg, data$G,r=1)
@@ -127,17 +127,18 @@ plotPerf<-function(P,G,r,thresh=0.5){
 #' @export
 #' @import ggplot2
 #' @importFrom tidyr gather
+#' @importFrom dplyr rename
 #' @importFrom tibble rowid_to_column
 #' @importFrom gridExtra grid.arrange
-#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=FALSE)
+#' @examples data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
 #' PLNfit<-norm_PLN(data$Y)
 #' MO<-PLNfit$MO
 #' SO<-PLNfit$SO
-#' sigma_obs=PLNfit$sigma_obs
+#' sigma_O=PLNfit$sigma_O
 #' #-- use true clique for example
 #' initClique=data$TC
 #' #-- initialize the VEM
-#' initList=initVEM(data$Y,cliqueList=initClique,sigma_obs, MO,r=1 )
+#' initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
 #' nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3 , verbatim=1)
 #' #-- obtain criteria
 #' plotConv(nestorFit)
@@ -154,7 +155,8 @@ plotConv<-function(nestorFit){
                   theme(strip.background=element_rect(fill="gray50",colour ="gray50"),
                         plot.title = element_text(hjust = 0.5)))
 
-    g1<-nestorFit$features  %>%  tibble::rowid_to_column() %>%
+    g1<-nestorFit$features  %>% dplyr::select(diffPg, diffOmega) %>% dplyr::rename(Prob=diffPg, Omega=diffOmega) %>%
+      tibble::rowid_to_column() %>%
       tidyr::gather(key, values, -rowid) %>%
       ggplot2::ggplot(aes(rowid,values, color=key))+ geom_point()+geom_line() + facet_wrap(~key, scales="free")+
       labs(x="",y="", title="Parameters")+ mytheme.dark("")+guides(color=FALSE)

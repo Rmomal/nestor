@@ -4,7 +4,7 @@
 \alias{FitSparsePCA}
 \title{Fit sparse PCA on a grid of alpha}
 \usage{
-FitSparsePCA(Y, r = 1, minV = 1, alphaGrid = 10^(seq(-4, 0, by =
+FitSparsePCA(Y, r = 1, min.size = 1, alphaGrid = 10^(seq(-4, 0, by =
   0.1)))
 }
 \arguments{
@@ -12,7 +12,7 @@ FitSparsePCA(Y, r = 1, minV = 1, alphaGrid = 10^(seq(-4, 0, by =
 
 \item{r}{the number of missing actors}
 
-\item{minV}{the minimum number of neighbors for each missing actor}
+\item{min.size}{the minimum number of neighbors for each missing actor}
 
 \item{alphaGrid}{the grid for alpha}
 }
@@ -28,7 +28,7 @@ FitSparsePCA(Y, r = 1, minV = 1, alphaGrid = 10^(seq(-4, 0, by =
 Fit sparse PCA on a grid of alpha
 }
 \examples{
-data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 TrueClique=data$TC
 findclique=FitSparsePCA(data$Y,r=1)
 initClique=findclique$cliques

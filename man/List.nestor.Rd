@@ -4,15 +4,15 @@
 \alias{List.nestor}
 \title{Run function nestor on a list of initial cliques using parallel computation (mclapply)}
 \usage{
-List.nestor(cliqueList, Y, sigma_obs, MO, SO, r, alpha = 0.1,
-  cores = 1, maxIter = 20, eps = 0.001, trackJ = FALSE)
+List.nestor(cliqueList, Y, sigma_O, MO, SO, r, alpha = 0.1, cores = 1,
+  maxIter = 20, eps = 0.001, trackJ = FALSE)
 }
 \arguments{
 \item{cliqueList}{a list containing all initial cliques to be tested}
 
 \item{Y}{count dataset}
 
-\item{sigma_obs}{result of PLN estimation: variance covariance matrix of observed data}
+\item{sigma_O}{result of PLN estimation: variance covariance matrix of observed data}
 
 \item{MO}{result of PLN estimation: means matrix of observed data}
 
@@ -37,17 +37,17 @@ a list containing the fit of nestor for every cliques contained in cliqueList
 Run function nestor on a list of initial cliques using parallel computation (mclapply)
 }
 \examples{
- data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=FALSE)
+ data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
 PLNfit<-norm_PLN(data$Y)
 MO<-PLNfit$MO
 SO<-PLNfit$SO
-sigma_obs=PLNfit$sigma_obs
+sigma_O=PLNfit$sigma_O
 #-- find a list of initial cliques
 findcliqueList=boot_FitSparsePCA(data$Y, B=5, r=1)
 cliqueList=findcliqueList$cliqueList
 length(cliqueList)
 #-- run List.nestor
-fitList=List.nestor(cliqueList,data$Y, sigma_obs, MO,SO, r=1)
+fitList=List.nestor(cliqueList,data$Y, sigma_O, MO,SO, r=1)
 length(fitList)
 str(fitList[[1]])
 }

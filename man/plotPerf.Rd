@@ -22,15 +22,15 @@ two heatmaps with performance criteria computed for the specified threshold as t
 Comparaitve plot of estimated edge probabilities and original graph.
 }
 \examples{
-data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=FALSE)
+data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
 PLNfit<-norm_PLN(data$Y)
 MO<-PLNfit$MO
 SO<-PLNfit$SO
-sigma_obs=PLNfit$sigma_obs
+sigma_O=PLNfit$sigma_O
 #-- use true clique for example
 initClique=data$TC
 #-- initialize the VEM
-initList=initVEM(data$Y,cliqueList=initClique,sigma_obs, MO,r=1 )
+initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
 nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1 )
 #-- obtain criteria
 plotPerf(nestorFit$Pg, data$G,r=1)

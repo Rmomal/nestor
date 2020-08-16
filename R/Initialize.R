@@ -1,7 +1,7 @@
 #' Fit sparse PCA on a grid of alpha
 #' @param Y a data frame
 #' @param r the number of missing actors
-#' @param minV the minimum number of neighbors for each missing actor
+#' @param min.size the minimum number of neighbors for each missing actor
 #' @param alphaGrid the grid for alpha
 #'
 #' @return \itemize{
@@ -14,13 +14,13 @@
 #' @importFrom sparsepca spca
 #' @importFrom mvtnorm dmvnorm
 #' @importFrom stats cov var
-#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+#' @examples data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 #' TrueClique=data$TC
 #' findclique=FitSparsePCA(data$Y,r=1)
 #' initClique=findclique$cliques
 #' TrueClique
 #' initClique
-FitSparsePCA <- function(Y, r=1,minV=1, alphaGrid=10^(seq(-4, 0, by=.1))){
+FitSparsePCA <- function(Y, r=1,min.size=1, alphaGrid=10^(seq(-4, 0, by=.1))){
   # estimate of Sigma: empirical variance of the rotated scores  + diagonal risidual variances
   n <- nrow(Y); p <- ncol(Y); alphaNb <- length(alphaGrid); nbDifferentH=-1
   while(nbDifferentH!=r){
@@ -40,7 +40,7 @@ FitSparsePCA <- function(Y, r=1,minV=1, alphaGrid=10^(seq(-4, 0, by=.1))){
 
     good<-do.call(rbind,lapply(sPCA, function(spca){
       vec_col<-apply(spca$loadings, 2,function(col){
-        (sum(col!=0)>minV && sum(col!=0)<p)})
+        (sum(col!=0)>min.size && sum(col!=0)<p)})
       return(sum(vec_col)==r)
     }))
     good2<- do.call(rbind,lapply(sPCA, function(spca){# missing actors should be different
@@ -73,7 +73,7 @@ FitSparsePCA <- function(Y, r=1,minV=1, alphaGrid=10^(seq(-4, 0, by=.1))){
 #' @return a list of 2*k cliques
 #' @export
 #'
-#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+#' @examples data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 #' data$TC
 #' complement_spca(data$Y,k=2)
 complement_spca<-function(Y,k){
@@ -89,7 +89,7 @@ complement_spca<-function(Y,k){
 #' @param Y data
 #' @param B number of bootstrap samples
 #' @param r number of missing actors
-#' @param minV minimum number of neighbors of missing actors
+#' @param min.size minimum number of neighbors of missing actors
 #' @param cores number of cores for possible parallel computation
 #' @param unique should unique results only be displayed ?
 #'
@@ -98,14 +98,14 @@ complement_spca<-function(Y,k){
 #' \item{nb_occ:}{ vector of the number of times each cliques has been found by sPCA.}}
 #' @export
 #' @importFrom parallel mclapply
-#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+#' @examples data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 #' boot_FitSparsePCA(data$Y, B=100, r=1)
-boot_FitSparsePCA<-function(Y, B,r, minV=1,cores=1, unique=TRUE){
+boot_FitSparsePCA<-function(Y, B,r, min.size=1,cores=1, unique=TRUE){
   cliqueList<-mclapply(1:B, function(x){
     n=nrow(Y); v=0.8; n.sample=round(0.8*n, 0)
     ech=sample(1:n,n.sample,replace = FALSE)
     Y.sample=Y[ech,]
-    c=FitSparsePCA(Y.sample,r=r,minV=minV)$cliques
+    c=FitSparsePCA(Y.sample,r=r,min.size=min.size)$cliques
     return(c)
   }, mc.cores=cores)
 
@@ -122,17 +122,17 @@ boot_FitSparsePCA<-function(Y, B,r, minV=1,cores=1, unique=TRUE){
 #' @return \itemize{
 #' \item{MO}{ Normalized means}
 #' \item{SO}{ Normalized marginal variances}
-#' \item{sigma_obs}{correlation matrix computed from the variance-covariance matrix estimated by PLNmodels}}
+#' \item{sigma_O}{ Correlation matrix computed from the variance-covariance matrix estimated by PLNmodels, and corresponding to observed variables.}}
 #' @export
 #' @importFrom PLNmodels PLN
 #' @importFrom stats cov2cor
-#' @examples  data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+#' @examples  data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 #' normPLNfit<-norm_PLN(data$Y)
 #' str(normPLNfit)
 norm_PLN<-function(Y){
   n=nrow(Y)
   p=ncol(Y)
-  PLNfit<-PLN(Y~1)
+  PLNfit<-PLN(Y~1, control=list(trace=0))
   MO<-PLNfit$var_par$M
   SO<-PLNfit$var_par$S
   sigma_obs=cov2cor(PLNfit$model_par$Sigma)
@@ -141,11 +141,11 @@ norm_PLN<-function(Y){
   matsig=(matrix(rep(1/sqrt(D),n),n,p, byrow = TRUE))
   MO=MO*matsig
   SO=SO*matsig^2
-  return(list(MO=MO, SO=SO, sigma_obs=sigma_obs))
+  return(list(MO=MO, SO=SO, sigma_O=sigma_obs))
 }
 #' Find initial cliques using blockmodels on the initial marginalized network
 #' @param Y count data
-#' @param sigma_obs original covariance matrix estimate
+#' @param sigma_O original covariance matrix estimate
 #' @param MO original observed means estimate
 #' @param SO original observed marginal variances estimate
 #' @param k number of groups
@@ -158,25 +158,24 @@ norm_PLN<-function(Y){
 #' @importFrom blockmodels BM_bernoulli
 #' @importFrom EMtree EMtree
 #' @importFrom stats cov2cor
-#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+#' @examples data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 #' data$TC
 #' PLNfit<-norm_PLN(data$Y)
 #' MO<-PLNfit$MO
 #' SO<-PLNfit$SO
-#' sigma_obs=PLNfit$sigma_obs
+#' sigma_O=PLNfit$sigma_O
 #' #-- initialize with blockmodels
-#' init_blockmodels(data$Y,sigma_obs, MO, SO, k=2 )
-init_blockmodels<-function(Y, sigma_obs, MO, SO, k=3,poisson=FALSE, alpha=0.1, cores=1){
-  init=initVEM(Y = Y,cliqueList=NULL, cov2cor(sigma_obs),MO,r = 0)
-  #--- fit VEMtree with 0 missing actor
-  resVEM0<- tryCatch(VEMtree(Y,MO,SO,initList=init, eps=1e-3, alpha=alpha,
-                             maxIter=100, plot=FALSE,print.hist=FALSE, verbatim = FALSE,trackJ=FALSE),
+#' init_blockmodels(data$Y,sigma_O, MO, SO, k=2 )
+init_blockmodels<-function(Y, sigma_O, MO, SO, k=3,poisson=FALSE, alpha=0.1, cores=1){
+  init=initVEM(Y = Y,cliqueList=NULL, cov2cor(sigma_O),MO,r = 0)
+  #--- fit nestor with 0 missing actor
+  resVEM0<- tryCatch(nestor(Y,MO,SO,initList=init, eps=1e-3, alpha=alpha, maxIter=100,verbatim = 0),
                      error=function(e){e}, finally={})
   if(length(resVEM0)>3){
     sbm.0 <- BM_bernoulli("SBM_sym",1*(resVEM0$Pg>0.5), plotting="", verbosity=0,ncores=cores)
   }else{
     p=ncol(Y)
-    resEM0 = EMtree(cov2cor(sigma_obs))
+    resEM0 = EMtree(cov2cor(sigma_O))
     sbm.0 <- BM_bernoulli("SBM_sym",1*(resEM0$edges_prob>2/p), plotting="", verbosity=0,ncores=1)
   }
   sbm.0$estimate()
@@ -234,12 +233,12 @@ extractParamBM <- function(BMobject,k){
 #' @importFrom dplyr mutate select
 #' @export
 #'
-#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=FALSE)
+#' @examples data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
 #' EMtree::draw_network(data$G,layout="nicely",curv=0,btw_rank=1,groupes=c(rep(1,10),2),
 #'  nodes_size=c(5,5),nodes_label=1:11, pal_nodes= c("#adc9e0","#e7bd42"),
 #'  pal_edges = "#31374f")$G
 #' PLNfit<-norm_PLN(data$Y)
-#' Sigma_hat=PLNfit$sigma_obs
+#' Sigma_hat=PLNfit$sigma_O
 #' #-- original true clique
 #' data$TC
 #' #-- clique found by mclust
@@ -303,7 +302,7 @@ init_mclust<-function(Sigma,r, n.noise=NULL){
 #' \item{clique: }{vector containing the indices of the nodes in the clique}}
 #' @export
 #' @importFrom stats cov2cor
-#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+#' @examples data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 #' Sigma=data$Sigma
 #' initClique=FitSparsePCA(data$Y,r=1)$cliques
 #' initOmega(Sigma=Sigma, cliqueList=initClique)
@@ -334,7 +333,7 @@ initOmega <- function(Sigma = NULL,  cliqueList,cst=1.1) {
 #'
 #' @param Y count data matrix
 #' @param cliqueList list of size r of initial neighbors for each missing actor
-#' @param sigma_obs estimated observed bloc of the variance-covariance matrix
+#' @param sigma_O estimated observed bloc of the variance-covariance matrix
 #' @param MO estimated mean values of the latent parameters corresponding to observed species
 #' @param r number of missing actors
 #'
@@ -346,17 +345,17 @@ initOmega <- function(Sigma = NULL,  cliqueList,cst=1.1) {
 #' \item{MHinit:}{ Mean values for the hidden latent Gaussian parameters}}
 #' @export
 #'
-#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+#' @examples data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 #' PLNfit<-norm_PLN(data$Y)
 #' MO<-PLNfit$MO
-#' sigma_obs=PLNfit$sigma_obs
+#' sigma_O=PLNfit$sigma_O
 #' #-- find initial clique
 #' findclique=FitSparsePCA(data$Y,r=1)
 #' initClique=findclique$cliques
 #' #-- initialize the VEM
-#' initList=initVEM(Y=data$Y,cliqueList=initClique,sigma_obs=sigma_obs, MO=MO,r=1 )
+#' initList=initVEM(Y=data$Y,cliqueList=initClique,sigma_O=sigma_O, MO=MO,r=1 )
 #' str(initList)
-initVEM<-function(Y,cliqueList,sigma_obs,MO,r){
+initVEM<-function(Y,cliqueList,sigma_O,MO,r){
   p=ncol(Y)
   n=nrow(Y)
   # Tree
@@ -365,7 +364,7 @@ initVEM<-function(Y,cliqueList,sigma_obs,MO,r){
   diag(Wginit) = 0;diag(Winit) = 0
   # Gaussian layer U
   if(r!=0){
-    initial.param<-initOmega(sigma_obs,cliqueList = cliqueList,cst=1.05 )
+    initial.param<-initOmega(sigma_O,cliqueList = cliqueList,cst=1.05 )
     omegainit=initial.param$K0
     MHinit<-sapply(cliqueList, function(clique){
       if(length(clique)>1){
@@ -375,7 +374,7 @@ initVEM<-function(Y,cliqueList,sigma_obs,MO,r){
     })
 
   }else{#init with no missing actors
-    omegainit=solve(sigma_obs)
+    omegainit=solve(sigma_O)
     MHinit=NULL
   }
   return(list(Wginit= Wginit, Winit= Winit, omegainit=omegainit,MHinit=MHinit))

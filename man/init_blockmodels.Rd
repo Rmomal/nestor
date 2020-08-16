@@ -4,13 +4,13 @@
 \alias{init_blockmodels}
 \title{Find initial cliques using blockmodels on the initial marginalized network}
 \usage{
-init_blockmodels(Y, sigma_obs, MO, SO, k = 3, poisson = FALSE,
+init_blockmodels(Y, sigma_O, MO, SO, k = 3, poisson = FALSE,
   alpha = 0.1, cores = 1)
 }
 \arguments{
 \item{Y}{count data}
 
-\item{sigma_obs}{original covariance matrix estimate}
+\item{sigma_O}{original covariance matrix estimate}
 
 \item{MO}{original observed means estimate}
 
@@ -31,12 +31,12 @@ a list of possible cliques
 Find initial cliques using blockmodels on the initial marginalized network
 }
 \examples{
-data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 data$TC
 PLNfit<-norm_PLN(data$Y)
 MO<-PLNfit$MO
 SO<-PLNfit$SO
-sigma_obs=PLNfit$sigma_obs
+sigma_O=PLNfit$sigma_O
 #-- initialize with blockmodels
-init_blockmodels(data$Y,sigma_obs, MO, SO, k=2 )
+init_blockmodels(data$Y,sigma_O, MO, SO, k=2 )
 }

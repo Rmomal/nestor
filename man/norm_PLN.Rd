@@ -13,13 +13,13 @@ norm_PLN(Y)
 \itemize{
 \item{MO}{ Normalized means}
 \item{SO}{ Normalized marginal variances}
-\item{sigma_obs}{correlation matrix computed from the variance-covariance matrix estimated by PLNmodels}}
+\item{sigma_O}{ Correlation matrix computed from the variance-covariance matrix estimated by PLNmodels, and corresponding to observed variables.}}
 }
 \description{
 Runs PLN function from the PLNmodels package and normalized the outputs
 }
 \examples{
- data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+ data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 normPLNfit<-norm_PLN(data$Y)
 str(normPLNfit)
 }

@@ -4,7 +4,7 @@
 \alias{boot_FitSparsePCA}
 \title{Finds initial cliques using a sparse PCA on bootstraps sub-samples}
 \usage{
-boot_FitSparsePCA(Y, B, r, minV = 1, cores = 1, unique = TRUE)
+boot_FitSparsePCA(Y, B, r, min.size = 1, cores = 1, unique = TRUE)
 }
 \arguments{
 \item{Y}{data}
@@ -13,7 +13,7 @@ boot_FitSparsePCA(Y, B, r, minV = 1, cores = 1, unique = TRUE)
 
 \item{r}{number of missing actors}
 
-\item{minV}{minimum number of neighbors of missing actors}
+\item{min.size}{minimum number of neighbors of missing actors}
 
 \item{cores}{number of cores for possible parallel computation}
 
@@ -28,6 +28,6 @@ boot_FitSparsePCA(Y, B, r, minV = 1, cores = 1, unique = TRUE)
 Finds initial cliques using a sparse PCA on bootstraps sub-samples
 }
 \examples{
-data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 boot_FitSparsePCA(data$Y, B=100, r=1)
 }

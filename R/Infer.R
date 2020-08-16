@@ -402,15 +402,15 @@ Mstep<-function(M, S, Pg, Omega,W, Wg, p,logSTW, logSTWg,  trackJ=FALSE){
 #' @importFrom tidyr gather
 #' @importFrom gridExtra grid.arrange
 #' @importFrom utils tail
-#' @examples data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=FALSE)
+#' @examples data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
 #' PLNfit<-norm_PLN(data$Y)
 #' MO<-PLNfit$MO
 #' SO<-PLNfit$SO
-#' sigma_obs=PLNfit$sigma_obs
+#' sigma_O=PLNfit$sigma_O
 #' #-- initialize with true clique for example
 #' initClique=data$TC
 #' #-- initialize the VEM
-#' initList=initVEM(data$Y,cliqueList=initClique,sigma_obs, MO,r=1 )
+#' initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
 #' #-- run core function nestor
 #' fit=nestor(data$Y, MO,SO, initList=initList, maxIter=5,verbatim=1)
 #' str(fit)
@@ -525,7 +525,7 @@ nestor<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1,
 #'
 #' @param cliqueList a list containing all initial cliques to be tested
 #' @param Y count dataset
-#' @param sigma_obs result of PLN estimation: variance covariance matrix of observed data
+#' @param sigma_O result of PLN estimation: variance covariance matrix of observed data
 #' @param MO result of PLN estimation: means matrix of observed data
 #' @param SO result of PLN estimation: marginal variances matrix of observed data
 #' @param r number of hidden variables
@@ -538,25 +538,25 @@ nestor<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1,
 #' @return a list containing the fit of nestor for every cliques contained in cliqueList
 #' @export
 #'
-#' @examples  data=missing_from_scratch(n=100,p=10,r=1,type="scale-free", plot=FALSE)
+#' @examples  data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
 #' PLNfit<-norm_PLN(data$Y)
 #' MO<-PLNfit$MO
 #' SO<-PLNfit$SO
-#' sigma_obs=PLNfit$sigma_obs
+#' sigma_O=PLNfit$sigma_O
 #' #-- find a list of initial cliques
 #' findcliqueList=boot_FitSparsePCA(data$Y, B=5, r=1)
 #' cliqueList=findcliqueList$cliqueList
 #' length(cliqueList)
 #' #-- run List.nestor
-#' fitList=List.nestor(cliqueList,data$Y, sigma_obs, MO,SO, r=1)
+#' fitList=List.nestor(cliqueList,data$Y, sigma_O, MO,SO, r=1)
 #' length(fitList)
 #' str(fitList[[1]])
-List.nestor<-function(cliqueList, Y, sigma_obs, MO,SO, r,alpha=0.1, cores=1,maxIter=20,eps=1e-3, trackJ=FALSE){
+List.nestor<-function(cliqueList, Y, sigma_O, MO,SO, r,alpha=0.1, cores=1,maxIter=20,eps=1e-3, trackJ=FALSE){
   p=ncol(Y) ; O=1:p ; n=nrow(Y)
   #--- run all initialisations with parallel computation
   list<-mclapply(cliqueList, function(c){
     #init
-    init=initVEM(Y = Y, cliqueList=c, sigma_obs,MO,r = r)
+    init=initVEM(Y = Y, cliqueList=c, sigma_O,MO,r = r)
    #run nestor
     VEM<- tryCatch({nestor(Y=Y,MO=MO,SO=SO,initList=init, eps=eps, alpha=alpha,maxIter=maxIter,
                             verbatim = 0, print.hist=FALSE, trackJ=trackJ)},
