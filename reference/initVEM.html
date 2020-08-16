@@ -120,7 +120,7 @@
     <p>Initialize all parameters for the variational inference</p>
     </div>
 
-    <pre class="usage"><span class='fu'>initVEM</span>(<span class='no'>Y</span>, <span class='no'>cliqueList</span>, <span class='no'>sigma_obs</span>, <span class='no'>MO</span>, <span class='no'>r</span>)</pre>
+    <pre class="usage"><span class='fu'>initVEM</span>(<span class='no'>Y</span>, <span class='no'>cliqueList</span>, <span class='no'>sigma_O</span>, <span class='no'>MO</span>, <span class='no'>r</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -134,7 +134,7 @@
       <td><p>list of size r of initial neighbors for each missing actor</p></td>
     </tr>
     <tr>
-      <th>sigma_obs</th>
+      <th>sigma_O</th>
       <td><p>estimated observed bloc of the variance-covariance matrix</p></td>
     </tr>
     <tr>
@@ -158,25 +158,22 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>data</span><span class='kw'>=</span><span class='fu'><a href='missing_from_scratch.html'>missing_from_scratch</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>100</span>,<span class='kw'>p</span><span class='kw'>=</span><span class='fl'>10</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>,<span class='kw'>type</span><span class='kw'>=</span><span class='st'>"scale-free"</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='initVEM-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>PLNfit</span><span class='kw'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>)</div><div class='output co'>#&gt; 
-#&gt;  Initialization...
-#&gt;  Adjusting a PLN model with full covariance model
-#&gt;  Post-treatments...
-#&gt;  DONE!</div><div class='input'><span class='no'>MO</span><span class='kw'>&lt;-</span><span class='no'>PLNfit</span>$<span class='no'>MO</span>
-<span class='no'>sigma_obs</span><span class='kw'>=</span><span class='no'>PLNfit</span>$<span class='no'>sigma_obs</span>
+    <pre class="examples"><div class='input'><span class='no'>data</span><span class='kw'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>100</span>,<span class='kw'>p</span><span class='kw'>=</span><span class='fl'>10</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>,<span class='kw'>type</span><span class='kw'>=</span><span class='st'>"scale-free"</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='initVEM-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>PLNfit</span><span class='kw'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>)
+<span class='no'>MO</span><span class='kw'>&lt;-</span><span class='no'>PLNfit</span>$<span class='no'>MO</span>
+<span class='no'>sigma_O</span><span class='kw'>=</span><span class='no'>PLNfit</span>$<span class='no'>sigma_O</span>
 <span class='co'>#-- find initial clique</span>
 <span class='no'>findclique</span><span class='kw'>=</span><span class='fu'><a href='FitSparsePCA.html'>FitSparsePCA</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>)
 <span class='no'>initClique</span><span class='kw'>=</span><span class='no'>findclique</span>$<span class='no'>cliques</span>
 <span class='co'>#-- initialize the VEM</span>
-<span class='no'>initList</span><span class='kw'>=</span><span class='fu'>initVEM</span>(<span class='kw'>Y</span><span class='kw'>=</span><span class='no'>data</span>$<span class='no'>Y</span>,<span class='kw'>cliqueList</span><span class='kw'>=</span><span class='no'>initClique</span>,<span class='kw'>sigma_obs</span><span class='kw'>=</span><span class='no'>sigma_obs</span>, <span class='kw'>MO</span><span class='kw'>=</span><span class='no'>MO</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span> )
+<span class='no'>initList</span><span class='kw'>=</span><span class='fu'>initVEM</span>(<span class='kw'>Y</span><span class='kw'>=</span><span class='no'>data</span>$<span class='no'>Y</span>,<span class='kw'>cliqueList</span><span class='kw'>=</span><span class='no'>initClique</span>,<span class='kw'>sigma_O</span><span class='kw'>=</span><span class='no'>sigma_O</span>, <span class='kw'>MO</span><span class='kw'>=</span><span class='no'>MO</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span> )
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>initList</span>)</div><div class='output co'>#&gt; List of 4
 #&gt;  $ Wginit   : num [1:11, 1:11] 0 0.00826 0.00826 0.00826 0.00826 ...
 #&gt;  $ Winit    : num [1:11, 1:11] 0 0.00826 0.00826 0.00826 0.00826 ...
-#&gt;  $ omegainit: num [1:11, 1:11] 4.15144 0.92074 0.00971 0.02166 1.30097 ...
+#&gt;  $ omegainit: num [1:11, 1:11] 4.7519 -0.0402 0.0684 1.1235 -0.2091 ...
 #&gt;   ..- attr(*, "dimnames")=List of 2
 #&gt;   .. ..$ : chr [1:11] "Y1" "Y2" "Y3" "Y4" ...
 #&gt;   .. ..$ : chr [1:11] "Y1" "Y2" "Y3" "Y4" ...
-#&gt;  $ MHinit   : num [1:100, 1] 1.001 0.795 0.587 0.785 1.077 ...</div></pre>
+#&gt;  $ MHinit   : num [1:100, 1] -0.8567 -0.2398 -1.1751 0.3371 0.0857 ...</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

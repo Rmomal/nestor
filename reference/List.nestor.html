@@ -120,8 +120,8 @@
     <p>Run function nestor on a list of initial cliques using parallel computation (mclapply)</p>
     </div>
 
-    <pre class="usage"><span class='fu'>List.nestor</span>(<span class='no'>cliqueList</span>, <span class='no'>Y</span>, <span class='no'>sigma_obs</span>, <span class='no'>MO</span>, <span class='no'>SO</span>, <span class='no'>r</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
-  <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>eps</span> <span class='kw'>=</span> <span class='fl'>0.001</span>, <span class='kw'>trackJ</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>List.nestor</span>(<span class='no'>cliqueList</span>, <span class='no'>Y</span>, <span class='no'>sigma_O</span>, <span class='no'>MO</span>, <span class='no'>SO</span>, <span class='no'>r</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>eps</span> <span class='kw'>=</span> <span class='fl'>0.001</span>, <span class='kw'>trackJ</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -135,7 +135,7 @@
       <td><p>count dataset</p></td>
     </tr>
     <tr>
-      <th>sigma_obs</th>
+      <th>sigma_O</th>
       <td><p>result of PLN estimation: variance covariance matrix of observed data</p></td>
     </tr>
     <tr>
@@ -177,19 +177,16 @@
     <p>a list containing the fit of nestor for every cliques contained in cliqueList</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='no'>data</span><span class='kw'>=</span><span class='fu'><a href='missing_from_scratch.html'>missing_from_scratch</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>100</span>,<span class='kw'>p</span><span class='kw'>=</span><span class='fl'>10</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>,<span class='kw'>type</span><span class='kw'>=</span><span class='st'>"scale-free"</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
-<span class='no'>PLNfit</span><span class='kw'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>)</div><div class='output co'>#&gt; 
-#&gt;  Initialization...
-#&gt;  Adjusting a PLN model with full covariance model
-#&gt;  Post-treatments...
-#&gt;  DONE!</div><div class='input'><span class='no'>MO</span><span class='kw'>&lt;-</span><span class='no'>PLNfit</span>$<span class='no'>MO</span>
+    <pre class="examples"><div class='input'> <span class='no'>data</span><span class='kw'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>100</span>,<span class='kw'>p</span><span class='kw'>=</span><span class='fl'>10</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>,<span class='kw'>type</span><span class='kw'>=</span><span class='st'>"scale-free"</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
+<span class='no'>PLNfit</span><span class='kw'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>)
+<span class='no'>MO</span><span class='kw'>&lt;-</span><span class='no'>PLNfit</span>$<span class='no'>MO</span>
 <span class='no'>SO</span><span class='kw'>&lt;-</span><span class='no'>PLNfit</span>$<span class='no'>SO</span>
-<span class='no'>sigma_obs</span><span class='kw'>=</span><span class='no'>PLNfit</span>$<span class='no'>sigma_obs</span>
+<span class='no'>sigma_O</span><span class='kw'>=</span><span class='no'>PLNfit</span>$<span class='no'>sigma_O</span>
 <span class='co'>#-- find a list of initial cliques</span>
 <span class='no'>findcliqueList</span><span class='kw'>=</span><span class='fu'><a href='boot_FitSparsePCA.html'>boot_FitSparsePCA</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>, <span class='kw'>B</span><span class='kw'>=</span><span class='fl'>5</span>, <span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>)
 <span class='no'>cliqueList</span><span class='kw'>=</span><span class='no'>findcliqueList</span>$<span class='no'>cliqueList</span>
 <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>cliqueList</span>)</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='co'>#-- run List.nestor</span>
-<span class='no'>fitList</span><span class='kw'>=</span><span class='fu'>List.nestor</span>(<span class='no'>cliqueList</span>,<span class='no'>data</span>$<span class='no'>Y</span>, <span class='no'>sigma_obs</span>, <span class='no'>MO</span>,<span class='no'>SO</span>, <span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>)
+<span class='no'>fitList</span><span class='kw'>=</span><span class='fu'>List.nestor</span>(<span class='no'>cliqueList</span>,<span class='no'>data</span>$<span class='no'>Y</span>, <span class='no'>sigma_O</span>, <span class='no'>MO</span>,<span class='no'>SO</span>, <span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>fitList</span>)</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>fitList</span><span class='kw'>[[</span><span class='fl'>1</span>]])</div><div class='output co'>#&gt; List of 12
 #&gt;  $ M        : num [1:100, 1:11] 1.099 -0.283 0.442 -0.242 -1.104 ...
 #&gt;  $ S        : num [1:100, 1:11] 0.0441 0.124 0.0751 0.1209 0.1908 ...
@@ -209,7 +206,7 @@
 #&gt;   ..$ diffOmega: num [1:20] 6.5377 0.3803 0.4077 0.1279 0.0447 ...
 #&gt;   ..$ diffWg   : num [1:20] 4.91e+32 1.41e+04 7.98e+15 3.40e+05 1.03e+16 ...
 #&gt;  $ finalIter: num 20
-#&gt;  $ time     : 'difftime' num 1.25816488265991
+#&gt;  $ time     : 'difftime' num 1.2362105846405
 #&gt;   ..- attr(*, "units")= chr "secs"
 #&gt;  $ max.prec : logi FALSE
 #&gt;  $ clique   :List of 1

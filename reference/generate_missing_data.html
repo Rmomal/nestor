@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Simulate data and parameters including missing actors. — missing_from_scratch • nestor</title>
+<title>Simulate data and parameters including missing actors. — generate_missing_data • nestor</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Simulate data and parameters including missing actors. — missing_from_scratch" />
+<meta property="og:title" content="Simulate data and parameters including missing actors. — generate_missing_data" />
 <meta property="og:description" content="Simulate data and parameters including missing actors." />
 
 
@@ -113,14 +113,14 @@
     <div class="page-header">
     <h1>Simulate data and parameters including missing actors.</h1>
     
-    <div class="hidden name"><code>missing_from_scratch.Rd</code></div>
+    <div class="hidden name"><code>generate_missing_data.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>Simulate data and parameters including missing actors.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>missing_from_scratch</span>(<span class='no'>n</span>, <span class='no'>p</span>, <span class='kw'>r</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>type</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>dens</span> <span class='kw'>=</span> <span class='fl'>2</span>/<span class='no'>p</span>)</pre>
+    <pre class="usage"><span class='fu'>generate_missing_data</span>(<span class='no'>n</span>, <span class='no'>p</span>, <span class='kw'>r</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>type</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>dens</span> <span class='kw'>=</span> <span class='fl'>2</span>/<span class='no'>p</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -170,18 +170,18 @@
 <span class='no'>p</span><span class='kw'>=</span><span class='fl'>10</span>
 <span class='no'>r</span><span class='kw'>=</span><span class='fl'>1</span>
 <span class='no'>type</span><span class='kw'>=</span><span class='st'>"scale-free"</span>
-<span class='no'>data</span><span class='kw'>=</span><span class='fu'>missing_from_scratch</span>(<span class='no'>n</span>,<span class='no'>p</span>,<span class='no'>r</span>,<span class='no'>type</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='missing_from_scratch-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>data</span>)</div><div class='output co'>#&gt; List of 7
-#&gt;  $ Y    : int [1:100, 1:10] 14 0 16 5 5 17 11 3 5 0 ...
-#&gt;  $ UH   : num [1:100] -1.681 1.63 -0.785 1.481 0.48 ...
-#&gt;  $ Sigma: num [1:10, 1:10] 1.481 0.487 0.348 0.572 -0.27 ...
-#&gt;  $ Omega: num [1:11, 1:11] 1.63 1.01 -1.45e-16 5.01e-16 -9.04e-17 ...
-#&gt;  $ G    : num [1:11, 1:11] 0 0 0 0 0 0 0 0 0 0 ...
+<span class='no'>data</span><span class='kw'>=</span><span class='fu'>generate_missing_data</span>(<span class='no'>n</span>,<span class='no'>p</span>,<span class='no'>r</span>,<span class='no'>type</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='generate_missing_data-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>data</span>)</div><div class='output co'>#&gt; List of 7
+#&gt;  $ Y    : int [1:100, 1:10] 8 14 2 6 9 7 2 13 9 16 ...
+#&gt;  $ UH   : num [1:100] -1.32 -1.019 2.041 -0.243 -1.548 ...
+#&gt;  $ Sigma: num [1:10, 1:10] 0.822 -0.748 -0.748 -0.748 0.342 ...
+#&gt;  $ Omega: num [1:11, 1:11] 4.15 7.19e-01 -5.07e-16 -2.87e-16 4.10e-18 ...
+#&gt;  $ G    : num [1:11, 1:11] 0 1 1 1 0 0 0 0 0 0 ...
 #&gt;   ..- attr(*, "dimnames")=List of 2
 #&gt;   .. ..$ : NULL
 #&gt;   .. ..$ : NULL
 #&gt;  $ TC   :List of 1
-#&gt;   ..$ : int [1:5] 1 2 3 4 8
-#&gt;  $ H    : int 2</div></pre>
+#&gt;   ..$ : int [1:6] 1 5 6 7 8 10
+#&gt;  $ H    : int 1</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

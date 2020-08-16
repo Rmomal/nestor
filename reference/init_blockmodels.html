@@ -120,7 +120,7 @@
     <p>Find initial cliques using blockmodels on the initial marginalized network</p>
     </div>
 
-    <pre class="usage"><span class='fu'>init_blockmodels</span>(<span class='no'>Y</span>, <span class='no'>sigma_obs</span>, <span class='no'>MO</span>, <span class='no'>SO</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>poisson</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+    <pre class="usage"><span class='fu'>init_blockmodels</span>(<span class='no'>Y</span>, <span class='no'>sigma_O</span>, <span class='no'>MO</span>, <span class='no'>SO</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>poisson</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -131,7 +131,7 @@
       <td><p>count data</p></td>
     </tr>
     <tr>
-      <th>sigma_obs</th>
+      <th>sigma_O</th>
       <td><p>original covariance matrix estimate</p></td>
     </tr>
     <tr>
@@ -165,30 +165,23 @@
     <p>a list of possible cliques</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>data</span><span class='kw'>=</span><span class='fu'><a href='missing_from_scratch.html'>missing_from_scratch</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>100</span>,<span class='kw'>p</span><span class='kw'>=</span><span class='fl'>10</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>,<span class='kw'>type</span><span class='kw'>=</span><span class='st'>"scale-free"</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='init_blockmodels-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>data</span>$<span class='no'>TC</span></div><div class='output co'>#&gt; [[1]]
-#&gt; [1]  1  2  3  4  5  6  8  9 10
-#&gt; </div><div class='input'><span class='no'>PLNfit</span><span class='kw'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>)</div><div class='output co'>#&gt; 
-#&gt;  Initialization...
-#&gt;  Adjusting a PLN model with full covariance model
-#&gt;  Post-treatments...
-#&gt;  DONE!</div><div class='input'><span class='no'>MO</span><span class='kw'>&lt;-</span><span class='no'>PLNfit</span>$<span class='no'>MO</span>
+    <pre class="examples"><div class='input'><span class='no'>data</span><span class='kw'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>100</span>,<span class='kw'>p</span><span class='kw'>=</span><span class='fl'>10</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>,<span class='kw'>type</span><span class='kw'>=</span><span class='st'>"scale-free"</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='init_blockmodels-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>data</span>$<span class='no'>TC</span></div><div class='output co'>#&gt; [[1]]
+#&gt; [1] 1 2 3 4 8
+#&gt; </div><div class='input'><span class='no'>PLNfit</span><span class='kw'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>)
+<span class='no'>MO</span><span class='kw'>&lt;-</span><span class='no'>PLNfit</span>$<span class='no'>MO</span>
 <span class='no'>SO</span><span class='kw'>&lt;-</span><span class='no'>PLNfit</span>$<span class='no'>SO</span>
-<span class='no'>sigma_obs</span><span class='kw'>=</span><span class='no'>PLNfit</span>$<span class='no'>sigma_obs</span>
+<span class='no'>sigma_O</span><span class='kw'>=</span><span class='no'>PLNfit</span>$<span class='no'>sigma_O</span>
 <span class='co'>#-- initialize with blockmodels</span>
-<span class='fu'>init_blockmodels</span>(<span class='no'>data</span>$<span class='no'>Y</span>,<span class='no'>sigma_obs</span>, <span class='no'>MO</span>, <span class='no'>SO</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>2</span> )</div><div class='output co'>#&gt; 
-#&gt; Likelihoods: -15.65398 , -15.63561 , -15.63555 , 
-#&gt; Convergence took 0.04 secs  and  3  iterations.
-#&gt; Likelihood difference = 5.922979e-05 
-#&gt; Betas difference = 4.831772e-07
-#&gt; </div><div class='output co'>#&gt; $cliqueList
+<span class='fu'>init_blockmodels</span>(<span class='no'>data</span>$<span class='no'>Y</span>,<span class='no'>sigma_O</span>, <span class='no'>MO</span>, <span class='no'>SO</span>, <span class='kw'>k</span><span class='kw'>=</span><span class='fl'>2</span> )</div><div class='output co'>#&gt; 
+#&gt; </div><div class='output co'>#&gt; $cliqueList
 #&gt; $cliqueList[[1]]
 #&gt; $cliqueList[[1]][[1]]
-#&gt; [1]  3  4 10
+#&gt; [1] 3
 #&gt; 
 #&gt; 
 #&gt; $cliqueList[[2]]
 #&gt; $cliqueList[[2]][[1]]
-#&gt; [1] 1 2 5 6 7 8 9
+#&gt; [1]  1  2  4  5  6  7  8  9 10
 #&gt; 
 #&gt; 
 #&gt; </div></pre>
