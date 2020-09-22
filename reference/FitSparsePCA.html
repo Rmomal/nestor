@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nestor</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -89,6 +89,18 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Vignettes
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/Usage.html">Usage example</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -120,7 +132,7 @@
     <p>Fit sparse PCA on a grid of alpha</p>
     </div>
 
-    <pre class="usage"><span class='fu'>FitSparsePCA</span>(<span class='no'>Y</span>, <span class='kw'>r</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>min.size</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>alphaGrid</span> <span class='kw'>=</span> <span class='fl'>10</span>^(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(-<span class='fl'>4</span>, <span class='fl'>0</span>, <span class='kw'>by</span> <span class='kw'>=</span>
+    <pre class="usage"><span class='fu'>FitSparsePCA</span>(<span class='kw'>Y</span>, r = <span class='fl'>1</span>, min.size = <span class='fl'>1</span>, alphaGrid = <span class='fl'>10</span><span class='op'>^</span>(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='op'>-</span><span class='fl'>4</span>, <span class='fl'>0</span>, by =
   <span class='fl'>0.1</span>)))</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -157,12 +169,15 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>data</span><span class='kw'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>100</span>,<span class='kw'>p</span><span class='kw'>=</span><span class='fl'>10</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>,<span class='kw'>type</span><span class='kw'>=</span><span class='st'>"scale-free"</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='FitSparsePCA-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>TrueClique</span><span class='kw'>=</span><span class='no'>data</span>$<span class='no'>TC</span>
-<span class='no'>findclique</span><span class='kw'>=</span><span class='fu'>FitSparsePCA</span>(<span class='no'>data</span>$<span class='no'>Y</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>)
-<span class='no'>initClique</span><span class='kw'>=</span><span class='no'>findclique</span>$<span class='no'>cliques</span>
-<span class='no'>TrueClique</span></div><div class='output co'>#&gt; [[1]]
+    <pre class="examples"><div class='input'><span class='kw'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(n=<span class='fl'>100</span>,p=<span class='fl'>10</span>,r=<span class='fl'>1</span>,type=<span class='st'>"scale-free"</span>, plot=<span class='fl'>TRUE</span>)
+</div><div class='img'><img src='FitSparsePCA-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw'>TrueClique</span><span class='op'>=</span><span class='kw'>data</span><span class='op'>$</span><span class='kw'>TC</span>
+<span class='kw'>findclique</span><span class='op'>=</span><span class='fu'>FitSparsePCA</span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>,r=<span class='fl'>1</span>)
+<span class='kw'>initClique</span><span class='op'>=</span><span class='kw'>findclique</span><span class='op'>$</span><span class='kw'>cliques</span>
+<span class='kw'>TrueClique</span>
+</div><div class='output co'>#&gt; [[1]]
 #&gt; [1] 1 4 7 8 9
-#&gt; </div><div class='input'><span class='no'>initClique</span></div><div class='output co'>#&gt; [[1]]
+#&gt; </div><div class='input'><span class='kw'>initClique</span>
+</div><div class='output co'>#&gt; [[1]]
 #&gt; [1]  4  8 10
 #&gt; </div></pre>
   </div>
@@ -180,7 +195,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

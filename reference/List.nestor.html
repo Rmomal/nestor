@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nestor</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -89,6 +89,18 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Vignettes
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/Usage.html">Usage example</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -120,8 +132,8 @@
     <p>Run function nestor on a list of initial cliques using parallel computation (mclapply)</p>
     </div>
 
-    <pre class="usage"><span class='fu'>List.nestor</span>(<span class='no'>cliqueList</span>, <span class='no'>Y</span>, <span class='no'>sigma_O</span>, <span class='no'>MO</span>, <span class='no'>SO</span>, <span class='no'>r</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>maxIter</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>eps</span> <span class='kw'>=</span> <span class='fl'>0.001</span>, <span class='kw'>trackJ</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>List.nestor</span>(<span class='kw'>cliqueList</span>, <span class='kw'>Y</span>, <span class='kw'>sigma_O</span>, <span class='kw'>MO</span>, <span class='kw'>SO</span>, <span class='kw'>r</span>, alpha = <span class='fl'>0.1</span>, cores = <span class='fl'>1</span>,
+  maxIter = <span class='fl'>20</span>, eps = <span class='fl'>0.001</span>, trackJ = <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -177,36 +189,39 @@
     <p>a list containing the fit of nestor for every cliques contained in cliqueList</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='no'>data</span><span class='kw'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='fl'>100</span>,<span class='kw'>p</span><span class='kw'>=</span><span class='fl'>10</span>,<span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>,<span class='kw'>type</span><span class='kw'>=</span><span class='st'>"scale-free"</span>, <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
-<span class='no'>PLNfit</span><span class='kw'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>)
-<span class='no'>MO</span><span class='kw'>&lt;-</span><span class='no'>PLNfit</span>$<span class='no'>MO</span>
-<span class='no'>SO</span><span class='kw'>&lt;-</span><span class='no'>PLNfit</span>$<span class='no'>SO</span>
-<span class='no'>sigma_O</span><span class='kw'>=</span><span class='no'>PLNfit</span>$<span class='no'>sigma_O</span>
+    <pre class="examples"><div class='input'> <span class='kw'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(n=<span class='fl'>100</span>,p=<span class='fl'>10</span>,r=<span class='fl'>1</span>,type=<span class='st'>"scale-free"</span>, plot=<span class='fl'>FALSE</span>)
+<span class='kw'>PLNfit</span><span class='op'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>)
+<span class='kw'>MO</span><span class='op'>&lt;-</span><span class='kw'>PLNfit</span><span class='op'>$</span><span class='kw'>MO</span>
+<span class='kw'>SO</span><span class='op'>&lt;-</span><span class='kw'>PLNfit</span><span class='op'>$</span><span class='kw'>SO</span>
+<span class='kw'>sigma_O</span><span class='op'>=</span><span class='kw'>PLNfit</span><span class='op'>$</span><span class='kw'>sigma_O</span>
 <span class='co'>#-- find a list of initial cliques</span>
-<span class='no'>findcliqueList</span><span class='kw'>=</span><span class='fu'><a href='boot_FitSparsePCA.html'>boot_FitSparsePCA</a></span>(<span class='no'>data</span>$<span class='no'>Y</span>, <span class='kw'>B</span><span class='kw'>=</span><span class='fl'>5</span>, <span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>)
-<span class='no'>cliqueList</span><span class='kw'>=</span><span class='no'>findcliqueList</span>$<span class='no'>cliqueList</span>
-<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>cliqueList</span>)</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='co'>#-- run List.nestor</span>
-<span class='no'>fitList</span><span class='kw'>=</span><span class='fu'>List.nestor</span>(<span class='no'>cliqueList</span>,<span class='no'>data</span>$<span class='no'>Y</span>, <span class='no'>sigma_O</span>, <span class='no'>MO</span>,<span class='no'>SO</span>, <span class='kw'>r</span><span class='kw'>=</span><span class='fl'>1</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>fitList</span>)</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>fitList</span><span class='kw'>[[</span><span class='fl'>1</span>]])</div><div class='output co'>#&gt; List of 12
-#&gt;  $ M        : num [1:100, 1:11] 1.099 -0.283 0.442 -0.242 -1.104 ...
-#&gt;  $ S        : num [1:100, 1:11] 0.0441 0.124 0.0751 0.1209 0.1908 ...
-#&gt;  $ Pg       : num [1:11, 1:11] 0.00 2.09e-13 0.00 1.02e-10 1.00 ...
-#&gt;  $ Wg       : num [1:11, 1:11] 0.00 2.11e-09 0.00 1.05e-06 1.03e+05 ...
-#&gt;  $ W        : num [1:11, 1:11] 0.00 6.93e-09 0.00 4.33e-06 9.93e+04 ...
-#&gt;  $ Omega    : num [1:11, 1:11] 1.333 -0.402 1.341 -0.404 -0.666 ...
-#&gt;  $ lowbound :'data.frame':	21 obs. of  5 variables:
-#&gt;   ..$ J        : num [1:21] -622 -613 -607 -610 -610 ...
-#&gt;   ..$ T1       : num [1:21] -823 -938 -954 -964 -967 ...
-#&gt;   ..$ T2       : num [1:21] -107.487 -0.451 -1.824 -0.154 -0.08 ...
-#&gt;   ..$ T3       : num [1:21] 309 326 349 354 357 ...
-#&gt;   ..$ parameter: chr [1:21] "complete" "complete" "complete" "complete" ...
-#&gt;  $ features :'data.frame':	20 obs. of  4 variables:
-#&gt;   ..$ diffPg   : num [1:20] 1.772 0.567 0.184 0.156 0.1 ...
-#&gt;   ..$ diffW    : num [1:20] 31.3 96.2 661.3 4644.3 34921.7 ...
-#&gt;   ..$ diffOmega: num [1:20] 6.5377 0.3803 0.4077 0.1279 0.0447 ...
-#&gt;   ..$ diffWg   : num [1:20] 4.91e+32 1.41e+04 7.98e+15 3.40e+05 1.03e+16 ...
-#&gt;  $ finalIter: num 20
-#&gt;  $ time     : 'difftime' num 1.2362105846405
+<span class='kw'>findcliqueList</span><span class='op'>=</span><span class='fu'><a href='boot_FitSparsePCA.html'>boot_FitSparsePCA</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>, B=<span class='fl'>5</span>, r=<span class='fl'>1</span>)
+<span class='kw'>cliqueList</span><span class='op'>=</span><span class='kw'>findcliqueList</span><span class='op'>$</span><span class='kw'>cliqueList</span>
+<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='kw'>cliqueList</span>)
+</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='co'>#-- run List.nestor</span>
+<span class='kw'>fitList</span><span class='op'>=</span><span class='fu'>List.nestor</span>(<span class='kw'>cliqueList</span>,<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>, <span class='kw'>sigma_O</span>, <span class='kw'>MO</span>,<span class='kw'>SO</span>, r=<span class='fl'>1</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='kw'>fitList</span>)
+</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='kw'>fitList</span>[[<span class='fl'>1</span>]])
+</div><div class='output co'>#&gt; List of 12
+#&gt;  $ M        : num [1:100, 1:11] 1.101 -0.282 0.444 -0.24 -1.103 ...
+#&gt;  $ S        : num [1:100, 1:11] 0.0441 0.1241 0.0751 0.121 0.1909 ...
+#&gt;  $ Pg       : num [1:11, 1:11] 0.00 2.27e-10 1.00 3.20e-08 1.00 ...
+#&gt;  $ Wg       : num [1:11, 1:11] 0.00 1.11e-04 3.89e+09 1.55e-02 4.53e+06 ...
+#&gt;  $ W        : num [1:11, 1:11] 0.00 2.81e-04 1.18e+06 4.98e-02 3.48e+06 ...
+#&gt;  $ Omega    : num [1:11, 1:11] 3.26 -0.402 1.341 -0.404 -0.666 ...
+#&gt;  $ lowbound :'data.frame':	16 obs. of  5 variables:
+#&gt;   ..$ J        : num [1:16] -725 -679 -663 -562 -530 ...
+#&gt;   ..$ T1       : num [1:16] -1133 -1055 -1033 -924 -890 ...
+#&gt;   ..$ T2       : num [1:16] 97.938 -0.451 -0.345 -4.898 0.494 ...
+#&gt;   ..$ T3       : num [1:16] 309 377 370 367 359 ...
+#&gt;   ..$ parameter: chr [1:16] "complete" "complete" "complete" "complete" ...
+#&gt;  $ features :'data.frame':	15 obs. of  4 variables:
+#&gt;   ..$ diffPg   : num [1:15] 0.645 0.567 0.264 0.99 0.952 ...
+#&gt;   ..$ diffW    : num [1:15] 50.2 95.5 410.9 3184.4 37977.8 ...
+#&gt;   ..$ diffOmega: num [1:15] 6.539 1.708 0.301 1.01 0.867 ...
+#&gt;   ..$ diffWg   : num [1:15] 4.93e+32 4.93e+04 7.51e+15 4.33e+17 5.28e+19 ...
+#&gt;  $ finalIter: num 15
+#&gt;  $ time     : 'difftime' num 0.871580839157104
 #&gt;   ..- attr(*, "units")= chr "secs"
 #&gt;  $ max.prec : logi FALSE
 #&gt;  $ clique   :List of 1
@@ -226,7 +241,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
