@@ -28,24 +28,20 @@ generate_missing_data<-function(n,p,r=1,type,plot=FALSE, dens=2/p){
   #generate a graph and data Y and U
   norm_data=EMtree::data_from_scratch(type = type,p = p+r,n = n,norm=TRUE,signed = FALSE,dens = dens,v = 0)
   omega=norm_data$omega
-  G=1*(omega!=0)
-
-  # remove r missing actors
-  hidden=which(diag(omega)%in%sort(diag(omega), decreasing = TRUE)[1:r])[r]
-  G=G[c(setdiff(1:(p+r), hidden), hidden),c(setdiff(1:(p+r), hidden), hidden)]
-  diag(G)=0
-  trueClique=lapply((p+1):(p+r), function(h){ which(G[h,-h]!=0)})
-  #group=1*(diag(omega)==diag(omega)[hidden][1])
-  labs=ifelse(1:(p+r) %in% c(unlist(trueClique), (p+1):(p+r)), 1:(p+r), "")
-  groupes = 1*(1:(p+r) %in% c(unlist(trueClique), (p+1):(p+r)))
-  groupes[(p+1):(p+r)]=2
-  if(plot){
-    g=EMtree::draw_network(G,groupes=groupes,layout="nicely",curv=0,btw_rank=1,
-                           nodes_size = c(2,5,6),pal_edges = "#31374f", nodes_label =labs)$G
-    print(g)
-  }
-  #compute final parameters R and Omega
+  G=1*(omega!=0) ;    diag(G)=0
   if(r!=0){
+    # remove r missing actors
+    hidden=which(diag(omega)%in%sort(diag(omega), decreasing = TRUE)[1:r])[r]
+    G=G[c(setdiff(1:(p+r), hidden), hidden),c(setdiff(1:(p+r), hidden), hidden)]
+    trueClique=lapply((p+1):(p+r), function(h){ which(G[h,-h]!=0)})
+    labs=ifelse(1:(p+r) %in% c(unlist(trueClique), (p+1):(p+r)), 1:(p+r), "")
+    groupes = 1*(1:(p+r) %in% c(unlist(trueClique), (p+1):(p+r)))
+    groupes[(p+1):(p+r)]=2
+    if(plot){
+      g=EMtree::draw_network(G,groupes=groupes,layout="nicely",curv=0,btw_rank=1,
+                             nodes_size = c(2,5,6),pal_edges = "#31374f", nodes_label =labs)$G
+      print(g)
+    }
     Kh  <- omega[hidden,hidden]
     Ko  <- omega[-hidden,-hidden]
     Koh <- omega[-hidden,hidden]
@@ -54,10 +50,15 @@ generate_missing_data<-function(n,p,r=1,type,plot=FALSE, dens=2/p){
     counts=norm_data$data$Y[,-hidden]
     UH=norm_data$data$U[,hidden]
   }else{
-    group=NULL
     counts=norm_data$data$Y
     UH=NULL
     sigmaO=solve(omega)
+    trueClique=hidden=NULL
+    if(plot){
+      g=EMtree::draw_network(G,groupes=NULL,layout="nicely",curv=0,btw_rank=1,
+                             nodes_size = 5 ,pal_edges = "#31374f",pal_nodes="#adc9e0", nodes_label =1:p)$G
+      print(g)
+    }
   }
   R=cov2cor(solve(omega))
   omega=solve(R) # inverse of a correlation matrix for the normalized formulation

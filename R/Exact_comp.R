@@ -69,15 +69,15 @@ pivot.fractional <- function(A, trace=FALSE, inverse=TRUE) {
 #'
 #' @param factors
 #' @noRd
-logprod<-function(factors){
-  list.of.frac<-stringr::str_split(factors,"/")
-  nd<-matrix(unlist(lapply(list.of.frac,function(x){
-    if (length(x)>1) {c(x[[1]], x[[2]])} else { c(x[[1]], 1)}})),nrow=2)
-  nd<-rcdd::qabs(nd)
-  nd[1,]<-nd[1,order(stringr::str_length(nd[1,]))]
-  nd[2,]<-nd[2,order(stringr::str_length(nd[2,]))]
-  return( sum(log(abs( rcdd::q2d(rcdd::qdq(sort(nd[1,]), sort(nd[2,])) )))))
-}
+# logprod<-function(factors){
+#   list.of.frac<-stringr::str_split(factors,"/")
+#   nd<-matrix(unlist(lapply(list.of.frac,function(x){
+#     if (length(x)>1) {c(x[[1]], x[[2]])} else { c(x[[1]], 1)}})),nrow=2)
+#   nd<-rcdd::qabs(nd)
+#   nd[1,]<-nd[1,order(stringr::str_length(nd[1,]))]
+#   nd[2,]<-nd[2,order(stringr::str_length(nd[2,]))]
+#   return( sum(log(abs( rcdd::q2d(rcdd::qdq(sort(nd[1,]), sort(nd[2,])) )))))
+# }
 
 
 # inverse.fractional<-function(A){

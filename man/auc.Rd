@@ -11,6 +11,9 @@ auc(pred, label)
 
 \item{label}{labels}
 }
+\value{
+The Area Under the Curve value
+}
 \description{
 wraper of auc from ROCR
 }

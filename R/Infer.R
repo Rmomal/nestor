@@ -23,6 +23,7 @@ computeWg<-function(Rho,Omega,W,r,n, alpha, hist=FALSE ){
   null = union(which(W==0),which((1-Rho^2)==0))
   logWg[-null]<-log(W[-null])-alpha*n*(0.5*log((1-Rho^2)[-null])+(Omega*Rho)[-null])
   diag(logWg) = 0
+#browser()
   #--- centrage
   gammaO=logWg[O,O]
   if(r!=0) gammaOH=logWg[O,H]
@@ -110,7 +111,7 @@ computeOmega<-function(Pg,Rho,p){
 
 #' Makes a symmetric matrix from the vector made of its lower tirangular part
 #'
-#' @param A.vec
+#' @param A.vec A vector
 #' @noRd
 F_Vec2Sym <- function(A.vec){
   n = (1+sqrt(1+8*length(A.vec)))/2
@@ -123,7 +124,7 @@ F_Vec2Sym <- function(A.vec){
 
 #' Makes a vector from the lower triangular par of a symmetric matrix
 #'
-#' @param A.mat
+#' @param A.mat A square matrix
 #' @noRd
 F_Sym2Vec <- function(A.mat){
   return(A.mat[lower.tri(A.mat)])
@@ -284,7 +285,7 @@ VEstep<-function(MO,SO,SH,Omega,W,Wg,MH,Pg,logSTW,logSTWg, alpha,it1, verbatim,t
 
   #--- Wg
   Rho=cov2cor((1/n)*(t(M)%*%M+diag(colSums(S))))
-  if(max(abs(F_Sym2Vec(Rho)))>1){ browser()
+  if(max(abs(F_Sym2Vec(Rho)))>1){
     message("trim Rho")
     Rho[Rho>1]=1
     Rho[Rho<(-1)]=-1}

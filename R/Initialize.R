@@ -253,7 +253,7 @@ init_mclust<-function(Sigma,r, n.noise=NULL){
   data=data.frame(Scomp$rotation[,1:2]%*%diag(Scomp$sdev[1:2]))
   # transform to polar coordinates in half polar circle
   datapolar=useful::cart2pol(x=data[,1],y=data[,2])[,1:2]
-  datapolar_half=datapolar %>% dplyr::mutate(theta2=ifelse(theta>pi,theta-pi,theta)) %>%
+  datapolar_half=datapolar %>% dplyr::mutate(theta2=ifelse(.data$theta>pi,.data$theta-pi,.data$theta)) %>%
     dplyr::select(r,theta2)
   colnames(datapolar_half)[1]="radius"
   while(!ok){
@@ -387,7 +387,7 @@ initVEM<-function(Y,cliqueList,sigma_O,MO,r){
 #' @param sup_val maximal value of the complete estimated correlation matrix. 0.8 by default.
 #' @param delta Maximal value allowed for a determinant. Set to the maximal machine precision by default
 #'
-#' @return
+#' @return an upper value of tempering parameter alpha
 #' @export
 #'
 #' @examples q=15

@@ -33,10 +33,7 @@ usethis::use_package("useful")
 usethis::use_readme_rmd()
 #git link
 usethis::use_git()
-# unitary tests
-usethis::use_testthat()
-# usethis::use_test("name_of_test_file")
-# devtools::test()
+
 #coverage
 usethis::use_coverage(type="codecov")
 #travis
@@ -60,5 +57,16 @@ openssl::write_ssh(pub_key) # for git key
 devtools::document() # then build and restart
 devtools::run_examples()
 devtools::check()
-#usethis::use_vignette("Fatala_Net","Fatala fishes")
+usethis::use_vignette("Usage","Usage example")
 pkgdown::build_site()
+
+##########
+# unitary tests
+usethis::use_testthat()
+usethis::use_test("test_Infer")
+usethis::use_test("Simulate")
+usethis::use_test("Initialize")
+usethis::use_test("Visualize")
+usethis::use_test("ExactComp")
+devtools::test()
+covr::report()

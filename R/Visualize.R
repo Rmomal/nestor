@@ -10,7 +10,7 @@
 #' ggimage(Sigma)
 ggimage<-function(data){
   melted_data <- reshape2::melt(data)
-  ggplot2::ggplot(melted_data, aes(x=Var1, y=Var2, fill=value)) + theme_light()+labs(x="",y="")+
+  ggplot2::ggplot(melted_data, aes(x=.data$Var1, y=.data$Var2, fill=.data$value)) + theme_light()+labs(x="",y="")+
     geom_tile() +guides(fill=FALSE)+ theme(plot.title = element_text(size=10, hjust=0.5))+ coord_fixed()
 }
 #' wraper of auc from ROCR
@@ -18,7 +18,7 @@ ggimage<-function(data){
 #' @param pred predictions
 #' @param label labels
 #'
-#' @return
+#' @return The Area Under the Curve value
 #' @export
 #' @importFrom ROCR prediction performance
 #' @examples data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
@@ -33,7 +33,7 @@ ggimage<-function(data){
 #' nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1)
 #' #-- obtain criteria
 #' auc(nestorFit$Pg,data$G)
-auc<-function(pred,label){ #require(ROCR)
+auc<-function(pred,label){
   prediction<-ROCR::prediction(as.vector(pred[upper.tri(pred)]),as.vector(label[upper.tri(label)]))
   ROC_auc <- round(ROCR::performance(prediction,"auc")@y.values[[1]],digits=2)
   return(ROC_auc)
@@ -155,17 +155,18 @@ plotConv<-function(nestorFit){
                   theme(strip.background=element_rect(fill="gray50",colour ="gray50"),
                         plot.title = element_text(hjust = 0.5)))
 
-    g1<-nestorFit$features  %>% dplyr::select(diffPg, diffOmega) %>% dplyr::rename(Prob=diffPg, Omega=diffOmega) %>%
+    g1<-nestorFit$features  %>% dplyr::select(.data$diffPg, .data$diffOmega) %>%
+      dplyr::rename(Prob=.data$diffPg, Omega=.data$diffOmega) %>%
       tibble::rowid_to_column() %>%
-      tidyr::gather(key, values, -rowid) %>%
-      ggplot2::ggplot(aes(rowid,values, color=key))+ geom_point()+geom_line() + facet_wrap(~key, scales="free")+
+      tidyr::gather(key, values, -.data$rowid) %>%
+      ggplot2::ggplot(aes(.data$rowid,.data$values, color=.data$key))+ geom_point()+geom_line() + facet_wrap(~.data$key, scales="free")+
       labs(x="",y="", title="Parameters")+ mytheme.dark("")+guides(color=FALSE)
     if(trackJ){
-      g2<- nestorFit$lowbound %>% tibble::rowid_to_column() %>%  tidyr::gather(key,value,-rowid,-parameter) %>%
-        ggplot2::ggplot(aes(rowid,value, group=key))+geom_line()+geom_point(aes(color=as.factor(parameter)), size=2, alpha=0.8)+
+      g2<- nestorFit$lowbound %>% tibble::rowid_to_column() %>%  tidyr::gather(key,value,-.data$rowid,-.data$parameter) %>%
+        ggplot2::ggplot(aes(.data$rowid,.data$value, group=.data$key))+geom_line()+geom_point(aes(color=as.factor(.data$parameter)), size=2, alpha=0.8)+
         facet_wrap(~key, scales="free")+  labs(x="sub-iteration",y="", title="Lower bound and components")+mytheme.dark("")
     }else{ g2<- nestorFit$lowbound %>% rowid_to_column() %>%
-      ggplot2::ggplot(aes(rowid,J ))+geom_line()+geom_point(aes(color=as.factor(parameter)),size=2, alpha=0.8)+
+      ggplot2::ggplot(aes(.data$rowid,.data$J ))+geom_line()+geom_point(aes(color=as.factor(.data$parameter)),size=2, alpha=0.8)+
       labs(x="iteration",y="", title="Lower bound")+mytheme+ scale_color_manual("",values="#2976d6")+
       guides(color=FALSE)}
     gridExtra::grid.arrange(g1,g2, ncol=1)

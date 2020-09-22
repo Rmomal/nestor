@@ -2,7 +2,7 @@
 % Please edit documentation in R/Exact_comp.R
 \name{det.fractional}
 \alias{det.fractional}
-\title{Exact log-determinant computation}
+\title{Get numerator and denominators}
 \usage{
 det.fractional(A, log = TRUE)
 }
@@ -15,5 +15,5 @@ det.fractional(A, log = TRUE)
 the exact determinant of A
 }
 \description{
-Exact log-determinant computation
+Get numerator and denominators
 }

@@ -15,6 +15,9 @@ alphaMax(q, n, sup_val = 0.8, delta = .Machine$double.xmax)
 
 \item{delta}{Maximal value allowed for a determinant. Set to the maximal machine precision by default}
 }
+\value{
+an upper value of tempering parameter alpha
+}
 \description{
 Heuristic for an upper value of tempering parameter alpha
 }

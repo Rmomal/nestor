@@ -1,0 +1,137 @@
+---
+title: "Usage example"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Usage example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+collapse = TRUE,
+comment = "#>",# out.width = "80%",
+fig.align="center",
+warning=FALSE
+)
+library(magrittr)
+library(tibble)
+set.seed(4) # first seed givig 5 nodes (p is 10)
+```
+
+
+
+## Simulation and preparation
+
+`nestor` can simulate data with with missing actors with the function `missing_from_scratch()`. It requires the desired type of dependency structure (scale-free, erdos, tree or cluster) and the number of missing actors `r`. Here is an example with `r=1` for the scale-free structure:
+```{r, fig.width=3,fig.height=3,out.width = "30%"}
+library(nestor)
+p=10
+r=1
+n=100
+data=generate_missing_data(n, p, r,type="scale-free", plot=TRUE)
+```
+  
+The original clique of the missing actor neighbors is available in the value `TC`:
+```{r}
+data$TC
+```
+  
+  The data is then prepared for analysis with the first step of the procedure: fit the PLN model. The `norm_PLN()` function is a wraper to `PLNmodels::PLN()` which normalizes all the necessary outputs, namely the mean, variance and correlation matrices of the model latent Gaussian layer corresponding to observed species.
+```{r}
+  PLNfit<-norm_PLN(data$Y)
+MO<-PLNfit$MO
+SO<-PLNfit$SO
+sigma_obs=PLNfit$sigma_O
+```
+
+## Inference
+### Single clique initialization
+
+`nestor` then needs to be initialized. This requires to find an initial clique of neighbors for the missing actor, for example using the `FitSparsePCA()` function:
+```{r}
+initClique = FitSparsePCA(data$Y,r=1, min.size = 3)$cliques
+initClique
+```
+The `min.size` parameter defines the minimal size of the output clique. The function `init_mclust()` is also available for finding a clique, it uses the package `mclust`. 
+
+Once an initial clique has been found, the algorithm can be initialized. This is the aim of the function `initVEM()`, which initializes all required parameters. This function builds one initialization from one initial clique. We initialize with the clique previously identified:
+```{r }
+initList = initVEM(data$Y, cliqueList=initClique, sigma_obs, MO, r=1 )
+```
+
+Then to set the tempering parameter `alpha`, we can look at the output of the `alphaMax()` function.
+```{r}
+alphaMax(p+r, n)
+```
+
+The actual tempering parameter should be lower than the upper bound given by `alphaMax()`. Here we set `alpha` to $0.1$. The core function `nestor()` can now be run as follows:
+```{r}
+fit = nestor(data$Y, MO,SO, initList=initList, alpha=0.1, eps=1e-3, 
+             maxIter=30)
+```
+The object `fit` contains inferred means and variances of the complete data, as well as edges weight and probability matrices.
+
+This package contains several visualization functions. `plotPerf()` gives a quick overview of the fit performance compared to initial graph:
+```{r}
+plotPerf(fit$Pg, data$G,r=1)
+```
+
+The convergence of `nestor()` can be checked with the plotting function `plotConv()`:
+```{r, fig.width=6, fig.height=5}
+plotConv(nestorFit = fit)
+```
+
+### Initialization with a list of cliques
+
+The fit of the `nestor()` function is very sensitive to the initialization, and so it is recommanded to try several initial cliques. Several functions are available for finding a list of possible starting points:
+
+* `init_blockmodels()` uses package `blockmodels`,
+* `boot_FitSparsePCA()` is a bootstraped version using `sparsepca`, 
+* `complement_spca()` looks in the complement of the `sparsepca` output.
+
+
+Here we use the `complement_spca()` function, which runs `sparsepca` and returns the cliques corresponding to the `k` first principal components as well as their complement.
+```{r}
+four_cliques = complement_spca(data$Y, k=2) 
+four_cliques
+```
+
+This package provides with a parllel procedure for the computation of several fits of `nestor()` corresponding to a list of possible cliques, with the function `List.nestor()`. Below is an example with the list of six cliques previously obtained with the `complement_spca()` function:
+```{r}
+fitList=List.nestor(four_cliques, data$Y, sigma_obs, MO,SO,r=1,eps=1e-3,
+                    maxIter = 50, alpha=0.1)
+```
+
+The object `fitList` is simply the list of all the `nestor()` fits. This procedure aborts in case of degenerated behaviour, which happens when the provided clique is too far from truth. Wrong fits can be identified by their ouput size:
+
+```{r}
+do.call(rbind,lapply(fitList, length))
+```
+
+```{r}
+goodfits=which(lapply(fitList, length)>4)
+```
+
+## Results
+Finally we can assess the performance of each converged fit with their AUC, precision and recall regarding the hidden node `h`, and the correlation between the inferred means  and the original latent Gaussian vector of `h`.
+```{r}
+do.call(rbind,lapply(fitList[goodfits], function(vem){
+  perf=ppvtpr(vem$Pg, data$G, r=r)
+  c(auc=auc(vem$Pg, data$G),precH=perf$PPVH, recH=perf$TPRH, corMH=cor(vem$M[,p+r], data$UH))
+})) %>% as_tibble()  
+```
+
+The converged fits give different outputs in terms of predicted neighbors of the missing node:
+
+```{r}
+do.call(rbind,lapply(fitList[goodfits], function(vem){
+  cat(sum(vem$Pg[,p+r]>0.1),"neighbor(s):", which(vem$Pg[,p+r]>0.1),"\n")
+})) 
+
+```
+
+The fit predicting the more neighbors gives the best results:
+```{r}
+plotPerf(fitList[goodfits][[2]]$Pg,data$G,r=1)
+```
