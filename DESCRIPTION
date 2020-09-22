@@ -1,5 +1,5 @@
 Package: nestor
-Title: Network inference from Species counTs with missing actORs.
+Title: Network inference from Species counTs with missing actORs
 Version: 1.0.0
 Authors@R: 
     person(given = "Raphaelle",

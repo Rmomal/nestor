@@ -196,7 +196,7 @@ extractParamBM <- function(BMobject,k){
   membership_name <-  BMobject$membership_name
   res <- list()
   if (model == 'bernoulli') { res$alpha <- BMobject$model_parameters[k][[1]]$pi}
-  if (model == 'bernoulli_multiplex') { res$alpha <- BMobject$model_parameters[k][[1]]$pi}
+ # if (model == 'bernoulli_multiplex') { res$alpha <- BMobject$model_parameters[k][[1]]$pi}
   if ((membership_name == 'SBM') |  (membership_name == 'SBM_sym')) {
     res$tau <-  BMobject$memberships[[k]]$Z
     res$Z <- apply(res$tau, 1, which.max)
@@ -215,7 +215,7 @@ extractParamBM <- function(BMobject,k){
     res$alpha <- res$alpha[o,o]
     res$tau <- res$tau[,o]
     res$Z <- apply(res$tau, 1, which.max)
-    if (model == 'poisson') {res$lambda <- res$lambda[o,o]}
+    #if (model == 'poisson') {res$lambda <- res$lambda[o,o]}
   }
   return(res)
 }

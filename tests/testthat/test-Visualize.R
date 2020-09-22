@@ -15,11 +15,13 @@ initClique=data$TC
 #-- initialize the VEM
 initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
 nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1)
+nestorFitTrack=nestor(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1,trackJ = TRUE)
 #-- obtain criteria
 AUC=auc(nestorFit$Pg,data$G)
 criteria=ppvtpr(nestorFit$Pg,r=1, data$G)
 perf=plotPerf(nestorFit$Pg, data$G,r=1)
 conv=plotConv(nestorFit)
+convTrack=plotConv(nestorFitTrack)
 test_that("auc", {
   expect_length(AUC,1)
 })
@@ -31,4 +33,7 @@ test_that("perf", {
 })
 test_that("conv", {
   expect_length(conv$grobs,2)
+})
+test_that("convTrack", {
+  expect_length(convTrack$grobs,2)
 })
