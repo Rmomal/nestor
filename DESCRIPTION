@@ -42,5 +42,5 @@ Suggests:
     testthat (>= 2.1.0),
     knitr,
     rmarkdown
-Remotes: git::https://github.com/Rmomal/EMtree
+Remotes: github::Rmomal/EMtree
 VignetteBuilder: knitr
