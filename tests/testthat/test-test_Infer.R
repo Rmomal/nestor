@@ -87,7 +87,7 @@ test_that("nestor-r1", {
 oneMAtrack=nestor(data$Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1,
              verbatim=2, print.hist=FALSE, trackJ=TRUE)
 test_that("nestor-r1-track", {
-  expect_equal(unique(oneMAtrack$lowbound$parameter),as.factor(c("MH" , "Wg", "Omega", "W")))
+  expect_length(unique(oneMAtrack$lowbound$parameter),4)
 })
 
 #---- List.nestor
