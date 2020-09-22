@@ -8,11 +8,11 @@ navbar:
     - text: "Home"
       href: index.html
     - text: "Reference"
-      href: "reference/index.html"
-#    - text: "Vignettes"
-#      menu:
-#      - text: "Fatala fishes"
-#        href: articles/Fatala_Net.html
+      href: reference/index.html
+    - text: "Vignettes"
+      menu:
+      - text: "Usage example"
+        href: articles/Usage.html
   right:
     - icon: fa-github
       href: https://github.com/Rmomal/nestor
