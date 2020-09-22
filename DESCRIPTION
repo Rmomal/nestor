@@ -1,13 +1,13 @@
 Package: nestor
-Title: Network inference with missing actors
-Version: 0.0.0.9000
+Title: Network inference from Species counTs with missing actORs.
+Version: 1.0.0
 Authors@R: 
     person(given = "Raphaelle",
            family = "Momal",
            role = c("aut", "cre"),
            email = "rmomaleisenring@gmail.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: VEMtree runs a variational inference using an average on spanning trees to infer the conditional dependency structure from abundance data, while accounting for missing actors.
+           comment = c(ORCID = "0000-0002-1550-4530"))
+Description: Implements a variational method using an average on spanning trees to infer the conditional dependency structure from abundance data, while accounting for missing actors.
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
