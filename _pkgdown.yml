@@ -1,6 +1,4 @@
 destination: docs
-
-
 navbar:
   type: inverse
   left:
@@ -23,7 +21,7 @@ reference:
   contents:
   - '`nestor`'
   - '`List.nestor`'
-  - '`missing_from_scratch`'
+  - '`generate_missing_data`'
   - '`norm_PLN`'
   - '`initVEM`'
 - title: Computing functions
