@@ -95,7 +95,7 @@
 <div id="simulation-and-preparation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#simulation-and-preparation" class="anchor"></a>Simulation and preparation</h2>
-<p><code>nestorFit</code> can simulate data with with missing actors with the function <code>missing_from_scratch()</code>. It requires the desired type of dependency structure (scale-free, erdos, tree or cluster) and the number of missing actors <code>r</code>. Here is an example with <code>r=1</code> for the scale-free structure:</p>
+<p><code>nestor</code> can simulate data with with missing actors with the function <code>missing_from_scratch()</code>. It requires the desired type of dependency structure (scale-free, erdos, tree or cluster) and the number of missing actors <code>r</code>. Here is an example with <code>r=1</code> for the scale-free structure:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">nestor</span>)
 <span class="kw">p</span><span class="op">=</span><span class="fl">10</span>
@@ -124,7 +124,7 @@
 <div id="single-clique-initialization" class="section level3">
 <h3 class="hasAnchor">
 <a href="#single-clique-initialization" class="anchor"></a>Single clique initialization</h3>
-<p><code>nestorFit</code> then needs to be initialized. This requires to find an initial clique of neighbors for the missing actor, for example using the <code><a href="../reference/FitSparsePCA.html">FitSparsePCA()</a></code> function:</p>
+<p>The algorithm then needs to be initialized. This requires to find an initial clique of neighbors for the missing actor, for example using the <code><a href="../reference/FitSparsePCA.html">FitSparsePCA()</a></code> function:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="kw">initClique</span> <span class="op">=</span> <span class="fu"><a href="../reference/FitSparsePCA.html">FitSparsePCA</a></span>(<span class="kw">data</span><span class="op">$</span><span class="kw">Y</span>,r=<span class="fl">1</span>, min.size = <span class="fl">3</span>)<span class="op">$</span><span class="kw">cliques</span>
 <span class="kw">initClique</span>
@@ -146,7 +146,7 @@
 <span class="kw">fit</span> <span class="op">=</span> <span class="fu"><a href="../reference/nestorFit.html">nestorFit</a></span>(<span class="kw">data</span><span class="op">$</span><span class="kw">Y</span>, <span class="kw">MO</span>,<span class="kw">SO</span>, initList=<span class="kw">initList</span>, alpha=<span class="fl">0.1</span>, eps=<span class="fl">1e-3</span>, 
              maxIter=<span class="fl">30</span>)
 <span class="co">#&gt; </span>
-<span class="co">#&gt; nestor ran in 0.883secs and 30 iterations.</span>
+<span class="co">#&gt; nestor ran in 0.917secs and 30 iterations.</span>
 </pre></div>
 <p>The object <code>fit</code> contains inferred means and variances of the complete data, as well as edges weight and probability matrices.</p>
 <p>This package contains several visualization functions. <code><a href="../reference/plotPerf.html">plotPerf()</a></code> gives a quick overview of the fit performance compared to initial graph:</p>
