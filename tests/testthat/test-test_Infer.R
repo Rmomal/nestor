@@ -61,7 +61,7 @@ sigma_O=PLNfit$sigma_O
 #-- initialize
 initClique=data$TC
 initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=r)
-noMA=nestor(data$Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1,
+noMA=nestorFit(data$Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1,
        verbatim=1, print.hist=FALSE, trackJ=FALSE)
 test_that("nestor-r0", {
   expect_equal(dim(noMA$M),dim(noMA$S))
@@ -76,7 +76,7 @@ sigma_O=PLNfit$sigma_O
 #-- initialize
 initClique=data$TC
 initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=r)
-oneMA=nestor(data$Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1,
+oneMA=nestorFit(data$Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1,
             verbatim=1, print.hist=FALSE, trackJ=FALSE)
 test_that("nestor-r1", {
   expect_equal(dim(oneMA$M),dim(oneMA$S))
@@ -84,7 +84,7 @@ test_that("nestor-r1", {
 test_that("nestor-r1", {
   expect_equal(dim(oneMA$Pg),dim(oneMA$Omega))
 })
-oneMAtrack=nestor(data$Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1,
+oneMAtrack=nestorFit(data$Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1,
              verbatim=2, print.hist=FALSE, trackJ=TRUE)
 test_that("nestor-r1-track", {
   expect_length(unique(oneMAtrack$lowbound$parameter),4)
@@ -92,7 +92,7 @@ test_that("nestor-r1-track", {
 
 #---- List.nestor
 cliqueList=boot_FitSparsePCA(data$Y, 10, r, min.size = 1, cores = 1, unique = TRUE)$cliqueList
-listFit=List.nestor(cliqueList, data$Y, sigma_O, MO,SO, r,alpha=0.1, cores=1,
+listFit=List.nestorFit(cliqueList, data$Y, sigma_O, MO,SO, r,alpha=0.1, cores=1,
             maxIter=20,eps=1e-3, trackJ=FALSE)
 test_that("listNestor", {
   expect_equal(length(listFit),length(cliqueList))

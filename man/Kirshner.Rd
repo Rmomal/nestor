@@ -11,7 +11,7 @@ Kirshner(W, r, it1, verbatim = 0)
 
 \item{r}{number of missing actors}
 
-\item{it1}{check if nestor is at it first iteration}
+\item{it1}{check if nestorFit is at it first iteration}
 
 \item{verbatim}{boolean controling verbosity}
 }

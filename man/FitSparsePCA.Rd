@@ -4,8 +4,7 @@
 \alias{FitSparsePCA}
 \title{Fit sparse PCA on a grid of alpha}
 \usage{
-FitSparsePCA(Y, r = 1, min.size = 1, alphaGrid = 10^(seq(-4, 0, by =
-  0.1)))
+FitSparsePCA(Y, r = 1, min.size = 1, alphaGrid = 10^(seq(-4, 0, by = 0.1)))
 }
 \arguments{
 \item{Y}{a data frame}

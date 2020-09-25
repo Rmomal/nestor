@@ -1,5 +1,5 @@
 #create package
-usethis::create_package("/Users/raphaellemomal/Library/Mobile Documents/com~apple~CloudDocs/Rpkg/VEMtree")
+usethis::create_package("/Users/raphaellemomal/Library/Mobile Documents/com~apple~CloudDocs/Rpkg/nestor")
 usethis::use_package_doc()
 usethis::use_roxygen_md()
 devtools::document()
@@ -59,6 +59,7 @@ devtools::run_examples()
 devtools::check()
 usethis::use_vignette("Usage","Usage example")
 pkgdown::build_site()
+pkgdown::build_reference()
 
 ##########
 # unitary tests
@@ -70,3 +71,4 @@ usethis::use_test("Visualize")
 usethis::use_test("ExactComp")
 devtools::test()
 covr::report()
+

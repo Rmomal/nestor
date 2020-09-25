@@ -2,18 +2,18 @@
 % Please edit documentation in R/Visualize.R
 \name{plotConv}
 \alias{plotConv}
-\title{Plot function for nestor convergence}
+\title{Plot function for nestorFit convergence}
 \usage{
 plotConv(nestorFit)
 }
 \arguments{
-\item{nestorFit}{a fit from the nestor() function}
+\item{nestorFit}{a fit from the nestorFit() function}
 }
 \value{
-visualiaztion of nestor convergence
+visualiaztion of nestorFit convergence
 }
 \description{
-Plot function for nestor convergence
+Plot function for nestorFit convergence
 }
 \examples{
 data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
@@ -25,7 +25,7 @@ sigma_O=PLNfit$sigma_O
 initClique=data$TC
 #-- initialize the VEM
 initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
-nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3 , verbatim=1)
+nestorFit=nestorFit(data$Y, MO,SO, initList=initList, maxIter=3 , verbatim=1)
 #-- obtain criteria
 plotConv(nestorFit)
 }

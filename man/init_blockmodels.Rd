@@ -4,8 +4,16 @@
 \alias{init_blockmodels}
 \title{Find initial cliques using blockmodels on the initial marginalized network}
 \usage{
-init_blockmodels(Y, sigma_O, MO, SO, k = 3, poisson = FALSE,
-  alpha = 0.1, cores = 1)
+init_blockmodels(
+  Y,
+  sigma_O,
+  MO,
+  SO,
+  k = 3,
+  poisson = FALSE,
+  alpha = 0.1,
+  cores = 1
+)
 }
 \arguments{
 \item{Y}{count data}

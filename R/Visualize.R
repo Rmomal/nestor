@@ -13,26 +13,23 @@ ggimage<-function(data){
   ggplot2::ggplot(melted_data, aes(x=.data$Var1, y=.data$Var2, fill=.data$value)) + theme_light()+labs(x="",y="")+
     geom_tile() +guides(fill=FALSE)+ theme(plot.title = element_text(size=10, hjust=0.5))+ coord_fixed()
 }
+
 #' wraper of auc from ROCR
-#'
 #' @param pred predictions
 #' @param label labels
-#'
 #' @return The Area Under the Curve value
 #' @export
 #' @importFrom ROCR prediction performance
-#' @examples data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
+#' @examples  data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
 #' PLNfit<-norm_PLN(data$Y)
 #' MO<-PLNfit$MO
 #' SO<-PLNfit$SO
 #' sigma_O=PLNfit$sigma_O
-#' #-- use true clique for example
 #' initClique=data$TC
-#' #-- initialize the VEM
 #' initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
-#' nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1)
-#' #-- obtain criteria
-#' auc(nestorFit$Pg,data$G)
+#' nestorFit=nestorFit(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1)
+#' res=auc(nestorFit$Pg,data$G)
+
 auc<-function(pred,label){
   prediction<-ROCR::prediction(as.vector(pred[upper.tri(pred)]),as.vector(label[upper.tri(label)]))
   ROC_auc <- round(ROCR::performance(prediction,"auc")@y.values[[1]],digits=2)
@@ -66,7 +63,7 @@ auc<-function(pred,label){
 #' initClique=data$TC
 #' #-- initialize the VEM
 #' initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
-#' nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1 )
+#' nestorFit=nestorFit(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1 )
 #' #-- obtain criteria
 #' ppvtpr(nestorFit$Pg,r=1, data$G)
 ppvtpr<-function(probs,G,r, thresh=0.5){
@@ -103,7 +100,7 @@ ppvtpr<-function(probs,G,r, thresh=0.5){
 #' initClique=data$TC
 #' #-- initialize the VEM
 #' initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
-#' nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1 )
+#' nestorFit=nestorFit(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1 )
 #' #-- obtain criteria
 #' plotPerf(nestorFit$Pg, data$G,r=1)
 plotPerf<-function(P,G,r,thresh=0.5){
@@ -120,10 +117,10 @@ plotPerf<-function(P,G,r,thresh=0.5){
                                         "\n AUC=",auc))
 }
 
-#' Plot function for nestor convergence
+#' Plot function for nestorFit convergence
 #'
-#' @param nestorFit a fit from the nestor() function
-#' @return visualiaztion of nestor convergence
+#' @param nestorFit a fit from the nestorFit() function
+#' @return visualiaztion of nestorFit convergence
 #' @export
 #' @import ggplot2
 #' @importFrom tidyr gather
@@ -139,7 +136,7 @@ plotPerf<-function(P,G,r,thresh=0.5){
 #' initClique=data$TC
 #' #-- initialize the VEM
 #' initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
-#' nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3 , verbatim=1)
+#' nestorFit=nestorFit(data$Y, MO,SO, initList=initList, maxIter=3 , verbatim=1)
 #' #-- obtain criteria
 #' plotConv(nestorFit)
 plotConv<-function(nestorFit){

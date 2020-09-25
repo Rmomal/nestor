@@ -154,7 +154,7 @@ exactMeila<-function (W,r){ # for edges weight beta
 #'
 #' @param W a weight matrix
 #' @param r number of missing actors
-#' @param it1 check if nestor is at it first iteration
+#' @param it1 check if nestorFit is at it first iteration
 #' @param verbatim boolean controling verbosity
 #'
 #' @return matrix of edges probabilities
@@ -245,7 +245,7 @@ LowerBound<-function(Pg ,Omega, M, S, W, Wg,p, logSTW, logSTWg){
 #' @param logSTW log-sum tree of the W matrix
 #' @param logSTWg log-sum tree of the Wg matrix
 #' @param alpha tempering parameter
-#' @param it1 check if nestor is at its first iteration
+#' @param it1 check if nestorFit is at its first iteration
 #' @param verbatim boolean controling verbosity
 #' @param trackJ boolean for evaluating the lower bound at each parameter update
 #' @param hist boolean for printing edges weights histogram at each iteration
@@ -372,7 +372,9 @@ Mstep<-function(M, S, Pg, Omega,W, Wg, p,logSTW, logSTWg,  trackJ=FALSE){
 }
 
 #===========
-#' Core function of nestor.
+
+
+#' Core function of nestorFit
 #'
 #' @param Y count dataset
 #' @param MO estimated means from norm_PLN
@@ -412,10 +414,11 @@ Mstep<-function(M, S, Pg, Omega,W, Wg, p,logSTW, logSTWg,  trackJ=FALSE){
 #' initClique=data$TC
 #' #-- initialize the VEM
 #' initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
-#' #-- run core function nestor
-#' fit=nestor(data$Y, MO,SO, initList=initList, maxIter=5,verbatim=1)
+#' #-- run core function nestorFit
+#' fit=nestorFit(data$Y, MO,SO, initList=initList, maxIter=5,verbatim=1)
 #' str(fit)
-nestor<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1,
+
+nestorFit<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1,
                    print.hist=FALSE, trackJ=FALSE){
   n=nrow(MO);  p=ncol(MO);  O=1:ncol(MO)
   MH=initList$MHinit;omegainit=initList$omegainit
@@ -522,7 +525,7 @@ nestor<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1,
 
 
 
-#' Run function nestor on a list of initial cliques using parallel computation (mclapply)
+#' Run function nestorFit on a list of initial cliques using parallel computation (mclapply)
 #'
 #' @param cliqueList a list containing all initial cliques to be tested
 #' @param Y count dataset
@@ -536,7 +539,7 @@ nestor<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1,
 #' @param eps convergence precision parameter
 #' @param trackJ boolean for the estimation of the lower bound at each parameter update
 #'
-#' @return a list containing the fit of nestor for every cliques contained in cliqueList
+#' @return a list containing the fit of nestorFit for every cliques contained in cliqueList
 #' @export
 #'
 #' @examples  data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
@@ -548,18 +551,18 @@ nestor<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1,
 #' findcliqueList=boot_FitSparsePCA(data$Y, B=5, r=1)
 #' cliqueList=findcliqueList$cliqueList
 #' length(cliqueList)
-#' #-- run List.nestor
-#' fitList=List.nestor(cliqueList,data$Y, sigma_O, MO,SO, r=1)
+#' #-- run List.nestorFit
+#' fitList=List.nestorFit(cliqueList,data$Y, sigma_O, MO,SO, r=1)
 #' length(fitList)
 #' str(fitList[[1]])
-List.nestor<-function(cliqueList, Y, sigma_O, MO,SO, r,alpha=0.1, cores=1,maxIter=20,eps=1e-3, trackJ=FALSE){
+List.nestorFit<-function(cliqueList, Y, sigma_O, MO,SO, r,alpha=0.1, cores=1,maxIter=20,eps=1e-3, trackJ=FALSE){
   p=ncol(Y) ; O=1:p ; n=nrow(Y)
   #--- run all initialisations with parallel computation
   list<-mclapply(cliqueList, function(c){
     #init
     init=initVEM(Y = Y, cliqueList=c, sigma_O,MO,r = r)
-   #run nestor
-    VEM<- tryCatch({nestor(Y=Y,MO=MO,SO=SO,initList=init, eps=eps, alpha=alpha,maxIter=maxIter,
+   #run nestorFit
+    VEM<- tryCatch({nestorFit(Y=Y,MO=MO,SO=SO,initList=init, eps=eps, alpha=alpha,maxIter=maxIter,
                             verbatim = 0, print.hist=FALSE, trackJ=trackJ)},
                    error=function(e){e},finally={})
     VEM$clique=c

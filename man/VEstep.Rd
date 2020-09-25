@@ -4,8 +4,23 @@
 \alias{VEstep}
 \title{Computes the variational expectation step of the algorithm}
 \usage{
-VEstep(MO, SO, SH, Omega, W, Wg, MH, Pg, logSTW, logSTWg, alpha, it1,
-  verbatim, trackJ = FALSE, hist = FALSE)
+VEstep(
+  MO,
+  SO,
+  SH,
+  Omega,
+  W,
+  Wg,
+  MH,
+  Pg,
+  logSTW,
+  logSTWg,
+  alpha,
+  it1,
+  verbatim,
+  trackJ = FALSE,
+  hist = FALSE
+)
 }
 \arguments{
 \item{MO}{matrix of observed means}
@@ -30,7 +45,7 @@ VEstep(MO, SO, SH, Omega, W, Wg, MH, Pg, logSTW, logSTWg, alpha, it1,
 
 \item{alpha}{tempering parameter}
 
-\item{it1}{check if nestor is at its first iteration}
+\item{it1}{check if nestorFit is at its first iteration}
 
 \item{verbatim}{boolean controling verbosity}
 

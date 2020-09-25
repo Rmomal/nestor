@@ -19,8 +19,8 @@ reference:
 - title: Main user functions
   desc: ~
   contents:
-  - '`nestor`'
-  - '`List.nestor`'
+  - '`nestorFit`'
+  - '`List.nestorFit`'
   - '`generate_missing_data`'
   - '`norm_PLN`'
   - '`initVEM`'

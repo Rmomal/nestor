@@ -4,12 +4,12 @@
 \name{nestor-package}
 \alias{nestor}
 \alias{nestor-package}
-\title{nestor: Network inference from Species counTs with missing actORs.}
+\title{nestor: Network inference from Species counTs with missing actORs}
 \description{
 Implements a variational method using an average on spanning trees to infer the conditional dependency structure from abundance data, while accounting for missing actors.
 }
 \author{
-\strong{Maintainer}: Raphaelle Momal \email{rmomaleisenring@gmail.com} (0000-0002-1550-4530)
+\strong{Maintainer}: Raphaelle Momal \email{rmomaleisenring@gmail.com} (\href{https://orcid.org/0000-0002-1550-4530}{ORCID})
 
 }
 \keyword{internal}

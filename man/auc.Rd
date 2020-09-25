@@ -18,16 +18,13 @@ The Area Under the Curve value
 wraper of auc from ROCR
 }
 \examples{
-data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
+ data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
 PLNfit<-norm_PLN(data$Y)
 MO<-PLNfit$MO
 SO<-PLNfit$SO
 sigma_O=PLNfit$sigma_O
-#-- use true clique for example
 initClique=data$TC
-#-- initialize the VEM
 initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
-nestorFit=nestor(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1)
-#-- obtain criteria
-auc(nestorFit$Pg,data$G)
+nestorFit=nestorFit(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1)
+res=auc(nestorFit$Pg,data$G)
 }

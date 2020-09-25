@@ -168,8 +168,8 @@ norm_PLN<-function(Y){
 #' init_blockmodels(data$Y,sigma_O, MO, SO, k=2 )
 init_blockmodels<-function(Y, sigma_O, MO, SO, k=3,poisson=FALSE, alpha=0.1, cores=1){
   init=initVEM(Y = Y,cliqueList=NULL, cov2cor(sigma_O),MO,r = 0)
-  #--- fit nestor with 0 missing actor
-  resVEM0<- tryCatch(nestor(Y,MO,SO,initList=init, eps=1e-3, alpha=alpha, maxIter=100,verbatim = 0),
+  #--- fit nestorFit with 0 missing actor
+  resVEM0<- tryCatch(nestorFit(Y,MO,SO,initList=init, eps=1e-3, alpha=alpha, maxIter=100,verbatim = 0),
                      error=function(e){e}, finally={})
   if(length(resVEM0)>3){
     sbm.0 <- BM_bernoulli("SBM_sym",1*(resVEM0$Pg>0.5), plotting="", verbosity=0,ncores=cores)
@@ -324,6 +324,7 @@ initOmega <- function(Sigma = NULL,  cliqueList,cst=1.1) {
   # Initialising Omega
   OmegaFull <- solve(CorrFull)
   if(r>1) OmegaFull[H,H]<-diag(diag(OmegaFull[H,H]))
+  attr(OmegaFull,"dimnames")=NULL
   return(list( Sigma0 = CorrFull, K0 = OmegaFull, cliquelist = cliqueList))
 }
 
