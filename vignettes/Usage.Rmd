@@ -23,7 +23,7 @@ set.seed(4) # first seed givig 5 nodes (p is 10)
 
 ## Simulation and preparation
 
-`nestorFit` can simulate data with with missing actors with the function `missing_from_scratch()`. It requires the desired type of dependency structure (scale-free, erdos, tree or cluster) and the number of missing actors `r`. Here is an example with `r=1` for the scale-free structure:
+`nestor` can simulate data with with missing actors with the function `missing_from_scratch()`. It requires the desired type of dependency structure (scale-free, erdos, tree or cluster) and the number of missing actors `r`. Here is an example with `r=1` for the scale-free structure:
 ```{r, fig.width=3,fig.height=3,out.width = "30%"}
 library(nestor)
 p=10
@@ -48,7 +48,7 @@ sigma_obs=PLNfit$sigma_O
 ## Inference
 ### Single clique initialization
 
-`nestorFit` then needs to be initialized. This requires to find an initial clique of neighbors for the missing actor, for example using the `FitSparsePCA()` function:
+The algorithm then needs to be initialized. This requires to find an initial clique of neighbors for the missing actor, for example using the `FitSparsePCA()` function:
 ```{r}
 initClique = FitSparsePCA(data$Y,r=1, min.size = 3)$cliques
 initClique
