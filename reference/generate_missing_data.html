@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fit sparse PCA on a grid of alpha — FitSparsePCA • nestor</title>
+<title>Simulate data and parameters including missing actors. — generate_missing_data • nestor</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Fit sparse PCA on a grid of alpha — FitSparsePCA" />
-<meta property="og:description" content="Fit sparse PCA on a grid of alpha" />
+<meta property="og:title" content="Simulate data and parameters including missing actors. — generate_missing_data" />
+<meta property="og:description" content="Simulate data and parameters including missing actors." />
 
 
 
@@ -123,35 +123,43 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Fit sparse PCA on a grid of alpha</h1>
+    <h1>Simulate data and parameters including missing actors.</h1>
     
-    <div class="hidden name"><code>FitSparsePCA.Rd</code></div>
+    <div class="hidden name"><code>generate_missing_data.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Fit sparse PCA on a grid of alpha</p>
+    <p>Simulate data and parameters including missing actors.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>FitSparsePCA</span>(<span class='kw'>Y</span>, r = <span class='fl'>1</span>, min.size = <span class='fl'>1</span>, alphaGrid = <span class='fl'>10</span><span class='op'>^</span>(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='op'>-</span><span class='fl'>4</span>, <span class='fl'>0</span>, by = <span class='fl'>0.1</span>)))</pre>
+    <pre class="usage"><span class='fu'>generate_missing_data</span>(<span class='kw'>n</span>, <span class='kw'>p</span>, r = <span class='fl'>1</span>, <span class='kw'>type</span>, plot = <span class='fl'>FALSE</span>, dens = <span class='fl'>2</span><span class='op'>/</span><span class='kw'>p</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>Y</th>
-      <td><p>a data frame</p></td>
+      <th>n</th>
+      <td><p>number of samples</p></td>
+    </tr>
+    <tr>
+      <th>p</th>
+      <td><p>number of observed species</p></td>
     </tr>
     <tr>
       <th>r</th>
-      <td><p>the number of missing actors</p></td>
+      <td><p>number of missing actors</p></td>
     </tr>
     <tr>
-      <th>min.size</th>
-      <td><p>the minimum number of neighbors for each missing actor</p></td>
+      <th>type</th>
+      <td><p>type of conditional dependency structure (graph), either "erdos", "cluster", or "scale-free".</p></td>
     </tr>
     <tr>
-      <th>alphaGrid</th>
-      <td><p>the grid for alpha</p></td>
+      <th>plot</th>
+      <td><p>should the simulated graph be plotted ? default to FALSE</p></td>
+    </tr>
+    <tr>
+      <th>dens</th>
+      <td><p>density parameter for cluster and erdos graphs. For erdos graphs, this corresponds to the edges probability of connectance</p></td>
     </tr>
     </table>
 
@@ -159,26 +167,35 @@
 
     
 <ul>
-<li><p>sPcaOpt the optimal spca object</p></li>
-<li><p>alphaOpt the best alpha value among the provided grid</p></li>
-<li><p>loglik vector of log likelihood obtained for each value of alpha</p></li>
-<li><p>bic vecotr of BIC values</p></li>
-<li><p>cliques optimal clique of neighbors</p></li>
+<li><p>Y: Observed count data</p></li>
+<li><p>UH: Hidden latent Gaussian parameters</p></li>
+<li><p>Sigma: Observed bloc of the variance-covariance matrix</p></li>
+<li><p>Omega: Observed bloc of the precision matrix</p></li>
+<li><p>G: The generated conditional dependency structure</p></li>
+<li><p>TC: The true clique of neighbors of the missing actors (a list if r&gt;1)</p></li>
+<li><p>H:  Indexes corresponding to missing actors in the original data</p></li>
 </ul>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(n=<span class='fl'>100</span>,p=<span class='fl'>10</span>,r=<span class='fl'>1</span>,type=<span class='st'>"scale-free"</span>, plot=<span class='fl'>TRUE</span>)
-</div><div class='img'><img src='FitSparsePCA-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw'>TrueClique</span><span class='op'>=</span><span class='kw'>data</span><span class='op'>$</span><span class='kw'>TC</span>
-<span class='kw'>findclique</span><span class='op'>=</span><span class='fu'>FitSparsePCA</span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>,r=<span class='fl'>1</span>)
-<span class='kw'>initClique</span><span class='op'>=</span><span class='kw'>findclique</span><span class='op'>$</span><span class='kw'>cliques</span>
-<span class='kw'>TrueClique</span>
-</div><div class='output co'>#&gt; [[1]]
-#&gt; [1] 1 4 7 8 9
-#&gt; </div><div class='input'><span class='kw'>initClique</span>
-</div><div class='output co'>#&gt; [[1]]
-#&gt; [1]  4  8 10
-#&gt; </div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>n</span><span class='op'>=</span><span class='fl'>100</span>
+<span class='kw'>p</span><span class='op'>=</span><span class='fl'>10</span>
+<span class='kw'>r</span><span class='op'>=</span><span class='fl'>1</span>
+<span class='kw'>type</span><span class='op'>=</span><span class='st'>"scale-free"</span>
+<span class='kw'>data</span><span class='op'>=</span><span class='fu'>generate_missing_data</span>(<span class='kw'>n</span>,<span class='kw'>p</span>,<span class='kw'>r</span>,<span class='kw'>type</span>, plot=<span class='fl'>TRUE</span>)
+</div><div class='img'><img src='generate_missing_data-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='kw'>data</span>)
+</div><div class='output co'>#&gt; List of 7
+#&gt;  $ Y    : int [1:100, 1:10] 8 14 2 6 9 7 2 13 9 16 ...
+#&gt;  $ UH   : num [1:100] -1.32 -1.019 2.041 -0.243 -1.548 ...
+#&gt;  $ Sigma: num [1:10, 1:10] 0.822 -0.748 -0.748 -0.748 0.342 ...
+#&gt;  $ Omega: num [1:11, 1:11] 4.15 7.19e-01 3.12e-16 3.12e-16 5.54e-16 ...
+#&gt;  $ G    : num [1:11, 1:11] 0 1 1 1 0 0 0 0 0 0 ...
+#&gt;   ..- attr(*, "dimnames")=List of 2
+#&gt;   .. ..$ : NULL
+#&gt;   .. ..$ : NULL
+#&gt;  $ TC   :List of 1
+#&gt;   ..$ : int [1:6] 1 5 6 7 8 10
+#&gt;  $ H    : int 1</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fit sparse PCA on a grid of alpha — FitSparsePCA • nestor</title>
+<title>Find initial cliques using mclust on the estimated correlation matrix — init_mclust • nestor</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Fit sparse PCA on a grid of alpha — FitSparsePCA" />
-<meta property="og:description" content="Fit sparse PCA on a grid of alpha" />
+<meta property="og:title" content="Find initial cliques using mclust on the estimated correlation matrix — init_mclust" />
+<meta property="og:description" content="Find initial cliques using mclust on the estimated correlation matrix" />
 
 
 
@@ -123,62 +123,58 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Fit sparse PCA on a grid of alpha</h1>
+    <h1>Find initial cliques using mclust on the estimated correlation matrix</h1>
     
-    <div class="hidden name"><code>FitSparsePCA.Rd</code></div>
+    <div class="hidden name"><code>init_mclust.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Fit sparse PCA on a grid of alpha</p>
+    <p>Find initial cliques using mclust on the estimated correlation matrix</p>
     </div>
 
-    <pre class="usage"><span class='fu'>FitSparsePCA</span>(<span class='kw'>Y</span>, r = <span class='fl'>1</span>, min.size = <span class='fl'>1</span>, alphaGrid = <span class='fl'>10</span><span class='op'>^</span>(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='op'>-</span><span class='fl'>4</span>, <span class='fl'>0</span>, by = <span class='fl'>0.1</span>)))</pre>
+    <pre class="usage"><span class='fu'>init_mclust</span>(<span class='kw'>Sigma</span>, <span class='kw'>r</span>, n.noise = <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>Y</th>
-      <td><p>a data frame</p></td>
+      <th>Sigma</th>
+      <td><p>Estimated correlation matrix from observed counts (pxp)</p></td>
     </tr>
     <tr>
       <th>r</th>
-      <td><p>the number of missing actors</p></td>
+      <td><p>number of missing actors</p></td>
     </tr>
     <tr>
-      <th>min.size</th>
-      <td><p>the minimum number of neighbors for each missing actor</p></td>
-    </tr>
-    <tr>
-      <th>alphaGrid</th>
-      <td><p>the grid for alpha</p></td>
+      <th>n.noise</th>
+      <td><p>quantity of noise for mclust, set to 3*p by default.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
-<ul>
-<li><p>sPcaOpt the optimal spca object</p></li>
-<li><p>alphaOpt the best alpha value among the provided grid</p></li>
-<li><p>loglik vector of log likelihood obtained for each value of alpha</p></li>
-<li><p>bic vecotr of BIC values</p></li>
-<li><p>cliques optimal clique of neighbors</p></li>
-</ul>
-
+    <p>A list of size r, with initial cliques of neighbors for each missing actor.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(n=<span class='fl'>100</span>,p=<span class='fl'>10</span>,r=<span class='fl'>1</span>,type=<span class='st'>"scale-free"</span>, plot=<span class='fl'>TRUE</span>)
-</div><div class='img'><img src='FitSparsePCA-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw'>TrueClique</span><span class='op'>=</span><span class='kw'>data</span><span class='op'>$</span><span class='kw'>TC</span>
-<span class='kw'>findclique</span><span class='op'>=</span><span class='fu'>FitSparsePCA</span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>,r=<span class='fl'>1</span>)
-<span class='kw'>initClique</span><span class='op'>=</span><span class='kw'>findclique</span><span class='op'>$</span><span class='kw'>cliques</span>
-<span class='kw'>TrueClique</span>
+    <pre class="examples"><div class='input'><span class='kw'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(n=<span class='fl'>100</span>,p=<span class='fl'>10</span>,r=<span class='fl'>1</span>,type=<span class='st'>"scale-free"</span>, plot=<span class='fl'>FALSE</span>)
+<span class='kw'>EMtree</span>::<span class='fu'><a href='https://rdrr.io/pkg/EMtree/man/draw_network.html'>draw_network</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>G</span>,layout=<span class='st'>"nicely"</span>,curv=<span class='fl'>0</span>,btw_rank=<span class='fl'>1</span>,groupes=<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>1</span>,<span class='fl'>10</span>),<span class='fl'>2</span>),
+ nodes_size=<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>5</span>,<span class='fl'>5</span>),nodes_label=<span class='fl'>1</span><span class='op'>:</span><span class='fl'>11</span>, pal_nodes= <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"#adc9e0"</span>,<span class='st'>"#e7bd42"</span>),
+ pal_edges = <span class='st'>"#31374f"</span>)<span class='op'>$</span><span class='kw'>G</span>
+</div><div class='img'><img src='init_mclust-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw'>PLNfit</span><span class='op'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>)
+<span class='kw'>Sigma_hat</span><span class='op'>=</span><span class='kw'>PLNfit</span><span class='op'>$</span><span class='kw'>sigma_O</span>
+<span class='co'>#-- original true clique</span>
+<span class='kw'>data</span><span class='op'>$</span><span class='kw'>TC</span>
 </div><div class='output co'>#&gt; [[1]]
-#&gt; [1] 1 4 7 8 9
-#&gt; </div><div class='input'><span class='kw'>initClique</span>
+#&gt; [1] 1 2 3 4 8 9
+#&gt; </div><div class='input'><span class='co'>#-- clique found by mclust</span>
+<span class='kw'>clique_mclust</span><span class='op'>=</span><span class='fu'>init_mclust</span>(<span class='kw'>Sigma_hat</span>, r=<span class='fl'>1</span>)
+</div><div class='output co'>#&gt; <span class='warning'>Warning: `data_frame()` is deprecated as of tibble 1.1.0.</span>
+#&gt; <span class='warning'>Please use `tibble()` instead.</span>
+#&gt; <span class='warning'><span style='color: #555555;'>This warning is displayed once every 8 hours.</span><span></span>
+#&gt; <span class='warning'></span><span style='color: #555555;'>Call `lifecycle::last_warnings()` to see where this warning was generated.</span><span></span></div><div class='input'><span class='kw'>clique_mclust</span>
 </div><div class='output co'>#&gt; [[1]]
-#&gt; [1]  4  8 10
-#&gt; </div></pre>
+#&gt; [1] 2 4 5 8
+#&gt; </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

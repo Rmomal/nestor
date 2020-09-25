@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fit sparse PCA on a grid of alpha — FitSparsePCA • nestor</title>
+<title>Initialize all parameters for the variational inference — initVEM • nestor</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Fit sparse PCA on a grid of alpha — FitSparsePCA" />
-<meta property="og:description" content="Fit sparse PCA on a grid of alpha" />
+<meta property="og:title" content="Initialize all parameters for the variational inference — initVEM" />
+<meta property="og:description" content="Initialize all parameters for the variational inference" />
 
 
 
@@ -123,62 +123,68 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Fit sparse PCA on a grid of alpha</h1>
+    <h1>Initialize all parameters for the variational inference</h1>
     
-    <div class="hidden name"><code>FitSparsePCA.Rd</code></div>
+    <div class="hidden name"><code>initVEM.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Fit sparse PCA on a grid of alpha</p>
+    <p>Initialize all parameters for the variational inference</p>
     </div>
 
-    <pre class="usage"><span class='fu'>FitSparsePCA</span>(<span class='kw'>Y</span>, r = <span class='fl'>1</span>, min.size = <span class='fl'>1</span>, alphaGrid = <span class='fl'>10</span><span class='op'>^</span>(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='op'>-</span><span class='fl'>4</span>, <span class='fl'>0</span>, by = <span class='fl'>0.1</span>)))</pre>
+    <pre class="usage"><span class='fu'>initVEM</span>(<span class='kw'>Y</span>, <span class='kw'>cliqueList</span>, <span class='kw'>sigma_O</span>, <span class='kw'>MO</span>, <span class='kw'>r</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>Y</th>
-      <td><p>a data frame</p></td>
+      <td><p>count data matrix</p></td>
+    </tr>
+    <tr>
+      <th>cliqueList</th>
+      <td><p>list of size r of initial neighbors for each missing actor</p></td>
+    </tr>
+    <tr>
+      <th>sigma_O</th>
+      <td><p>estimated observed bloc of the variance-covariance matrix</p></td>
+    </tr>
+    <tr>
+      <th>MO</th>
+      <td><p>estimated mean values of the latent parameters corresponding to observed species</p></td>
     </tr>
     <tr>
       <th>r</th>
-      <td><p>the number of missing actors</p></td>
-    </tr>
-    <tr>
-      <th>min.size</th>
-      <td><p>the minimum number of neighbors for each missing actor</p></td>
-    </tr>
-    <tr>
-      <th>alphaGrid</th>
-      <td><p>the grid for alpha</p></td>
+      <td><p>number of missing actors</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
-<ul>
-<li><p>sPcaOpt the optimal spca object</p></li>
-<li><p>alphaOpt the best alpha value among the provided grid</p></li>
-<li><p>loglik vector of log likelihood obtained for each value of alpha</p></li>
-<li><p>bic vecotr of BIC values</p></li>
-<li><p>cliques optimal clique of neighbors</p></li>
+    <p>initVEM computes the following initial matrices:</p><ul>
+<li><p>Wginit: Variational edges weights matrix</p></li>
+<li><p>Winit: Edges weights matrix</p></li>
+<li><p>omegainit: Precision matrix</p></li>
+<li><p>MHinit: Mean values for the hidden latent Gaussian parameters</p></li>
 </ul>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(n=<span class='fl'>100</span>,p=<span class='fl'>10</span>,r=<span class='fl'>1</span>,type=<span class='st'>"scale-free"</span>, plot=<span class='fl'>TRUE</span>)
-</div><div class='img'><img src='FitSparsePCA-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw'>TrueClique</span><span class='op'>=</span><span class='kw'>data</span><span class='op'>$</span><span class='kw'>TC</span>
-<span class='kw'>findclique</span><span class='op'>=</span><span class='fu'>FitSparsePCA</span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>,r=<span class='fl'>1</span>)
+</div><div class='img'><img src='initVEM-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw'>PLNfit</span><span class='op'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>)
+<span class='kw'>MO</span><span class='op'>&lt;-</span><span class='kw'>PLNfit</span><span class='op'>$</span><span class='kw'>MO</span>
+<span class='kw'>sigma_O</span><span class='op'>=</span><span class='kw'>PLNfit</span><span class='op'>$</span><span class='kw'>sigma_O</span>
+<span class='co'>#-- find initial clique</span>
+<span class='kw'>findclique</span><span class='op'>=</span><span class='fu'><a href='FitSparsePCA.html'>FitSparsePCA</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>,r=<span class='fl'>1</span>)
 <span class='kw'>initClique</span><span class='op'>=</span><span class='kw'>findclique</span><span class='op'>$</span><span class='kw'>cliques</span>
-<span class='kw'>TrueClique</span>
-</div><div class='output co'>#&gt; [[1]]
-#&gt; [1] 1 4 7 8 9
-#&gt; </div><div class='input'><span class='kw'>initClique</span>
-</div><div class='output co'>#&gt; [[1]]
-#&gt; [1]  4  8 10
-#&gt; </div></pre>
+<span class='co'>#-- initialize the VEM</span>
+<span class='kw'>initList</span><span class='op'>=</span><span class='fu'>initVEM</span>(Y=<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>,cliqueList=<span class='kw'>initClique</span>,sigma_O=<span class='kw'>sigma_O</span>, MO=<span class='kw'>MO</span>,r=<span class='fl'>1</span> )
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='kw'>initList</span>)
+</div><div class='output co'>#&gt; List of 4
+#&gt;  $ Wginit   : num [1:11, 1:11] 0 0.00826 0.00826 0.00826 0.00826 ...
+#&gt;  $ Winit    : num [1:11, 1:11] 0 0.00826 0.00826 0.00826 0.00826 ...
+#&gt;  $ omegainit: num [1:11, 1:11] 4.7495 -0.0406 0.0683 1.123 -0.2102 ...
+#&gt;  $ MHinit   : num [1:100, 1] -0.861 -0.244 -1.1779 0.3329 0.0814 ...</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

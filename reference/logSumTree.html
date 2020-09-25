@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fit sparse PCA on a grid of alpha — FitSparsePCA • nestor</title>
+<title>exact computation of matrix tree log determinant — logSumTree • nestor</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Fit sparse PCA on a grid of alpha — FitSparsePCA" />
-<meta property="og:description" content="Fit sparse PCA on a grid of alpha" />
+<meta property="og:title" content="exact computation of matrix tree log determinant — logSumTree" />
+<meta property="og:description" content="exact computation of matrix tree log determinant" />
 
 
 
@@ -123,35 +123,23 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Fit sparse PCA on a grid of alpha</h1>
+    <h1>exact computation of matrix tree log determinant</h1>
     
-    <div class="hidden name"><code>FitSparsePCA.Rd</code></div>
+    <div class="hidden name"><code>logSumTree.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Fit sparse PCA on a grid of alpha</p>
+    <p>exact computation of matrix tree log determinant</p>
     </div>
 
-    <pre class="usage"><span class='fu'>FitSparsePCA</span>(<span class='kw'>Y</span>, r = <span class='fl'>1</span>, min.size = <span class='fl'>1</span>, alphaGrid = <span class='fl'>10</span><span class='op'>^</span>(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='op'>-</span><span class='fl'>4</span>, <span class='fl'>0</span>, by = <span class='fl'>0.1</span>)))</pre>
+    <pre class="usage"><span class='fu'>logSumTree</span>(<span class='kw'>W</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>Y</th>
-      <td><p>a data frame</p></td>
-    </tr>
-    <tr>
-      <th>r</th>
-      <td><p>the number of missing actors</p></td>
-    </tr>
-    <tr>
-      <th>min.size</th>
-      <td><p>the minimum number of neighbors for each missing actor</p></td>
-    </tr>
-    <tr>
-      <th>alphaGrid</th>
-      <td><p>the grid for alpha</p></td>
+      <th>W</th>
+      <td><p>a weight matrix</p></td>
     </tr>
     </table>
 
@@ -159,26 +147,11 @@
 
     
 <ul>
-<li><p>sPcaOpt the optimal spca object</p></li>
-<li><p>alphaOpt the best alpha value among the provided grid</p></li>
-<li><p>loglik vector of log likelihood obtained for each value of alpha</p></li>
-<li><p>bic vecotr of BIC values</p></li>
-<li><p>cliques optimal clique of neighbors</p></li>
+<li><p>det exact log-determinant</p></li>
+<li><p>max.prec boolean tracking the reach of maximal precision during computation</p></li>
 </ul>
 
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(n=<span class='fl'>100</span>,p=<span class='fl'>10</span>,r=<span class='fl'>1</span>,type=<span class='st'>"scale-free"</span>, plot=<span class='fl'>TRUE</span>)
-</div><div class='img'><img src='FitSparsePCA-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw'>TrueClique</span><span class='op'>=</span><span class='kw'>data</span><span class='op'>$</span><span class='kw'>TC</span>
-<span class='kw'>findclique</span><span class='op'>=</span><span class='fu'>FitSparsePCA</span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>,r=<span class='fl'>1</span>)
-<span class='kw'>initClique</span><span class='op'>=</span><span class='kw'>findclique</span><span class='op'>$</span><span class='kw'>cliques</span>
-<span class='kw'>TrueClique</span>
-</div><div class='output co'>#&gt; [[1]]
-#&gt; [1] 1 4 7 8 9
-#&gt; </div><div class='input'><span class='kw'>initClique</span>
-</div><div class='output co'>#&gt; [[1]]
-#&gt; [1]  4  8 10
-#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

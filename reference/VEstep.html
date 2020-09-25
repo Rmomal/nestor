@@ -132,8 +132,23 @@
     <p>Computes the variational expectation step of the algorithm</p>
     </div>
 
-    <pre class="usage"><span class='fu'>VEstep</span>(<span class='kw'>MO</span>, <span class='kw'>SO</span>, <span class='kw'>SH</span>, <span class='kw'>Omega</span>, <span class='kw'>W</span>, <span class='kw'>Wg</span>, <span class='kw'>MH</span>, <span class='kw'>Pg</span>, <span class='kw'>logSTW</span>, <span class='kw'>logSTWg</span>, <span class='kw'>alpha</span>, <span class='kw'>it1</span>,
-  <span class='kw'>verbatim</span>, trackJ = <span class='fl'>FALSE</span>, hist = <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>VEstep</span>(
+  <span class='kw'>MO</span>,
+  <span class='kw'>SO</span>,
+  <span class='kw'>SH</span>,
+  <span class='kw'>Omega</span>,
+  <span class='kw'>W</span>,
+  <span class='kw'>Wg</span>,
+  <span class='kw'>MH</span>,
+  <span class='kw'>Pg</span>,
+  <span class='kw'>logSTW</span>,
+  <span class='kw'>logSTWg</span>,
+  <span class='kw'>alpha</span>,
+  <span class='kw'>it1</span>,
+  <span class='kw'>verbatim</span>,
+  trackJ = <span class='fl'>FALSE</span>,
+  hist = <span class='fl'>FALSE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -184,7 +199,7 @@
     </tr>
     <tr>
       <th>it1</th>
-      <td><p>check if nestor is at its first iteration</p></td>
+      <td><p>check if nestorFit is at its first iteration</p></td>
     </tr>
     <tr>
       <th>verbatim</th>
