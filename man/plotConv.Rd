@@ -7,10 +7,10 @@
 plotConv(nestorFit)
 }
 \arguments{
-\item{nestorFit}{a fit from the nestorFit() function}
+\item{nestorFit}{Fit from the nestorFit() function.}
 }
 \value{
-visualiaztion of nestorFit convergence
+Visualiaztion of nestorFit convergence.
 }
 \description{
 Plot function for nestorFit convergence

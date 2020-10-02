@@ -4,39 +4,28 @@
 \alias{init_blockmodels}
 \title{Find initial cliques using blockmodels on the initial marginalized network}
 \usage{
-init_blockmodels(
-  Y,
-  sigma_O,
-  MO,
-  SO,
-  k = 3,
-  poisson = FALSE,
-  alpha = 0.1,
-  cores = 1
-)
+init_blockmodels(Y, sigma_O, MO, SO, k = 3, alpha = 0.1, cores = 1)
 }
 \arguments{
-\item{Y}{count data}
+\item{Y}{Count dataset.}
 
-\item{sigma_O}{original covariance matrix estimate}
+\item{sigma_O}{PLNmodels output: covariance matrix estimate.}
 
-\item{MO}{original observed means estimate}
+\item{MO}{PLNmodels output: observed means estimate.}
 
-\item{SO}{original observed marginal variances estimate}
+\item{SO}{PLNmodels output: observed marginal variances estimate.}
 
-\item{k}{number of groups}
+\item{k}{Number of groups to find.}
 
-\item{poisson}{boolean for the choice of model of blockmodel. If FALSE, runs bernoulli.}
+\item{alpha}{Tempering parameter.}
 
-\item{alpha}{tempering parameter}
-
-\item{cores}{number of cores}
+\item{cores}{Number of cores for parallel computation (uses mclapply, not available for Windows).}
 }
 \value{
-a list of possible cliques
+A list of cliques
 }
 \description{
-Find initial cliques using blockmodels on the initial marginalized network
+This function aims at clustering the marginal network, inferred from edges probabilities obtained with either \code{nestorFit()} or \code{EMtree()}.
 }
 \examples{
 data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)

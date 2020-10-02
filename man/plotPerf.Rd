@@ -4,19 +4,21 @@
 \alias{plotPerf}
 \title{Comparaitve plot of estimated edge probabilities and original graph.}
 \usage{
-plotPerf(P, G, r, thresh = 0.5)
+plotPerf(P, G, r, thresh = 0.5, no.names = FALSE)
 }
 \arguments{
-\item{P}{edges probabilities matrix}
+\item{P}{Edges probabilities matrix.}
 
-\item{G}{adjacency matrix of the original graph}
+\item{G}{Adjacency matrix of the original graph.}
 
-\item{r}{number of missing actors}
+\item{r}{Number of missing actors.}
 
-\item{thresh}{required threshold for criteria computations, default to 0.5}
+\item{thresh}{Required threshold for criteria computations, default to 0.5.}
+
+\item{no.names}{Boolean controlling the display of variable names and ticks.}
 }
 \value{
-two heatmaps with performance criteria computed for the specified threshold as title.
+Two heatmaps with performance criteria computed for the specified threshold as title.
 }
 \description{
 Comparaitve plot of estimated edge probabilities and original graph.

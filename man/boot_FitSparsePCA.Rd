@@ -4,24 +4,24 @@
 \alias{boot_FitSparsePCA}
 \title{Finds initial cliques using a sparse PCA on bootstraps sub-samples}
 \usage{
-boot_FitSparsePCA(Y, B, r, min.size = 1, cores = 1, unique = TRUE)
+boot_FitSparsePCA(M, B, r, min.size = 1, cores = 1, unique = TRUE)
 }
 \arguments{
-\item{Y}{data}
+\item{M}{Gaussian proxy for the original dataset. Possibly obtained using PLNmodels.}
 
-\item{B}{number of bootstrap samples}
+\item{B}{Number of bootstrap samples.}
 
-\item{r}{number of missing actors}
+\item{r}{Number of missing actors.}
 
-\item{min.size}{minimum number of neighbors of missing actors}
+\item{min.size}{Minimum number of neighbors of missing actors.}
 
-\item{cores}{number of cores for possible parallel computation}
+\item{cores}{Number of cores for parallel computation (uses mclapply, not available for Windows).}
 
-\item{unique}{should unique results only be displayed ?}
+\item{unique}{Boolean for keeping only unique results.}
 }
 \value{
 \itemize{
-\item{cliqueList:}{ a list of all possible initial cliques of neighbors. Each element is of size r}
+\item{cliqueList:}{ list of all cliques found. Each element is itself a list of size r.}
 \item{nb_occ:}{ vector of the number of times each cliques has been found by sPCA.}}
 }
 \description{
@@ -29,5 +29,6 @@ Finds initial cliques using a sparse PCA on bootstraps sub-samples
 }
 \examples{
 data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
-boot_FitSparsePCA(data$Y, B=100, r=1)
+PLNfit=norm_PLN(data$Y)
+boot_FitSparsePCA(PLNfit$MO, B=100, r=1)
 }

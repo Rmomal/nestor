@@ -19,30 +19,30 @@ List.nestorFit(
 )
 }
 \arguments{
-\item{cliqueList}{a list containing all initial cliques to be tested}
+\item{cliqueList}{List containing all initial cliques to be tested.}
 
-\item{Y}{count dataset}
+\item{Y}{Count dataset.}
 
-\item{sigma_O}{result of PLN estimation: variance covariance matrix of observed data}
+\item{sigma_O}{Result of PLN estimation: variance covariance matrix of observed data.}
 
-\item{MO}{result of PLN estimation: means matrix of observed data}
+\item{MO}{Result of PLN estimation: means matrix of observed data.}
 
-\item{SO}{result of PLN estimation: marginal variances matrix of observed data}
+\item{SO}{Result of PLN estimation: marginal variances matrix of observed data.}
 
-\item{r}{number of hidden variables}
+\item{r}{Number of hidden variables.}
 
-\item{alpha}{tempering parameter}
+\item{alpha}{Tempering parameter.}
 
-\item{cores}{number of cores}
+\item{cores}{Number of cores for parallel computation (uses mclapply, not available for Windows).}
 
-\item{maxIter}{maximal number of iterations of the algorithm}
+\item{maxIter}{Maximal number of iterations of the algorithm.}
 
-\item{eps}{convergence precision parameter}
+\item{eps}{Convergence precision parameter.}
 
-\item{trackJ}{boolean for the estimation of the lower bound at each parameter update}
+\item{trackJ}{Boolean for the lower bound estimation at each parameter update instead of each step.}
 }
 \value{
-a list containing the fit of nestorFit for every cliques contained in cliqueList
+A list containing the fit of nestorFit for every clique contained in cliqueList.
 }
 \description{
 Run function nestorFit on a list of initial cliques using parallel computation (mclapply)
@@ -54,7 +54,7 @@ MO<-PLNfit$MO
 SO<-PLNfit$SO
 sigma_O=PLNfit$sigma_O
 #-- find a list of initial cliques
-findcliqueList=boot_FitSparsePCA(data$Y, B=5, r=1)
+findcliqueList=boot_FitSparsePCA(MO, B=5, r=1)
 cliqueList=findcliqueList$cliqueList
 length(cliqueList)
 #-- run List.nestorFit

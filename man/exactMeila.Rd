@@ -7,12 +7,12 @@
 exactMeila(W, r)
 }
 \arguments{
-\item{W}{a weight matrix}
+\item{W}{A weight matrix.}
 
-\item{r}{the number of missing actors}
+\item{r}{The number of missing actors.}
 }
 \value{
-the Meila matrix
+The Meila matrix.
 }
 \description{
 Calculates the Meila matrix using exact computation

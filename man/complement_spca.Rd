@@ -4,21 +4,23 @@
 \alias{complement_spca}
 \title{Select the k first components and their complement as initial cliques}
 \usage{
-complement_spca(Y, k)
+complement_spca(M, k)
 }
 \arguments{
-\item{Y}{count dataset}
+\item{M}{Gaussian proxy for the original dataset. Possibly obtained using PLNmodels.}
 
-\item{k}{number of principal components of sparse PCA to keep}
+\item{k}{Number of principal components of sparse PCA to keep.}
 }
 \value{
-a list of 2*k cliques
+A list of 2 x k cliques.
 }
 \description{
 This function aims at efficiently exploring the space of likely cliques when only one missing actor is estimated.
+It focuses and the first two principal component axes found, and their complements.
 }
 \examples{
 data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+PLNfit=norm_PLN(data$Y)
 data$TC
-complement_spca(data$Y,k=2)
+complement_spca(PLNfit$MO,k=2)
 }

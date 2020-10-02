@@ -7,24 +7,24 @@
 ppvtpr(probs, G, r, thresh = 0.5)
 }
 \arguments{
-\item{probs}{matrix of estimated edges probabilities}
+\item{probs}{Matrix of estimated edges probabilities.}
 
-\item{G}{original graph}
+\item{G}{Original graph.}
 
-\item{r}{number of missing actors}
+\item{r}{Number of missing actors.}
 
-\item{thresh}{required threshold for criteria computations, default to 0.5}
+\item{thresh}{Required threshold for criteria computations, default to 0.5.}
 }
 \value{
 \itemize{
-\item{PPV}{ Precision of the whole data}
-\item{PPVH}{ Precision regarding observed data}
-\item{PPVO}{ Precision regarding hidden data}
-\item{TPR}{ Recall of the whole data}
-\item{TPRH}{ Recall regarding observed data}
-\item{TPRO}{ Recall regarding hidden data}
-\item{FPRH}{ False Positive Rate of hidden data}
-\item{FNRH}{ False Negative Rate of hidden data}
+\item{PPV:}{ precision of the whole data.}
+\item{PPVH:}{ precision regarding observed data.}
+\item{PPVO:}{ precision regarding hidden data.}
+\item{TPR:}{ recall of the whole data.}
+\item{TPRH:}{ recall regarding observed data.}
+\item{TPRO:}{ recall regarding hidden data.}
+\item{FPRH:}{ false Positive Rate of hidden data.}
+\item{FNRH:}{ false Negative Rate of hidden data.}
 }
 }
 \description{

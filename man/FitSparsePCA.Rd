@@ -4,24 +4,24 @@
 \alias{FitSparsePCA}
 \title{Fit sparse PCA on a grid of alpha}
 \usage{
-FitSparsePCA(Y, r = 1, min.size = 1, alphaGrid = 10^(seq(-4, 0, by = 0.1)))
+FitSparsePCA(M, r = 1, min.size = 1, alphaGrid = 10^(seq(-4, 0, by = 0.1)))
 }
 \arguments{
-\item{Y}{a data frame}
+\item{M}{Gaussian proxy for the original dataset. Possibly obtained using PLNmodels.}
 
-\item{r}{the number of missing actors}
+\item{r}{Number of missing actors.}
 
-\item{min.size}{the minimum number of neighbors for each missing actor}
+\item{min.size}{Minimal number of neighbors for each missing actor.}
 
-\item{alphaGrid}{the grid for alpha}
+\item{alphaGrid}{Grid for parsity controlling parameter.}
 }
 \value{
 \itemize{
-\item{sPcaOpt}{ the optimal spca object }
-\item{alphaOpt}{ the best alpha value among the provided grid}
-\item{loglik}{ vector of log likelihood obtained for each value of alpha}
-\item{bic}{ vecotr of BIC values}
-\item{cliques}{ optimal clique of neighbors}}
+\item{sPcaOpt:}{ optimal spca object.}
+\item{alphaOpt:}{ best alpha value among the provided grid.}
+\item{loglik:}{ vector of log likelihood obtained for each value of alpha.}
+\item{bic:}{ vecotr of BIC values.}
+\item{cliques:}{ optimal clique of neighbors.}}
 }
 \description{
 Fit sparse PCA on a grid of alpha
@@ -29,7 +29,8 @@ Fit sparse PCA on a grid of alpha
 \examples{
 data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 TrueClique=data$TC
-findclique=FitSparsePCA(data$Y,r=1)
+PLNfit=norm_PLN(data$Y)
+findclique=FitSparsePCA(PLNfit$MO,r=1)
 initClique=findclique$cliques
 TrueClique
 initClique

@@ -1,23 +1,31 @@
 #' ggplot heatmap
 #'
-#' @param data input matrix
-#'
-#' @return a heatmap
+#' @param data Input matrix.
+#' @param no.names Boolean controlling the display of variable names and ticks.
+#' @param order Defines a specific display order of the heatmap's rows.
+#' @return A heatmap of the input data
 #' @export
 #' @importFrom reshape2 melt
 #' @import ggplot2
 #' @examples Sigma=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)$Sigma
 #' ggimage(Sigma)
-ggimage<-function(data){
+ggimage<-function(data, no.names=FALSE, order=NULL){
   melted_data <- reshape2::melt(data)
-  ggplot2::ggplot(melted_data, aes(x=.data$Var1, y=.data$Var2, fill=.data$value)) + theme_light()+labs(x="",y="")+
-    geom_tile() +guides(fill=FALSE)+ theme(plot.title = element_text(size=10, hjust=0.5))+ coord_fixed()
+  if(is.null(order)){p=ncol(data) ; order = 1:p}
+  melted_data$Var1 <- factor( melted_data$Var1, levels = colnames(data)[order])
+  melted_data$Var2 <- factor( melted_data$Var2, levels = colnames(data)[order])
+  g=ggplot2::ggplot(melted_data, ggplot2::aes(x=.data$Var1, y=.data$Var2, fill=.data$value)) + ggplot2::theme_light()+
+    ggplot2::labs(x="",y="")+ ggplot2::geom_tile() +ggplot2::guides(fill=FALSE)+
+    ggplot2::theme(plot.title = element_text(size=10, hjust=0.5))+
+    ggplot2::coord_fixed()
+  if(no.names) g=g+theme(axis.text=element_blank(),axis.ticks =element_blank())
+  g
 }
 
 #' wraper of auc from ROCR
-#' @param pred predictions
-#' @param label labels
-#' @return The Area Under the Curve value
+#' @param pred Predictions.
+#' @param label Labels.
+#' @return The Area Under the Curve value.
 #' @export
 #' @importFrom ROCR prediction performance
 #' @examples  data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
@@ -37,20 +45,20 @@ auc<-function(pred,label){
 }
 #' Computes precision and recall statistics separating observed from hidden variables, and (FPR,FNR) for hidden variables .
 #'
-#' @param probs matrix of estimated edges probabilities
-#' @param G original graph
-#' @param r number of missing actors
-#' @param thresh required threshold for criteria computations, default to 0.5
+#' @param probs Matrix of estimated edges probabilities.
+#' @param G Original graph.
+#' @param r Number of missing actors.
+#' @param thresh Required threshold for criteria computations, default to 0.5.
 #'
 #' @return \itemize{
-#' \item{PPV}{ Precision of the whole data}
-#' \item{PPVH}{ Precision regarding observed data}
-#' \item{PPVO}{ Precision regarding hidden data}
-#' \item{TPR}{ Recall of the whole data}
-#' \item{TPRH}{ Recall regarding observed data}
-#' \item{TPRO}{ Recall regarding hidden data}
-#' \item{FPRH}{ False Positive Rate of hidden data}
-#' \item{FNRH}{ False Negative Rate of hidden data}
+#' \item{PPV:}{ precision of the whole data.}
+#' \item{PPVH:}{ precision regarding observed data.}
+#' \item{PPVO:}{ precision regarding hidden data.}
+#' \item{TPR:}{ recall of the whole data.}
+#' \item{TPRH:}{ recall regarding observed data.}
+#' \item{TPRO:}{ recall regarding hidden data.}
+#' \item{FPRH:}{ false Positive Rate of hidden data.}
+#' \item{FNRH:}{ false Negative Rate of hidden data.}
 #' }
 #' @export
 #'
@@ -84,12 +92,12 @@ ppvtpr<-function(probs,G,r, thresh=0.5){
 }
 #' Comparaitve plot of estimated edge probabilities and original graph.
 #'
-#' @param P edges probabilities matrix
-#' @param G adjacency matrix of the original graph
-#' @param r number of missing actors
-#' @param thresh required threshold for criteria computations, default to 0.5
-#'
-#' @return two heatmaps with performance criteria computed for the specified threshold as title.
+#' @param P Edges probabilities matrix.
+#' @param G Adjacency matrix of the original graph.
+#' @param r Number of missing actors.
+#' @param thresh Required threshold for criteria computations, default to 0.5.
+#' @param no.names Boolean controlling the display of variable names and ticks.
+#' @return Two heatmaps with performance criteria computed for the specified threshold as title.
 #' @export
 #' @examples data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
 #' PLNfit<-norm_PLN(data$Y)
@@ -103,14 +111,14 @@ ppvtpr<-function(probs,G,r, thresh=0.5){
 #' nestorFit=nestorFit(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1 )
 #' #-- obtain criteria
 #' plotPerf(nestorFit$Pg, data$G,r=1)
-plotPerf<-function(P,G,r,thresh=0.5){
+plotPerf<-function(P,G,r,thresh=0.5, no.names=FALSE){
   # plots heatmaps for the chosen threshold and print verdicts as title
   q=ncol(G)
   criteria=ppvtpr(P,G,r,thresh)
   PPV=criteria$PPV ;PPVH=criteria$PPVH ; PPVO=criteria$PPVO
   TPR=criteria$TPR ;TPRH=criteria$TPRH ; TPRO=criteria$TPRO
-  p1<-ggimage(P)+labs(title=paste0("G hat"))
-  p2<-ggimage(G)+labs(title="True G")
+  p1<-ggimage(P,no.names=no.names)+labs(title=paste0("G hat"))
+  p2<-ggimage(G,no.names=no.names)+labs(title="True G")
   auc<-round(auc(pred = P, label = G),3)
   grid.arrange(p1,p2,ncol=2, top=paste0("Recall=",TPR," (Obs=",TPRO," , Hid=",TPRH,
                                         ")\n Precision=",PPV," (Obs=",PPVO," , Hid=",PPVH,")",
@@ -119,8 +127,8 @@ plotPerf<-function(P,G,r,thresh=0.5){
 
 #' Plot function for nestorFit convergence
 #'
-#' @param nestorFit a fit from the nestorFit() function
-#' @return visualiaztion of nestorFit convergence
+#' @param nestorFit  Fit from the nestorFit() function.
+#' @return Visualiaztion of nestorFit convergence.
 #' @export
 #' @import ggplot2
 #' @importFrom tidyr gather

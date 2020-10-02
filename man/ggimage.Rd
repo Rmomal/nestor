@@ -4,13 +4,17 @@
 \alias{ggimage}
 \title{ggplot heatmap}
 \usage{
-ggimage(data)
+ggimage(data, no.names = FALSE, order = NULL)
 }
 \arguments{
-\item{data}{input matrix}
+\item{data}{Input matrix.}
+
+\item{no.names}{Boolean controlling the display of variable names and ticks.}
+
+\item{order}{Defines a specific display order of the heatmap's rows.}
 }
 \value{
-a heatmap
+A heatmap of the input data
 }
 \description{
 ggplot heatmap

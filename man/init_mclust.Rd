@@ -7,11 +7,11 @@
 init_mclust(Sigma, r, n.noise = NULL)
 }
 \arguments{
-\item{Sigma}{Estimated correlation matrix from observed counts (pxp)}
+\item{Sigma}{A covariance matrix estimate (p x p).}
 
-\item{r}{number of missing actors}
+\item{r}{Number of missing actors.}
 
-\item{n.noise}{quantity of noise for mclust, set to 3*p by default.}
+\item{n.noise}{Quantity of noise for mclust, set to 3 x p by default.}
 }
 \value{
 A list of size r, with initial cliques of neighbors for each missing actor.

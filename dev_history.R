@@ -59,6 +59,8 @@ devtools::run_examples()
 devtools::check()
 usethis::use_vignette("Usage","Usage example")
 pkgdown::build_site()
+pkgdown::build_home()
+pkgdown::build_articles()
 pkgdown::build_reference()
 
 ##########

@@ -7,12 +7,12 @@
 auc(pred, label)
 }
 \arguments{
-\item{pred}{predictions}
+\item{pred}{Predictions.}
 
-\item{label}{labels}
+\item{label}{Labels.}
 }
 \value{
-The Area Under the Curve value
+The Area Under the Curve value.
 }
 \description{
 wraper of auc from ROCR

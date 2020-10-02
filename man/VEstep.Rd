@@ -23,35 +23,46 @@ VEstep(
 )
 }
 \arguments{
-\item{MO}{matrix of observed means}
+\item{MO}{Matrix of observed means.}
 
-\item{SO}{matrix of observed marginal variances}
+\item{SO}{Matrix of observed marginal variances.}
 
-\item{SH}{matrix of observed hidden variances}
+\item{SH}{Matrix of observed hidden variances.}
 
-\item{Omega}{matrix containing the precision terms of precision matrices faithful ot a tree}
+\item{Omega}{matrix containing the precision terms of precision matrices faithful ot a tree.}
 
-\item{W}{edges weights matrix}
+\item{W}{Edges weights matrix.}
 
-\item{Wg}{variational edges weights matrix}
+\item{Wg}{Variational edges weights matrix.}
 
-\item{MH}{matrix of hidden means}
+\item{MH}{Matrix of hidden means.}
 
-\item{Pg}{edges probabilities matrix}
+\item{Pg}{Edges probabilities matrix.}
 
-\item{logSTW}{log-sum tree of the W matrix}
+\item{logSTW}{Log of the Matrix Tree quantity of the W matrix.}
 
-\item{logSTWg}{log-sum tree of the Wg matrix}
+\item{logSTWg}{Log of the Matrix Tree quantity of the Wg matrix.}
 
-\item{alpha}{tempering parameter}
+\item{alpha}{Tempering parameter.}
 
-\item{it1}{check if nestorFit is at its first iteration}
+\item{it1}{Checks if nestorFit is at its first iteration.}
 
-\item{verbatim}{boolean controling verbosity}
+\item{verbatim}{Displays verbose if set to 2.}
 
-\item{trackJ}{boolean for evaluating the lower bound at each parameter update}
+\item{trackJ}{Boolean for evaluating the lower bound at each parameter update.}
 
-\item{hist}{boolean for printing edges weights histogram at each iteration}
+\item{hist}{Boolean for printing edges weights histogram at each iteration.}
+}
+\value{
+Quantities required by the Mstep funciton:
+\itemize{
+\item{Pg:}{ edges probabilities.}
+\item{Wg:}{ edges variational weights.}
+\item{M:}{ variational means.}
+\item{S:}{ variational marginal variances.}
+\item{LB:}{ lower bound values.}
+\item{logSTWg:}{ log of the Matrix Tree quantity of the Wg matrix.}
+\item{max.prec:}{ boolean tracking the reach of maximal precision during computation.}}
 }
 \description{
 Computes the variational expectation step of the algorithm

@@ -1,39 +1,40 @@
 #' Fit sparse PCA on a grid of alpha
-#' @param Y a data frame
-#' @param r the number of missing actors
-#' @param min.size the minimum number of neighbors for each missing actor
-#' @param alphaGrid the grid for alpha
+#' @param M Gaussian proxy for the original dataset. Possibly obtained using PLNmodels.
+#' @param r Number of missing actors.
+#' @param min.size Minimal number of neighbors for each missing actor.
+#' @param alphaGrid Grid for parsity controlling parameter.
 #'
 #' @return \itemize{
-#' \item{sPcaOpt}{ the optimal spca object }
-#' \item{alphaOpt}{ the best alpha value among the provided grid}
-#' \item{loglik}{ vector of log likelihood obtained for each value of alpha}
-#' \item{bic}{ vecotr of BIC values}
-#' \item{cliques}{ optimal clique of neighbors}}
+#' \item{sPcaOpt:}{ optimal spca object.}
+#' \item{alphaOpt:}{ best alpha value among the provided grid.}
+#' \item{loglik:}{ vector of log likelihood obtained for each value of alpha.}
+#' \item{bic:}{ vecotr of BIC values.}
+#' \item{cliques:}{ optimal clique of neighbors.}}
 #' @export
 #' @importFrom sparsepca spca
 #' @importFrom mvtnorm dmvnorm
 #' @importFrom stats cov var
 #' @examples data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 #' TrueClique=data$TC
-#' findclique=FitSparsePCA(data$Y,r=1)
+#' PLNfit=norm_PLN(data$Y)
+#' findclique=FitSparsePCA(PLNfit$MO,r=1)
 #' initClique=findclique$cliques
 #' TrueClique
 #' initClique
-FitSparsePCA <- function(Y, r=1,min.size=1, alphaGrid=10^(seq(-4, 0, by=.1))){
+FitSparsePCA <- function(M, r=1,min.size=1, alphaGrid=10^(seq(-4, 0, by=.1))){
   # estimate of Sigma: empirical variance of the rotated scores  + diagonal risidual variances
-  n <- nrow(Y); p <- ncol(Y); alphaNb <- length(alphaGrid); nbDifferentH=-1
+  n <- nrow(M); p <- ncol(M); alphaNb <- length(alphaGrid); nbDifferentH=-1
   while(nbDifferentH!=r){
     sPCA <- list()
 
     for(a in 1:alphaNb){
-      sPCA[[a]] <- spca(Y, k=r, alpha=alphaGrid[a], verbose=FALSE)
+      sPCA[[a]] <- spca(M, k=r, alpha=alphaGrid[a], verbose=FALSE)
       sPCA[[a]]$Sigma <- cov(sPCA[[a]]$scores%*%t(sPCA[[a]]$transform))
 
-      resVar <- (n-1)*apply(Y - sPCA[[a]]$scores %*% t(sPCA[[a]]$transform), 2, var)/n
+      resVar <- (n-1)*apply(M - sPCA[[a]]$scores %*% t(sPCA[[a]]$transform), 2, var)/n
       sPCA[[a]]$Sigma <- sPCA[[a]]$Sigma  + diag(resVar)
       sPCA[[a]]$df <- 1 + sum(sPCA[[a]]$loadings!=0)
-      sPCA[[a]]$loglik <- sum(mvtnorm::dmvnorm((Y), sigma=sPCA[[a]]$Sigma, log=TRUE))
+      sPCA[[a]]$loglik <- sum(mvtnorm::dmvnorm((M), sigma=sPCA[[a]]$Sigma, log=TRUE))
       sPCA[[a]]$bic <- sPCA[[a]]$loglik - log(n)*sPCA[[a]]$df/2
     }
     df<-unlist(lapply(sPCA, function(sPca){sPca$df}))
@@ -67,18 +68,20 @@ FitSparsePCA <- function(Y, r=1,min.size=1, alphaGrid=10^(seq(-4, 0, by=.1))){
 #' Select the k first components and their complement as initial cliques
 #'
 #'This function aims at efficiently exploring the space of likely cliques when only one missing actor is estimated.
-#' @param Y count dataset
-#' @param k number of principal components of sparse PCA to keep
+#'It focuses and the first two principal component axes found, and their complements.
+#' @param M Gaussian proxy for the original dataset. Possibly obtained using PLNmodels.
+#' @param k Number of principal components of sparse PCA to keep.
 #'
-#' @return a list of 2*k cliques
+#' @return A list of 2 x k cliques.
 #' @export
 #'
 #' @examples data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
+#' PLNfit=norm_PLN(data$Y)
 #' data$TC
-#' complement_spca(data$Y,k=2)
-complement_spca<-function(Y,k){
-  p=ncol(Y)
-  cliques_spca<-FitSparsePCA(Y, r=k)$cliques
+#' complement_spca(PLNfit$MO,k=2)
+complement_spca<-function(M,k){
+  p=ncol(M)
+  cliques_spca<-FitSparsePCA(M, r=k)$cliques
   complement=lapply(cliques_spca, function(clique){setdiff(1:p,clique)})
   four_clique=lapply(c(cliques_spca,complement), function(cl) list(cl))
   return(four_clique)
@@ -86,26 +89,27 @@ complement_spca<-function(Y,k){
 
 #'Finds initial cliques using a sparse PCA on bootstraps sub-samples
 #'
-#' @param Y data
-#' @param B number of bootstrap samples
-#' @param r number of missing actors
-#' @param min.size minimum number of neighbors of missing actors
-#' @param cores number of cores for possible parallel computation
-#' @param unique should unique results only be displayed ?
+#' @param M Gaussian proxy for the original dataset. Possibly obtained using PLNmodels.
+#' @param B Number of bootstrap samples.
+#' @param r Number of missing actors.
+#' @param min.size Minimum number of neighbors of missing actors.
+#' @param cores Number of cores for parallel computation (uses mclapply, not available for Windows).
+#' @param unique Boolean for keeping only unique results.
 #'
 #' @return \itemize{
-#' \item{cliqueList:}{ a list of all possible initial cliques of neighbors. Each element is of size r}
+#' \item{cliqueList:}{ list of all cliques found. Each element is itself a list of size r.}
 #' \item{nb_occ:}{ vector of the number of times each cliques has been found by sPCA.}}
 #' @export
 #' @importFrom parallel mclapply
 #' @examples data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
-#' boot_FitSparsePCA(data$Y, B=100, r=1)
-boot_FitSparsePCA<-function(Y, B,r, min.size=1,cores=1, unique=TRUE){
+#' PLNfit=norm_PLN(data$Y)
+#' boot_FitSparsePCA(PLNfit$MO, B=100, r=1)
+boot_FitSparsePCA<-function(M, B,r, min.size=1,cores=1, unique=TRUE){
   cliqueList<-mclapply(1:B, function(x){
-    n=nrow(Y); v=0.8; n.sample=round(0.8*n, 0)
+    n=nrow(M); v=0.8; n.sample=round(0.8*n, 0)
     ech=sample(1:n,n.sample,replace = FALSE)
-    Y.sample=Y[ech,]
-    c=FitSparsePCA(Y.sample,r=r,min.size=min.size)$cliques
+    M.sample=M[ech,]
+    c=FitSparsePCA(M.sample,r=r,min.size=min.size)$cliques
     return(c)
   }, mc.cores=cores)
 
@@ -117,43 +121,57 @@ boot_FitSparsePCA<-function(Y, B,r, min.size=1,cores=1, unique=TRUE){
 }
 
 #' Runs PLN function from the PLNmodels package and normalized the outputs
-#' @param Y count dataset
-#'
+#' @param Y Count dataset (n x p).
+#' @param X Matrix of covariates (n x d).
+#' @param O Matrix of offsets (n x p).
 #' @return \itemize{
-#' \item{MO}{ Normalized means}
-#' \item{SO}{ Normalized marginal variances}
-#' \item{sigma_O}{ Correlation matrix computed from the variance-covariance matrix estimated by PLNmodels, and corresponding to observed variables.}}
+#' \item{MO:}{ normalized means (n x p).}
+#' \item{SO:}{ normalized marginal variances (n x p).}
+#' \item{sigma_O:}{ correlation matrix (p x p) computed from the variance-covariance matrix estimated by PLNmodels, and corresponding to observed variables.}
+#' \item{theta:}{ matrix of the covariates regression coefficients (p x (d+1) including the intercept).}}
 #' @export
 #' @importFrom PLNmodels PLN
 #' @importFrom stats cov2cor
-#' @examples  data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
-#' normPLNfit<-norm_PLN(data$Y)
+#' @examples  n=100 # 100 samples
+#' p=10  # 10 species
+#' r=1 # 1 missing actor
+#' data=generate_missing_data(n=n,p=p,r=r,type="scale-free", plot=TRUE)
+#' X=data.frame(X1=rnorm(n), X2=runif(n))
+#' normPLNfit<-norm_PLN(data$Y,X)
 #' str(normPLNfit)
-norm_PLN<-function(Y){
+norm_PLN<-function(Y, X=NULL, O=NULL){
   n=nrow(Y)
   p=ncol(Y)
-  PLNfit<-PLN(Y~1, control=list(trace=0))
+  if(is.null(O)) O=matrix(1, n, p)
+  if(is.null(X)){
+    PLNfit<-PLN(Y~1+offset(log(O)), control=list(trace=0))
+  }else{
+    X=as.matrix(X)
+    PLNfit<-PLN(Y~1+X+offset(log(O)), control=list(trace=0))
+  }
   MO<-PLNfit$var_par$M
   SO<-PLNfit$var_par$S
   sigma_obs=cov2cor(PLNfit$model_par$Sigma)
+  theta=PLNfit$model_par$Theta
   #-- normalize the PLN outputs
   D=diag(sigma_obs)
   matsig=(matrix(rep(1/sqrt(D),n),n,p, byrow = TRUE))
   MO=MO*matsig
   SO=SO*matsig^2
-  return(list(MO=MO, SO=SO, sigma_O=sigma_obs))
+  return(list(MO=MO, SO=SO, sigma_O=sigma_obs, theta=theta))
 }
 #' Find initial cliques using blockmodels on the initial marginalized network
-#' @param Y count data
-#' @param sigma_O original covariance matrix estimate
-#' @param MO original observed means estimate
-#' @param SO original observed marginal variances estimate
-#' @param k number of groups
-#' @param poisson boolean for the choice of model of blockmodel. If FALSE, runs bernoulli.
-#' @param alpha tempering parameter
-#' @param cores number of cores
 #'
-#' @return a list of possible cliques
+#' This function aims at clustering the marginal network, inferred from edges probabilities obtained with either `nestorFit()` or `EMtree()`.
+#' @param Y Count dataset.
+#' @param sigma_O PLNmodels output: covariance matrix estimate.
+#' @param MO PLNmodels output: observed means estimate.
+#' @param SO PLNmodels output: observed marginal variances estimate.
+#' @param k Number of groups to find.
+#' @param alpha Tempering parameter.
+#' @param cores Number of cores for parallel computation (uses mclapply, not available for Windows).
+#'
+#' @return A list of cliques
 #' @export
 #' @importFrom blockmodels BM_bernoulli
 #' @importFrom EMtree EMtree
@@ -166,7 +184,7 @@ norm_PLN<-function(Y){
 #' sigma_O=PLNfit$sigma_O
 #' #-- initialize with blockmodels
 #' init_blockmodels(data$Y,sigma_O, MO, SO, k=2 )
-init_blockmodels<-function(Y, sigma_O, MO, SO, k=3,poisson=FALSE, alpha=0.1, cores=1){
+init_blockmodels<-function(Y, sigma_O, MO, SO, k=3, alpha=0.1, cores=1){
   init=initVEM(Y = Y,cliqueList=NULL, cov2cor(sigma_O),MO,r = 0)
   #--- fit nestorFit with 0 missing actor
   resVEM0<- tryCatch(nestorFit(Y,MO,SO,initList=init, eps=1e-3, alpha=alpha, maxIter=100,verbatim = 0),
@@ -207,7 +225,7 @@ extractParamBM <- function(BMobject,k){
   ########## ordering
   if ((membership_name == 'SBM') |  (membership_name == 'SBM_sym')) {
     o <- switch(model,
-                poisson = order(res$lambda %*% matrix(res$pi,ncol = 1),decreasing = TRUE),
+              #  poisson = order(res$lambda %*% matrix(res$pi,ncol = 1),decreasing = TRUE),
                 bernoulli  =  order(res$alpha %*% matrix(res$pi,ncol = 1),decreasing = TRUE),
                 1:res$k
     )
@@ -215,16 +233,15 @@ extractParamBM <- function(BMobject,k){
     res$alpha <- res$alpha[o,o]
     res$tau <- res$tau[,o]
     res$Z <- apply(res$tau, 1, which.max)
-    #if (model == 'poisson') {res$lambda <- res$lambda[o,o]}
   }
   return(res)
 }
 
 #' Find initial cliques using mclust on the estimated correlation matrix
 #'
-#' @param Sigma Estimated correlation matrix from observed counts (pxp)
-#' @param r number of missing actors
-#' @param n.noise quantity of noise for mclust, set to 3*p by default.
+#' @param Sigma A covariance matrix estimate (p x p).
+#' @param r Number of missing actors.
+#' @param n.noise Quantity of noise for mclust, set to 3 x p by default.
 #'
 #' @return A list of size r, with initial cliques of neighbors for each missing actor.
 #' @importFrom stats prcomp runif
@@ -332,26 +349,26 @@ initOmega <- function(Sigma = NULL,  cliqueList,cst=1.1) {
 
 #' Initialize all parameters for the variational inference
 #'
-#' @param Y count data matrix
-#' @param cliqueList list of size r of initial neighbors for each missing actor
-#' @param sigma_O estimated observed bloc of the variance-covariance matrix
-#' @param MO estimated mean values of the latent parameters corresponding to observed species
-#' @param r number of missing actors
+#' @param Y Count dataset.
+#' @param cliqueList List of size r of initial neighbors for each missing actor.
+#' @param sigma_O PLNmodels output: estimated observed bloc of the variance-covariance matrix.
+#' @param MO PLNmodels output: estimated variational mean values of the latent parameters corresponding to observed species.
+#' @param r Number of missing actors.
 #'
-#' @return initVEM computes the following initial matrices:
+#' @return Computes the following initial matrices:
 #' \itemize{
-#' \item{Wginit:}{ Variational edges weights matrix}
-#' \item{Winit:}{ Edges weights matrix}
-#' \item{omegainit:}{ Precision matrix}
-#' \item{MHinit:}{ Mean values for the hidden latent Gaussian parameters}}
+#' \item{Wginit:}{ variational edges weights matrix.}
+#' \item{Winit:}{ edges weights matrix.}
+#' \item{omegainit:}{ precision matrix.}
+#' \item{MHinit:}{ variational mean values for the hidden latent Gaussian parameters.}}
 #' @export
 #'
 #' @examples data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 #' PLNfit<-norm_PLN(data$Y)
 #' MO<-PLNfit$MO
 #' sigma_O=PLNfit$sigma_O
-#' #-- find initial clique
-#' findclique=FitSparsePCA(data$Y,r=1)
+#' #-- find initial clique using your favorite method
+#' findclique=FitSparsePCA(MO,r=1)
 #' initClique=findclique$cliques
 #' #-- initialize the VEM
 #' initList=initVEM(Y=data$Y,cliqueList=initClique,sigma_O=sigma_O, MO=MO,r=1 )
@@ -383,12 +400,12 @@ initVEM<-function(Y,cliqueList,sigma_O,MO,r){
 
 #' Heuristic for an upper value of tempering parameter alpha
 #'
-#' @param q Total number of variables (observed and unobserved)
-#' @param n Number of samples
-#' @param sup_val maximal value of the complete estimated correlation matrix. 0.8 by default.
-#' @param delta Maximal value allowed for a determinant. Set to the maximal machine precision by default
+#' @param q Total number of variables (observed and unobserved).
+#' @param n Number of samples.
+#' @param sup_val maximal value of the complete estimated correlation matrix (default 0.8).
+#' @param delta Maximal value allowed for a determinant (default maximal machine precision).
 #'
-#' @return an upper value of tempering parameter alpha
+#' @return An upper value of tempering parameter alpha.
 #' @export
 #'
 #' @examples q=15

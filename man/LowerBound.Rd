@@ -7,26 +7,31 @@
 LowerBound(Pg, Omega, M, S, W, Wg, p, logSTW, logSTWg)
 }
 \arguments{
-\item{Pg}{Edge probability matrix (qxq)}
+\item{Pg}{Edge probability matrix (qxq).}
 
-\item{Omega}{market matrix with precision values (qxq)}
+\item{Omega}{Matrix with precision values common to all spanning trees (qxq).}
 
-\item{M}{Matrix of variational means (nxq)}
+\item{M}{Matrix of variational means (nxq).}
 
-\item{S}{Matrix of variational marginal variances (nxq)}
+\item{S}{Matrix of variational marginal variances (nxq).}
 
-\item{W}{Edges weight matrix}
+\item{W}{Edges weight matrix.}
 
-\item{Wg}{Variational edges weight matrix}
+\item{Wg}{Variational edges weight matrix.}
 
-\item{p}{number of observed species}
+\item{p}{Number of observed species.}
 
-\item{logSTW}{log of the matrix tree run on the W matrix}
+\item{logSTW}{Log of the matrix tree run on the W matrix.}
 
-\item{logSTWg}{log of the matrix tree run on the Wg matrix}
+\item{logSTWg}{Log of the matrix tree run on the Wg matrix.}
 }
 \value{
-a vector containing the different terms of the lower bound
+A vector containing the different terms of the lower bound. More precisely :
+\itemize{
+\item{J:}{ value of the lower bound.}
+\item{T1:}{ expectation of log p(Z | T).}
+\item{T2:}{ expectation of the difference in log scale of the tree density and its variational approximation.}
+\item{T3:}{ Variational entropy of the latent gaussian parameters Z.} }
 }
 \description{
 Computes the lower bound.

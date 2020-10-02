@@ -7,25 +7,34 @@
 Mstep(M, S, Pg, Omega, W, Wg, p, logSTW, logSTWg, trackJ = FALSE)
 }
 \arguments{
-\item{M}{matrix of means}
+\item{M}{Matrix of variational means.}
 
-\item{S}{matrix of marginal variances}
+\item{S}{Matrix of variational marginal variances.}
 
-\item{Pg}{matrix of edges probabilities}
+\item{Pg}{Matrix of edges probabilities.}
 
-\item{Omega}{matrix gathering the precision terms}
+\item{Omega}{Matrix gathering precision terms common to all spanning tree structures.}
 
-\item{W}{edges weights matrix}
+\item{W}{Edges weights matrix.}
 
-\item{Wg}{variational weights matrix}
+\item{Wg}{Variational edge weights matrix.}
 
-\item{p}{number of observed species}
+\item{p}{Number of observed species.}
 
-\item{logSTW}{log-sum tree of the W matrix}
+\item{logSTW}{Log of the Matrix Tree quantity of the W matrix.}
 
-\item{logSTWg}{log-sum tree of the Wg matrix}
+\item{logSTWg}{Log of the Matrix Tree quantity of the Wg matrix.}
 
-\item{trackJ}{boolean for evaluating the lower bound at each parameter update}
+\item{trackJ}{Boolean for evaluating the lower bound at each parameter update.}
+}
+\value{
+Quantities required by the VEstep function:
+\itemize{
+\item{W:}{ edge weights matrix.}
+\item{Omega:}{ Matrix gathering precision terms common to all spanning tree structures.}
+\item{LB:}{ lower bound values.}
+\item{logSTW:}{ log of the Matrix Tree quantity of the W matrix.}
+\item{max.prec:}{ boolean tracking the reach of maximal precision during computation.}}
 }
 \description{
 Computes the maximization step of the algorithm

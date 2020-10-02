@@ -7,16 +7,16 @@
 alphaMax(q, n, sup_val = 0.8, delta = .Machine$double.xmax)
 }
 \arguments{
-\item{q}{Total number of variables (observed and unobserved)}
+\item{q}{Total number of variables (observed and unobserved).}
 
-\item{n}{Number of samples}
+\item{n}{Number of samples.}
 
-\item{sup_val}{maximal value of the complete estimated correlation matrix. 0.8 by default.}
+\item{sup_val}{maximal value of the complete estimated correlation matrix (default 0.8).}
 
-\item{delta}{Maximal value allowed for a determinant. Set to the maximal machine precision by default}
+\item{delta}{Maximal value allowed for a determinant (default maximal machine precision).}
 }
 \value{
-an upper value of tempering parameter alpha
+An upper value of tempering parameter alpha.
 }
 \description{
 Heuristic for an upper value of tempering parameter alpha

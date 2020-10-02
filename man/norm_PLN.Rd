@@ -4,22 +4,31 @@
 \alias{norm_PLN}
 \title{Runs PLN function from the PLNmodels package and normalized the outputs}
 \usage{
-norm_PLN(Y)
+norm_PLN(Y, X = NULL, O = NULL)
 }
 \arguments{
-\item{Y}{count dataset}
+\item{Y}{Count dataset (n x p).}
+
+\item{X}{Matrix of covariates (n x d).}
+
+\item{O}{Matrix of offsets (n x p).}
 }
 \value{
 \itemize{
-\item{MO}{ Normalized means}
-\item{SO}{ Normalized marginal variances}
-\item{sigma_O}{ Correlation matrix computed from the variance-covariance matrix estimated by PLNmodels, and corresponding to observed variables.}}
+\item{MO:}{ normalized means (n x p).}
+\item{SO:}{ normalized marginal variances (n x p).}
+\item{sigma_O:}{ correlation matrix (p x p) computed from the variance-covariance matrix estimated by PLNmodels, and corresponding to observed variables.}
+\item{theta:}{ matrix of the covariates regression coefficients (p x (d+1) including the intercept).}}
 }
 \description{
 Runs PLN function from the PLNmodels package and normalized the outputs
 }
 \examples{
- data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
-normPLNfit<-norm_PLN(data$Y)
+ n=100 # 100 samples
+p=10  # 10 species
+r=1 # 1 missing actor
+data=generate_missing_data(n=n,p=p,r=r,type="scale-free", plot=TRUE)
+X=data.frame(X1=rnorm(n), X2=runif(n))
+normPLNfit<-norm_PLN(data$Y,X)
 str(normPLNfit)
 }

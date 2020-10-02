@@ -7,16 +7,16 @@
 Kirshner(W, r, it1, verbatim = 0)
 }
 \arguments{
-\item{W}{a weight matrix}
+\item{W}{A weight matrix.}
 
-\item{r}{number of missing actors}
+\item{r}{Number of missing actors.}
 
-\item{it1}{check if nestorFit is at it first iteration}
+\item{it1}{Checks if nestorFit is at it first iteration.}
 
-\item{verbatim}{boolean controling verbosity}
+\item{verbatim}{Displays unstable probabilities if set to 2.}
 }
 \value{
-matrix of edges probabilities
+The matrix of edges probabilities.
 }
 \description{
 Computes edges probability from weights W (Kirshner (07) formulas)

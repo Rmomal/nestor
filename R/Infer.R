@@ -1,16 +1,16 @@
 #=====
 # VE step
 
-#' updates the variational edges weights inside the VEM.
-#' @param Rho Correlation matrix
-#' @param Omega Market matrix filled with all the precision values common to all spanning trees
-#' @param W Edge weight matrix
-#' @param r number of missing actors
-#' @param n number of samples
-#' @param alpha tempering parameter
-#' @param hist should the histogram of the log-values of OO blocs and OH blocs be printed ?
+#' Updates the variational edges weights inside the VEM.
+#' @param Rho Correlation matrix.
+#' @param Omega Matrix filled with precision values common to all spanning trees.
+#' @param W Edge weight matrix.
+#' @param r Number of missing actors.
+#' @param n Number of samples.
+#' @param alpha Tempering parameter.
+#' @param hist Prints the histogram of the log-values of OO and OH blocs if TRUE.
 #'
-#' @return The variational edge weights matrix
+#' @return The variational edge weights matrix.
 #' @export
 #' @importFrom graphics par
 computeWg<-function(Rho,Omega,W,r,n, alpha, hist=FALSE ){
@@ -50,11 +50,11 @@ computeWg<-function(Rho,Omega,W,r,n, alpha, hist=FALSE ){
 
 
 #' Updates the precision terms
-#' @param Pg Edge probability matrix
-#' @param Rho Correlation matrix
-#' @param p number of observed species
+#' @param Pg Edge probability matrix.
+#' @param Rho Correlation matrix.
+#' @param p Number of observed species.
 #'
-#' @return the market matrix filled with all the precision values common to all spanning trees
+#' @return The matrix filled with the precision values common to all spanning trees.
 #' @export
 computeOmega<-function(Pg,Rho,p){
   q=ncol(Rho) ; hidden=(q!=p)
@@ -132,9 +132,9 @@ F_Sym2Vec <- function(A.mat){
 
 #' Calculates the Meila matrix using exact computation
 #'
-#' @param W a weight matrix
-#' @param r the number of missing actors
-#' @return the Meila matrix
+#' @param W A weight matrix.
+#' @param r The number of missing actors.
+#' @return The Meila matrix.
 #' @export
 exactMeila<-function (W,r){ # for edges weight beta
   p = nrow(W) ; index=1
@@ -152,12 +152,12 @@ exactMeila<-function (W,r){ # for edges weight beta
 
 #' Computes edges probability from weights W (Kirshner (07) formulas)
 #'
-#' @param W a weight matrix
-#' @param r number of missing actors
-#' @param it1 check if nestorFit is at it first iteration
-#' @param verbatim boolean controling verbosity
+#' @param W A weight matrix.
+#' @param r Number of missing actors.
+#' @param it1 Checks if nestorFit is at it first iteration.
+#' @param verbatim Displays unstable probabilities if set to 2.
 #'
-#' @return matrix of edges probabilities
+#' @return The matrix of edges probabilities.
 #' @export
 Kirshner <- function(W,r, it1, verbatim=0){
   p = nrow(W);   L = EMtree::Laplacian(W)[-1,-1]
@@ -177,13 +177,13 @@ Kirshner <- function(W,r, it1, verbatim=0){
   return(P)
 }
 
-#' exact computation of matrix tree log determinant
+#' Exact computation of matrix tree log determinant
 #'
-#' @param W a weight matrix
+#' @param W A weight matrix.
 #'
 #' @return \itemize{
-#' \item{det}{ exact log-determinant}
-#' \item{max.prec}{ boolean tracking the reach of maximal precision during computation}}
+#' \item{det:}{ exact log-determinant of W Laplacian matrix.}
+#' \item{max.prec:}{ boolean tracking the reach of maximal precision during computation.}}
 #' @export
 logSumTree<-function(W){
   index=1;  max.prec=FALSE
@@ -195,17 +195,22 @@ logSumTree<-function(W){
 
 
 #' Computes the lower bound.
-#' @param Pg Edge probability matrix (qxq)
-#' @param Omega market matrix with precision values (qxq)
-#' @param M Matrix of variational means (nxq)
-#' @param S Matrix of variational marginal variances (nxq)
-#' @param W Edges weight matrix
-#' @param Wg Variational edges weight matrix
-#' @param p number of observed species
-#' @param logSTW log of the matrix tree run on the W matrix
-#' @param logSTWg log of the matrix tree run on the Wg matrix
+#' @param Pg Edge probability matrix (qxq).
+#' @param Omega Matrix with precision values common to all spanning trees (qxq).
+#' @param M Matrix of variational means (nxq).
+#' @param S Matrix of variational marginal variances (nxq).
+#' @param W Edges weight matrix.
+#' @param Wg Variational edges weight matrix.
+#' @param p Number of observed species.
+#' @param logSTW Log of the matrix tree run on the W matrix.
+#' @param logSTWg Log of the matrix tree run on the Wg matrix.
 #'
-#' @return a vector containing the different terms of the lower bound
+#' @return A vector containing the different terms of the lower bound. More precisely :
+#' \itemize{
+#' \item{J:}{ value of the lower bound.}
+#' \item{T1:}{ expectation of log p(Z | T).}
+#' \item{T2:}{ expectation of the difference in log scale of the tree density and its variational approximation.}
+#' \item{T3:}{ Variational entropy of the latent gaussian parameters Z.} }
 #' @export
 #' @importFrom stats cov2cor
 LowerBound<-function(Pg ,Omega, M, S, W, Wg,p, logSTW, logSTWg){
@@ -215,7 +220,7 @@ LowerBound<-function(Pg ,Omega, M, S, W, Wg,p, logSTW, logSTWg){
   Rho=cov2cor((1/n)*(t(M)%*%M+diag(colSums(S))))
   phi=1-Rho^2
   diag(phi)=0
-  #Egh lop (Z |T)
+  #Egh log p(Z |T)
   t1<-(-n*0.25)*sum(Pg *log( phi +(phi<1e-16) ))
   t2<-(-n*0.5) *sum((Pg+diag(q))*Omega*Rho)
   t3<- n*0.5* sum(log(diag(Omega)))  - q*n*0.5*log(2*pi)
@@ -234,21 +239,30 @@ LowerBound<-function(Pg ,Omega, M, S, W, Wg,p, logSTW, logSTWg){
 #===========
 #' Computes the variational expectation step of the algorithm
 #'
-#' @param MO matrix of observed means
-#' @param SO matrix of observed marginal variances
-#' @param SH matrix of observed hidden variances
-#' @param Omega matrix containing the precision terms of precision matrices faithful ot a tree
-#' @param W edges weights matrix
-#' @param Wg variational edges weights matrix
-#' @param MH matrix of hidden means
-#' @param Pg edges probabilities matrix
-#' @param logSTW log-sum tree of the W matrix
-#' @param logSTWg log-sum tree of the Wg matrix
-#' @param alpha tempering parameter
-#' @param it1 check if nestorFit is at its first iteration
-#' @param verbatim boolean controling verbosity
-#' @param trackJ boolean for evaluating the lower bound at each parameter update
-#' @param hist boolean for printing edges weights histogram at each iteration
+#' @param MO Matrix of observed means.
+#' @param SO Matrix of observed marginal variances.
+#' @param SH Matrix of observed hidden variances.
+#' @param Omega matrix containing the precision terms of precision matrices faithful ot a tree.
+#' @param W Edges weights matrix.
+#' @param Wg Variational edges weights matrix.
+#' @param MH Matrix of hidden means.
+#' @param Pg Edges probabilities matrix.
+#' @param logSTW Log of the Matrix Tree quantity of the W matrix.
+#' @param logSTWg Log of the Matrix Tree quantity of the Wg matrix.
+#' @param alpha Tempering parameter.
+#' @param it1 Checks if nestorFit is at its first iteration.
+#' @param verbatim Displays verbose if set to 2.
+#' @param trackJ Boolean for evaluating the lower bound at each parameter update.
+#' @param hist Boolean for printing edges weights histogram at each iteration.
+#' @return Quantities required by the Mstep funciton:
+#' \itemize{
+#' \item{Pg:}{ edges probabilities.}
+#' \item{Wg:}{ edges variational weights.}
+#' \item{M:}{ variational means.}
+#' \item{S:}{ variational marginal variances.}
+#' \item{LB:}{ lower bound values.}
+#' \item{logSTWg:}{ log of the Matrix Tree quantity of the Wg matrix.}
+#' \item{max.prec:}{ boolean tracking the reach of maximal precision during computation.}}
 #' @importFrom stats cov2cor
 #' @export
 VEstep<-function(MO,SO,SH,Omega,W,Wg,MH,Pg,logSTW,logSTWg, alpha,it1, verbatim,trackJ=FALSE, hist=FALSE){
@@ -318,16 +332,23 @@ VEstep<-function(MO,SO,SH,Omega,W,Wg,MH,Pg,logSTW,logSTWg, alpha,it1, verbatim,t
 #===========
 #' Computes the maximization step of the algorithm
 #'
-#' @param M matrix of means
-#' @param S matrix of marginal variances
-#' @param Pg matrix of edges probabilities
-#' @param Omega matrix gathering the precision terms
-#' @param W edges weights matrix
-#' @param Wg variational weights matrix
-#' @param p number of observed species
-#' @param logSTW log-sum tree of the W matrix
-#' @param logSTWg log-sum tree of the Wg matrix
-#' @param trackJ boolean for evaluating the lower bound at each parameter update
+#' @param M Matrix of variational means.
+#' @param S Matrix of variational marginal variances.
+#' @param Pg Matrix of edges probabilities.
+#' @param Omega Matrix gathering precision terms common to all spanning tree structures.
+#' @param W Edges weights matrix.
+#' @param Wg Variational edge weights matrix.
+#' @param p Number of observed species.
+#' @param logSTW Log of the Matrix Tree quantity of the W matrix.
+#' @param logSTWg Log of the Matrix Tree quantity of the Wg matrix.
+#' @param trackJ Boolean for evaluating the lower bound at each parameter update.
+#' @return Quantities required by the VEstep function:
+#' \itemize{
+#' \item{W:}{ edge weights matrix.}
+#' \item{Omega:}{ Matrix gathering precision terms common to all spanning tree structures.}
+#' \item{LB:}{ lower bound values.}
+#' \item{logSTW:}{ log of the Matrix Tree quantity of the W matrix.}
+#' \item{max.prec:}{ boolean tracking the reach of maximal precision during computation.}}
 #' @importFrom stats cov2cor
 #' @export
 Mstep<-function(M, S, Pg, Omega,W, Wg, p,logSTW, logSTWg,  trackJ=FALSE){
@@ -376,29 +397,29 @@ Mstep<-function(M, S, Pg, Omega,W, Wg, p,logSTW, logSTWg,  trackJ=FALSE){
 
 #' Core function of nestorFit
 #'
-#' @param Y count dataset
-#' @param MO estimated means from norm_PLN
-#' @param SO estimated marginal vairances from norm_PLN
-#' @param initList result from initVEM
-#' @param maxIter maximun number of iterations
-#' @param eps convergence precision parameter
-#' @param alpha tempering parameter, default to 0.1
-#' @param verbatim controls verbosity, between 0,1 and 2.
-#' @param print.hist prints edges weights histograms at each step if TRUE
-#' @param trackJ computes the lower bound at each parameter update if TRUE. Otherwise, the lower bound is only computed at each new VE step.
+#' @param Y Count dataset.
+#' @param MO Estimated means from norm_PLN.
+#' @param SO Estimated marginal vairances from norm_PLN.
+#' @param initList Result list from initVEM.
+#' @param maxIter Maximal number of iterations.
+#' @param eps Convergence precision parameter.
+#' @param alpha Tempering parameter, default to 0.1.
+#' @param verbatim Integer controlling verbosity in three levels, starting at 0.
+#' @param print.hist Prints edges weights histograms at each step if TRUE.
+#' @param trackJ Computes the lower bound at each parameter update if TRUE. Otherwise, the lower bound is only computed at each new VE step.
 #'
 #' @return \itemize{
-#' \item{M}{ estimated means}
-#' \item{S}{ estimated marginal variances}
-#' \item{Pg}{ edges probabilities}
-#' \item{Wg}{edges variational weights}
-#' \item{W}{ edges weights}
-#' \item{Omega}{ market matrix filled with precision terms common to all spanning trees}
-#' \item{lowbound}{ table containing the lowerbound trajectory}
-#' \item{features}{ table containing the parametes trajectory}
-#' \item{finalIter}{ number of iterations until convergence was reached}
-#' \item{time}{ running time of the VEM}
-#' \item{max.prec}{ boolean for reach of maximal precision reached during the VEM fit}}
+#' \item{M:}{ estimated means.}
+#' \item{S:}{ estimated marginal variances.}
+#' \item{Pg:}{ edges probabilities.}
+#' \item{Wg:}{ edges variational weights.}
+#' \item{W:}{ edges weights.}
+#' \item{Omega:}{ matrix filled with precision terms common to all spanning trees.}
+#' \item{lowbound:}{ table containing the lowerbound trajectory.}
+#' \item{features:}{ table containing the parametes trajectory.}
+#' \item{finalIter:}{ number of iterations until convergence was reached.}
+#' \item{time:}{ running time of the VEM.}
+#' \item{max.prec:}{ boolean for reach of maximal precision reached during the VEM fit.}}
 #' @export
 #' @importFrom magrittr %>%
 #' @importFrom tibble rowid_to_column
@@ -527,19 +548,19 @@ nestorFit<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1
 
 #' Run function nestorFit on a list of initial cliques using parallel computation (mclapply)
 #'
-#' @param cliqueList a list containing all initial cliques to be tested
-#' @param Y count dataset
-#' @param sigma_O result of PLN estimation: variance covariance matrix of observed data
-#' @param MO result of PLN estimation: means matrix of observed data
-#' @param SO result of PLN estimation: marginal variances matrix of observed data
-#' @param r number of hidden variables
-#' @param alpha tempering parameter
-#' @param cores number of cores
-#' @param maxIter maximal number of iterations of the algorithm
-#' @param eps convergence precision parameter
-#' @param trackJ boolean for the estimation of the lower bound at each parameter update
+#' @param cliqueList List containing all initial cliques to be tested.
+#' @param Y Count dataset.
+#' @param sigma_O Result of PLN estimation: variance covariance matrix of observed data.
+#' @param MO Result of PLN estimation: means matrix of observed data.
+#' @param SO Result of PLN estimation: marginal variances matrix of observed data.
+#' @param r Number of hidden variables.
+#' @param alpha Tempering parameter.
+#' @param cores Number of cores for parallel computation (uses mclapply, not available for Windows).
+#' @param maxIter Maximal number of iterations of the algorithm.
+#' @param eps Convergence precision parameter.
+#' @param trackJ Boolean for the lower bound estimation at each parameter update instead of each step.
 #'
-#' @return a list containing the fit of nestorFit for every cliques contained in cliqueList
+#' @return A list containing the fit of nestorFit for every clique contained in cliqueList.
 #' @export
 #'
 #' @examples  data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)
@@ -548,7 +569,7 @@ nestorFit<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1
 #' SO<-PLNfit$SO
 #' sigma_O=PLNfit$sigma_O
 #' #-- find a list of initial cliques
-#' findcliqueList=boot_FitSparsePCA(data$Y, B=5, r=1)
+#' findcliqueList=boot_FitSparsePCA(MO, B=5, r=1)
 #' cliqueList=findcliqueList$cliqueList
 #' length(cliqueList)
 #' #-- run List.nestorFit

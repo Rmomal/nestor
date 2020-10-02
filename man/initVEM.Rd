@@ -7,23 +7,23 @@
 initVEM(Y, cliqueList, sigma_O, MO, r)
 }
 \arguments{
-\item{Y}{count data matrix}
+\item{Y}{Count dataset.}
 
-\item{cliqueList}{list of size r of initial neighbors for each missing actor}
+\item{cliqueList}{List of size r of initial neighbors for each missing actor.}
 
-\item{sigma_O}{estimated observed bloc of the variance-covariance matrix}
+\item{sigma_O}{PLNmodels output: estimated observed bloc of the variance-covariance matrix.}
 
-\item{MO}{estimated mean values of the latent parameters corresponding to observed species}
+\item{MO}{PLNmodels output: estimated variational mean values of the latent parameters corresponding to observed species.}
 
-\item{r}{number of missing actors}
+\item{r}{Number of missing actors.}
 }
 \value{
-initVEM computes the following initial matrices:
+Computes the following initial matrices:
 \itemize{
-\item{Wginit:}{ Variational edges weights matrix}
-\item{Winit:}{ Edges weights matrix}
-\item{omegainit:}{ Precision matrix}
-\item{MHinit:}{ Mean values for the hidden latent Gaussian parameters}}
+\item{Wginit:}{ variational edges weights matrix.}
+\item{Winit:}{ edges weights matrix.}
+\item{omegainit:}{ precision matrix.}
+\item{MHinit:}{ variational mean values for the hidden latent Gaussian parameters.}}
 }
 \description{
 Initialize all parameters for the variational inference
@@ -33,8 +33,8 @@ data=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=TRUE)
 PLNfit<-norm_PLN(data$Y)
 MO<-PLNfit$MO
 sigma_O=PLNfit$sigma_O
-#-- find initial clique
-findclique=FitSparsePCA(data$Y,r=1)
+#-- find initial clique using your favorite method
+findclique=FitSparsePCA(MO,r=1)
 initClique=findclique$cliques
 #-- initialize the VEM
 initList=initVEM(Y=data$Y,cliqueList=initClique,sigma_O=sigma_O, MO=MO,r=1 )

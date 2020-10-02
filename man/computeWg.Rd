@@ -2,28 +2,28 @@
 % Please edit documentation in R/Infer.R
 \name{computeWg}
 \alias{computeWg}
-\title{updates the variational edges weights inside the VEM.}
+\title{Updates the variational edges weights inside the VEM.}
 \usage{
 computeWg(Rho, Omega, W, r, n, alpha, hist = FALSE)
 }
 \arguments{
-\item{Rho}{Correlation matrix}
+\item{Rho}{Correlation matrix.}
 
-\item{Omega}{Market matrix filled with all the precision values common to all spanning trees}
+\item{Omega}{Matrix filled with precision values common to all spanning trees.}
 
-\item{W}{Edge weight matrix}
+\item{W}{Edge weight matrix.}
 
-\item{r}{number of missing actors}
+\item{r}{Number of missing actors.}
 
-\item{n}{number of samples}
+\item{n}{Number of samples.}
 
-\item{alpha}{tempering parameter}
+\item{alpha}{Tempering parameter.}
 
-\item{hist}{should the histogram of the log-values of OO blocs and OH blocs be printed ?}
+\item{hist}{Prints the histogram of the log-values of OO and OH blocs if TRUE.}
 }
 \value{
-The variational edge weights matrix
+The variational edge weights matrix.
 }
 \description{
-updates the variational edges weights inside the VEM.
+Updates the variational edges weights inside the VEM.
 }

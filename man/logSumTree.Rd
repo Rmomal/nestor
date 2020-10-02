@@ -2,18 +2,18 @@
 % Please edit documentation in R/Infer.R
 \name{logSumTree}
 \alias{logSumTree}
-\title{exact computation of matrix tree log determinant}
+\title{Exact computation of matrix tree log determinant}
 \usage{
 logSumTree(W)
 }
 \arguments{
-\item{W}{a weight matrix}
+\item{W}{A weight matrix.}
 }
 \value{
 \itemize{
-\item{det}{ exact log-determinant}
-\item{max.prec}{ boolean tracking the reach of maximal precision during computation}}
+\item{det:}{ exact log-determinant of W Laplacian matrix.}
+\item{max.prec:}{ boolean tracking the reach of maximal precision during computation.}}
 }
 \description{
-exact computation of matrix tree log determinant
+Exact computation of matrix tree log determinant
 }

@@ -7,14 +7,14 @@
 computeOmega(Pg, Rho, p)
 }
 \arguments{
-\item{Pg}{Edge probability matrix}
+\item{Pg}{Edge probability matrix.}
 
-\item{Rho}{Correlation matrix}
+\item{Rho}{Correlation matrix.}
 
-\item{p}{number of observed species}
+\item{p}{Number of observed species.}
 }
 \value{
-the market matrix filled with all the precision values common to all spanning trees
+The matrix filled with the precision values common to all spanning trees.
 }
 \description{
 Updates the precision terms

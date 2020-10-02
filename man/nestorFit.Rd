@@ -18,39 +18,39 @@ nestorFit(
 )
 }
 \arguments{
-\item{Y}{count dataset}
+\item{Y}{Count dataset.}
 
-\item{MO}{estimated means from norm_PLN}
+\item{MO}{Estimated means from norm_PLN.}
 
-\item{SO}{estimated marginal vairances from norm_PLN}
+\item{SO}{Estimated marginal vairances from norm_PLN.}
 
-\item{initList}{result from initVEM}
+\item{initList}{Result list from initVEM.}
 
-\item{maxIter}{maximun number of iterations}
+\item{maxIter}{Maximal number of iterations.}
 
-\item{eps}{convergence precision parameter}
+\item{eps}{Convergence precision parameter.}
 
-\item{alpha}{tempering parameter, default to 0.1}
+\item{alpha}{Tempering parameter, default to 0.1.}
 
-\item{verbatim}{controls verbosity, between 0,1 and 2.}
+\item{verbatim}{Integer controlling verbosity in three levels, starting at 0.}
 
-\item{print.hist}{prints edges weights histograms at each step if TRUE}
+\item{print.hist}{Prints edges weights histograms at each step if TRUE.}
 
-\item{trackJ}{computes the lower bound at each parameter update if TRUE. Otherwise, the lower bound is only computed at each new VE step.}
+\item{trackJ}{Computes the lower bound at each parameter update if TRUE. Otherwise, the lower bound is only computed at each new VE step.}
 }
 \value{
 \itemize{
-\item{M}{ estimated means}
-\item{S}{ estimated marginal variances}
-\item{Pg}{ edges probabilities}
-\item{Wg}{edges variational weights}
-\item{W}{ edges weights}
-\item{Omega}{ market matrix filled with precision terms common to all spanning trees}
-\item{lowbound}{ table containing the lowerbound trajectory}
-\item{features}{ table containing the parametes trajectory}
-\item{finalIter}{ number of iterations until convergence was reached}
-\item{time}{ running time of the VEM}
-\item{max.prec}{ boolean for reach of maximal precision reached during the VEM fit}}
+\item{M:}{ estimated means.}
+\item{S:}{ estimated marginal variances.}
+\item{Pg:}{ edges probabilities.}
+\item{Wg:}{ edges variational weights.}
+\item{W:}{ edges weights.}
+\item{Omega:}{ matrix filled with precision terms common to all spanning trees.}
+\item{lowbound:}{ table containing the lowerbound trajectory.}
+\item{features:}{ table containing the parametes trajectory.}
+\item{finalIter:}{ number of iterations until convergence was reached.}
+\item{time:}{ running time of the VEM.}
+\item{max.prec:}{ boolean for reach of maximal precision reached during the VEM fit.}}
 }
 \description{
 Core function of nestorFit
