@@ -139,33 +139,33 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>Y</th>
-      <td><p>count data matrix</p></td>
+      <td><p>Count dataset.</p></td>
     </tr>
     <tr>
       <th>cliqueList</th>
-      <td><p>list of size r of initial neighbors for each missing actor</p></td>
+      <td><p>List of size r of initial neighbors for each missing actor.</p></td>
     </tr>
     <tr>
       <th>sigma_O</th>
-      <td><p>estimated observed bloc of the variance-covariance matrix</p></td>
+      <td><p>PLNmodels output: estimated observed bloc of the variance-covariance matrix.</p></td>
     </tr>
     <tr>
       <th>MO</th>
-      <td><p>estimated mean values of the latent parameters corresponding to observed species</p></td>
+      <td><p>PLNmodels output: estimated variational mean values of the latent parameters corresponding to observed species.</p></td>
     </tr>
     <tr>
       <th>r</th>
-      <td><p>number of missing actors</p></td>
+      <td><p>Number of missing actors.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>initVEM computes the following initial matrices:</p><ul>
-<li><p>Wginit: Variational edges weights matrix</p></li>
-<li><p>Winit: Edges weights matrix</p></li>
-<li><p>omegainit: Precision matrix</p></li>
-<li><p>MHinit: Mean values for the hidden latent Gaussian parameters</p></li>
+    <p>Computes the following initial matrices:</p><ul>
+<li><p>Wginit: variational edges weights matrix.</p></li>
+<li><p>Winit: edges weights matrix.</p></li>
+<li><p>omegainit: precision matrix.</p></li>
+<li><p>MHinit: variational mean values for the hidden latent Gaussian parameters.</p></li>
 </ul>
 
 
@@ -174,8 +174,8 @@
 </div><div class='img'><img src='initVEM-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw'>PLNfit</span><span class='op'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>)
 <span class='kw'>MO</span><span class='op'>&lt;-</span><span class='kw'>PLNfit</span><span class='op'>$</span><span class='kw'>MO</span>
 <span class='kw'>sigma_O</span><span class='op'>=</span><span class='kw'>PLNfit</span><span class='op'>$</span><span class='kw'>sigma_O</span>
-<span class='co'>#-- find initial clique</span>
-<span class='kw'>findclique</span><span class='op'>=</span><span class='fu'><a href='FitSparsePCA.html'>FitSparsePCA</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>,r=<span class='fl'>1</span>)
+<span class='co'>#-- find initial clique using your favorite method</span>
+<span class='kw'>findclique</span><span class='op'>=</span><span class='fu'><a href='FitSparsePCA.html'>FitSparsePCA</a></span>(<span class='kw'>MO</span>,r=<span class='fl'>1</span>)
 <span class='kw'>initClique</span><span class='op'>=</span><span class='kw'>findclique</span><span class='op'>$</span><span class='kw'>cliques</span>
 <span class='co'>#-- initialize the VEM</span>
 <span class='kw'>initList</span><span class='op'>=</span><span class='fu'>initVEM</span>(Y=<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>,cliqueList=<span class='kw'>initClique</span>,sigma_O=<span class='kw'>sigma_O</span>, MO=<span class='kw'>MO</span>,r=<span class='fl'>1</span> )
@@ -183,8 +183,8 @@
 </div><div class='output co'>#&gt; List of 4
 #&gt;  $ Wginit   : num [1:11, 1:11] 0 0.00826 0.00826 0.00826 0.00826 ...
 #&gt;  $ Winit    : num [1:11, 1:11] 0 0.00826 0.00826 0.00826 0.00826 ...
-#&gt;  $ omegainit: num [1:11, 1:11] 4.7495 -0.0406 0.0683 1.123 -0.2102 ...
-#&gt;  $ MHinit   : num [1:100, 1] -0.861 -0.244 -1.1779 0.3329 0.0814 ...</div></pre>
+#&gt;  $ omegainit: num [1:11, 1:11] 5.884 0.649 0.772 0.272 -0.21 ...
+#&gt;  $ MHinit   : num [1:100, 1] -0.0136 -0.1064 0.3991 -0.572 -0.6034 ...</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

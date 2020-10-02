@@ -139,45 +139,55 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>M</th>
-      <td><p>matrix of means</p></td>
+      <td><p>Matrix of variational means.</p></td>
     </tr>
     <tr>
       <th>S</th>
-      <td><p>matrix of marginal variances</p></td>
+      <td><p>Matrix of variational marginal variances.</p></td>
     </tr>
     <tr>
       <th>Pg</th>
-      <td><p>matrix of edges probabilities</p></td>
+      <td><p>Matrix of edges probabilities.</p></td>
     </tr>
     <tr>
       <th>Omega</th>
-      <td><p>matrix gathering the precision terms</p></td>
+      <td><p>Matrix gathering precision terms common to all spanning tree structures.</p></td>
     </tr>
     <tr>
       <th>W</th>
-      <td><p>edges weights matrix</p></td>
+      <td><p>Edges weights matrix.</p></td>
     </tr>
     <tr>
       <th>Wg</th>
-      <td><p>variational weights matrix</p></td>
+      <td><p>Variational edge weights matrix.</p></td>
     </tr>
     <tr>
       <th>p</th>
-      <td><p>number of observed species</p></td>
+      <td><p>Number of observed species.</p></td>
     </tr>
     <tr>
       <th>logSTW</th>
-      <td><p>log-sum tree of the W matrix</p></td>
+      <td><p>Log of the Matrix Tree quantity of the W matrix.</p></td>
     </tr>
     <tr>
       <th>logSTWg</th>
-      <td><p>log-sum tree of the Wg matrix</p></td>
+      <td><p>Log of the Matrix Tree quantity of the Wg matrix.</p></td>
     </tr>
     <tr>
       <th>trackJ</th>
-      <td><p>boolean for evaluating the lower bound at each parameter update</p></td>
+      <td><p>Boolean for evaluating the lower bound at each parameter update.</p></td>
     </tr>
     </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Quantities required by the VEstep function:</p><ul>
+<li><p>W: edge weights matrix.</p></li>
+<li><p>Omega: Matrix gathering precision terms common to all spanning tree structures.</p></li>
+<li><p>LB: lower bound values.</p></li>
+<li><p>logSTW: log of the Matrix Tree quantity of the W matrix.</p></li>
+<li><p>max.prec: boolean tracking the reach of maximal precision during computation.</p></li>
+</ul>
 
 
   </div>

@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Find initial cliques using blockmodels on the initial marginalized network — init_blockmodels" />
-<meta property="og:description" content="Find initial cliques using blockmodels on the initial marginalized network" />
+<meta property="og:description" content="This function aims at clustering the marginal network, inferred from edges probabilities obtained with either nestorFit() or EMtree()." />
 
 
 
@@ -129,60 +129,47 @@
     </div>
 
     <div class="ref-description">
-    <p>Find initial cliques using blockmodels on the initial marginalized network</p>
+    <p>This function aims at clustering the marginal network, inferred from edges probabilities obtained with either <code><a href='nestorFit.html'>nestorFit()</a></code> or <code>EMtree()</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>init_blockmodels</span>(
-  <span class='kw'>Y</span>,
-  <span class='kw'>sigma_O</span>,
-  <span class='kw'>MO</span>,
-  <span class='kw'>SO</span>,
-  k = <span class='fl'>3</span>,
-  poisson = <span class='fl'>FALSE</span>,
-  alpha = <span class='fl'>0.1</span>,
-  cores = <span class='fl'>1</span>
-)</pre>
+    <pre class="usage"><span class='fu'>init_blockmodels</span>(<span class='kw'>Y</span>, <span class='kw'>sigma_O</span>, <span class='kw'>MO</span>, <span class='kw'>SO</span>, k = <span class='fl'>3</span>, alpha = <span class='fl'>0.1</span>, cores = <span class='fl'>1</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>Y</th>
-      <td><p>count data</p></td>
+      <td><p>Count dataset.</p></td>
     </tr>
     <tr>
       <th>sigma_O</th>
-      <td><p>original covariance matrix estimate</p></td>
+      <td><p>PLNmodels output: covariance matrix estimate.</p></td>
     </tr>
     <tr>
       <th>MO</th>
-      <td><p>original observed means estimate</p></td>
+      <td><p>PLNmodels output: observed means estimate.</p></td>
     </tr>
     <tr>
       <th>SO</th>
-      <td><p>original observed marginal variances estimate</p></td>
+      <td><p>PLNmodels output: observed marginal variances estimate.</p></td>
     </tr>
     <tr>
       <th>k</th>
-      <td><p>number of groups</p></td>
-    </tr>
-    <tr>
-      <th>poisson</th>
-      <td><p>boolean for the choice of model of blockmodel. If FALSE, runs bernoulli.</p></td>
+      <td><p>Number of groups to find.</p></td>
     </tr>
     <tr>
       <th>alpha</th>
-      <td><p>tempering parameter</p></td>
+      <td><p>Tempering parameter.</p></td>
     </tr>
     <tr>
       <th>cores</th>
-      <td><p>number of cores</p></td>
+      <td><p>Number of cores for parallel computation (uses mclapply, not available for Windows).</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list of possible cliques</p>
+    <p>A list of cliques</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(n=<span class='fl'>100</span>,p=<span class='fl'>10</span>,r=<span class='fl'>1</span>,type=<span class='st'>"scale-free"</span>, plot=<span class='fl'>TRUE</span>)

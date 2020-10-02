@@ -139,45 +139,51 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>Pg</th>
-      <td><p>Edge probability matrix (qxq)</p></td>
+      <td><p>Edge probability matrix (qxq).</p></td>
     </tr>
     <tr>
       <th>Omega</th>
-      <td><p>market matrix with precision values (qxq)</p></td>
+      <td><p>Matrix with precision values common to all spanning trees (qxq).</p></td>
     </tr>
     <tr>
       <th>M</th>
-      <td><p>Matrix of variational means (nxq)</p></td>
+      <td><p>Matrix of variational means (nxq).</p></td>
     </tr>
     <tr>
       <th>S</th>
-      <td><p>Matrix of variational marginal variances (nxq)</p></td>
+      <td><p>Matrix of variational marginal variances (nxq).</p></td>
     </tr>
     <tr>
       <th>W</th>
-      <td><p>Edges weight matrix</p></td>
+      <td><p>Edges weight matrix.</p></td>
     </tr>
     <tr>
       <th>Wg</th>
-      <td><p>Variational edges weight matrix</p></td>
+      <td><p>Variational edges weight matrix.</p></td>
     </tr>
     <tr>
       <th>p</th>
-      <td><p>number of observed species</p></td>
+      <td><p>Number of observed species.</p></td>
     </tr>
     <tr>
       <th>logSTW</th>
-      <td><p>log of the matrix tree run on the W matrix</p></td>
+      <td><p>Log of the matrix tree run on the W matrix.</p></td>
     </tr>
     <tr>
       <th>logSTWg</th>
-      <td><p>log of the matrix tree run on the Wg matrix</p></td>
+      <td><p>Log of the matrix tree run on the Wg matrix.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a vector containing the different terms of the lower bound</p>
+    <p>A vector containing the different terms of the lower bound. More precisely :</p><ul>
+<li><p>J: value of the lower bound.</p></li>
+<li><p>T1: expectation of log p(Z | T).</p></li>
+<li><p>T2: expectation of the difference in log scale of the tree density and its variational approximation.</p></li>
+<li><p>T3: Variational entropy of the latent gaussian parameters Z.</p></li>
+</ul>
+
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -132,32 +132,36 @@
     <p>Comparaitve plot of estimated edge probabilities and original graph.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plotPerf</span>(<span class='kw'>P</span>, <span class='kw'>G</span>, <span class='kw'>r</span>, thresh = <span class='fl'>0.5</span>)</pre>
+    <pre class="usage"><span class='fu'>plotPerf</span>(<span class='kw'>P</span>, <span class='kw'>G</span>, <span class='kw'>r</span>, thresh = <span class='fl'>0.5</span>, no.names = <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>P</th>
-      <td><p>edges probabilities matrix</p></td>
+      <td><p>Edges probabilities matrix.</p></td>
     </tr>
     <tr>
       <th>G</th>
-      <td><p>adjacency matrix of the original graph</p></td>
+      <td><p>Adjacency matrix of the original graph.</p></td>
     </tr>
     <tr>
       <th>r</th>
-      <td><p>number of missing actors</p></td>
+      <td><p>Number of missing actors.</p></td>
     </tr>
     <tr>
       <th>thresh</th>
-      <td><p>required threshold for criteria computations, default to 0.5</p></td>
+      <td><p>Required threshold for criteria computations, default to 0.5.</p></td>
+    </tr>
+    <tr>
+      <th>no.names</th>
+      <td><p>Boolean controlling the display of variable names and ticks.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>two heatmaps with performance criteria computed for the specified threshold as title.</p>
+    <p>Two heatmaps with performance criteria computed for the specified threshold as title.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(n=<span class='fl'>100</span>,p=<span class='fl'>10</span>,r=<span class='fl'>1</span>,type=<span class='st'>"scale-free"</span>, plot=<span class='fl'>FALSE</span>)
@@ -171,7 +175,7 @@
 <span class='kw'>initList</span><span class='op'>=</span><span class='fu'><a href='initVEM.html'>initVEM</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>,cliqueList=<span class='kw'>initClique</span>,<span class='kw'>sigma_O</span>, <span class='kw'>MO</span>,r=<span class='fl'>1</span> )
 <span class='kw'>nestorFit</span><span class='op'>=</span><span class='fu'><a href='nestorFit.html'>nestorFit</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>, <span class='kw'>MO</span>,<span class='kw'>SO</span>, initList=<span class='kw'>initList</span>, maxIter=<span class='fl'>3</span>,verbatim=<span class='fl'>1</span> )
 </div><div class='output co'>#&gt; 
-#&gt; nestor ran in 0.236secs and 3 iterations.</div><div class='input'><span class='co'>#-- obtain criteria</span>
+#&gt; nestor ran in 0.24secs and 3 iterations.</div><div class='input'><span class='co'>#-- obtain criteria</span>
 <span class='fu'>plotPerf</span>(<span class='kw'>nestorFit</span><span class='op'>$</span><span class='kw'>Pg</span>, <span class='kw'>data</span><span class='op'>$</span><span class='kw'>G</span>,r=<span class='fl'>1</span>)
 </div><div class='img'><img src='plotPerf-1.png' alt='' width='700' height='433' /></div></pre>
   </div>

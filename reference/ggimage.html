@@ -132,20 +132,28 @@
     <p>ggplot heatmap</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ggimage</span>(<span class='kw'>data</span>)</pre>
+    <pre class="usage"><span class='fu'>ggimage</span>(<span class='kw'>data</span>, no.names = <span class='fl'>FALSE</span>, order = <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>input matrix</p></td>
+      <td><p>Input matrix.</p></td>
+    </tr>
+    <tr>
+      <th>no.names</th>
+      <td><p>Boolean controlling the display of variable names and ticks.</p></td>
+    </tr>
+    <tr>
+      <th>order</th>
+      <td><p>Defines a specific display order of the heatmap's rows.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a heatmap</p>
+    <p>A heatmap of the input data</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>Sigma</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(n=<span class='fl'>100</span>,p=<span class='fl'>10</span>,r=<span class='fl'>1</span>,type=<span class='st'>"scale-free"</span>, plot=<span class='fl'>FALSE</span>)<span class='op'>$</span><span class='kw'>Sigma</span>

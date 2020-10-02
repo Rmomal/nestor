@@ -155,65 +155,77 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>MO</th>
-      <td><p>matrix of observed means</p></td>
+      <td><p>Matrix of observed means.</p></td>
     </tr>
     <tr>
       <th>SO</th>
-      <td><p>matrix of observed marginal variances</p></td>
+      <td><p>Matrix of observed marginal variances.</p></td>
     </tr>
     <tr>
       <th>SH</th>
-      <td><p>matrix of observed hidden variances</p></td>
+      <td><p>Matrix of observed hidden variances.</p></td>
     </tr>
     <tr>
       <th>Omega</th>
-      <td><p>matrix containing the precision terms of precision matrices faithful ot a tree</p></td>
+      <td><p>matrix containing the precision terms of precision matrices faithful ot a tree.</p></td>
     </tr>
     <tr>
       <th>W</th>
-      <td><p>edges weights matrix</p></td>
+      <td><p>Edges weights matrix.</p></td>
     </tr>
     <tr>
       <th>Wg</th>
-      <td><p>variational edges weights matrix</p></td>
+      <td><p>Variational edges weights matrix.</p></td>
     </tr>
     <tr>
       <th>MH</th>
-      <td><p>matrix of hidden means</p></td>
+      <td><p>Matrix of hidden means.</p></td>
     </tr>
     <tr>
       <th>Pg</th>
-      <td><p>edges probabilities matrix</p></td>
+      <td><p>Edges probabilities matrix.</p></td>
     </tr>
     <tr>
       <th>logSTW</th>
-      <td><p>log-sum tree of the W matrix</p></td>
+      <td><p>Log of the Matrix Tree quantity of the W matrix.</p></td>
     </tr>
     <tr>
       <th>logSTWg</th>
-      <td><p>log-sum tree of the Wg matrix</p></td>
+      <td><p>Log of the Matrix Tree quantity of the Wg matrix.</p></td>
     </tr>
     <tr>
       <th>alpha</th>
-      <td><p>tempering parameter</p></td>
+      <td><p>Tempering parameter.</p></td>
     </tr>
     <tr>
       <th>it1</th>
-      <td><p>check if nestorFit is at its first iteration</p></td>
+      <td><p>Checks if nestorFit is at its first iteration.</p></td>
     </tr>
     <tr>
       <th>verbatim</th>
-      <td><p>boolean controling verbosity</p></td>
+      <td><p>Displays verbose if set to 2.</p></td>
     </tr>
     <tr>
       <th>trackJ</th>
-      <td><p>boolean for evaluating the lower bound at each parameter update</p></td>
+      <td><p>Boolean for evaluating the lower bound at each parameter update.</p></td>
     </tr>
     <tr>
       <th>hist</th>
-      <td><p>boolean for printing edges weights histogram at each iteration</p></td>
+      <td><p>Boolean for printing edges weights histogram at each iteration.</p></td>
     </tr>
     </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Quantities required by the Mstep funciton:</p><ul>
+<li><p>Pg: edges probabilities.</p></li>
+<li><p>Wg: edges variational weights.</p></li>
+<li><p>M: variational means.</p></li>
+<li><p>S: variational marginal variances.</p></li>
+<li><p>LB: lower bound values.</p></li>
+<li><p>logSTWg: log of the Matrix Tree quantity of the Wg matrix.</p></li>
+<li><p>max.prec: boolean tracking the reach of maximal precision during computation.</p></li>
+</ul>
 
 
   </div>

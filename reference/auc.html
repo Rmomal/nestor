@@ -139,17 +139,17 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>pred</th>
-      <td><p>predictions</p></td>
+      <td><p>Predictions.</p></td>
     </tr>
     <tr>
       <th>label</th>
-      <td><p>labels</p></td>
+      <td><p>Labels.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The Area Under the Curve value</p>
+    <p>The Area Under the Curve value.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'> <span class='kw'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(n=<span class='fl'>100</span>,p=<span class='fl'>10</span>,r=<span class='fl'>1</span>,type=<span class='st'>"scale-free"</span>, plot=<span class='fl'>FALSE</span>)
@@ -161,7 +161,7 @@
 <span class='kw'>initList</span><span class='op'>=</span><span class='fu'><a href='initVEM.html'>initVEM</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>,cliqueList=<span class='kw'>initClique</span>,<span class='kw'>sigma_O</span>, <span class='kw'>MO</span>,r=<span class='fl'>1</span> )
 <span class='kw'>nestorFit</span><span class='op'>=</span><span class='fu'><a href='nestorFit.html'>nestorFit</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>, <span class='kw'>MO</span>,<span class='kw'>SO</span>, initList=<span class='kw'>initList</span>, maxIter=<span class='fl'>3</span>,verbatim=<span class='fl'>1</span>)
 </div><div class='output co'>#&gt; 
-#&gt; nestor ran in 0.246secs and 3 iterations.</div><div class='input'><span class='kw'>res</span><span class='op'>=</span><span class='fu'>auc</span>(<span class='kw'>nestorFit</span><span class='op'>$</span><span class='kw'>Pg</span>,<span class='kw'>data</span><span class='op'>$</span><span class='kw'>G</span>)
+#&gt; nestor ran in 0.232secs and 3 iterations.</div><div class='input'><span class='kw'>res</span><span class='op'>=</span><span class='fu'>auc</span>(<span class='kw'>nestorFit</span><span class='op'>$</span><span class='kw'>Pg</span>,<span class='kw'>data</span><span class='op'>$</span><span class='kw'>G</span>)
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

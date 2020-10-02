@@ -151,53 +151,53 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>cliqueList</th>
-      <td><p>a list containing all initial cliques to be tested</p></td>
+      <td><p>List containing all initial cliques to be tested.</p></td>
     </tr>
     <tr>
       <th>Y</th>
-      <td><p>count dataset</p></td>
+      <td><p>Count dataset.</p></td>
     </tr>
     <tr>
       <th>sigma_O</th>
-      <td><p>result of PLN estimation: variance covariance matrix of observed data</p></td>
+      <td><p>Result of PLN estimation: variance covariance matrix of observed data.</p></td>
     </tr>
     <tr>
       <th>MO</th>
-      <td><p>result of PLN estimation: means matrix of observed data</p></td>
+      <td><p>Result of PLN estimation: means matrix of observed data.</p></td>
     </tr>
     <tr>
       <th>SO</th>
-      <td><p>result of PLN estimation: marginal variances matrix of observed data</p></td>
+      <td><p>Result of PLN estimation: marginal variances matrix of observed data.</p></td>
     </tr>
     <tr>
       <th>r</th>
-      <td><p>number of hidden variables</p></td>
+      <td><p>Number of hidden variables.</p></td>
     </tr>
     <tr>
       <th>alpha</th>
-      <td><p>tempering parameter</p></td>
+      <td><p>Tempering parameter.</p></td>
     </tr>
     <tr>
       <th>cores</th>
-      <td><p>number of cores</p></td>
+      <td><p>Number of cores for parallel computation (uses mclapply, not available for Windows).</p></td>
     </tr>
     <tr>
       <th>maxIter</th>
-      <td><p>maximal number of iterations of the algorithm</p></td>
+      <td><p>Maximal number of iterations of the algorithm.</p></td>
     </tr>
     <tr>
       <th>eps</th>
-      <td><p>convergence precision parameter</p></td>
+      <td><p>Convergence precision parameter.</p></td>
     </tr>
     <tr>
       <th>trackJ</th>
-      <td><p>boolean for the estimation of the lower bound at each parameter update</p></td>
+      <td><p>Boolean for the lower bound estimation at each parameter update instead of each step.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list containing the fit of nestorFit for every cliques contained in cliqueList</p>
+    <p>A list containing the fit of nestorFit for every clique contained in cliqueList.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'> <span class='kw'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(n=<span class='fl'>100</span>,p=<span class='fl'>10</span>,r=<span class='fl'>1</span>,type=<span class='st'>"scale-free"</span>, plot=<span class='fl'>FALSE</span>)
@@ -206,37 +206,37 @@
 <span class='kw'>SO</span><span class='op'>&lt;-</span><span class='kw'>PLNfit</span><span class='op'>$</span><span class='kw'>SO</span>
 <span class='kw'>sigma_O</span><span class='op'>=</span><span class='kw'>PLNfit</span><span class='op'>$</span><span class='kw'>sigma_O</span>
 <span class='co'>#-- find a list of initial cliques</span>
-<span class='kw'>findcliqueList</span><span class='op'>=</span><span class='fu'><a href='boot_FitSparsePCA.html'>boot_FitSparsePCA</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>, B=<span class='fl'>5</span>, r=<span class='fl'>1</span>)
+<span class='kw'>findcliqueList</span><span class='op'>=</span><span class='fu'><a href='boot_FitSparsePCA.html'>boot_FitSparsePCA</a></span>(<span class='kw'>MO</span>, B=<span class='fl'>5</span>, r=<span class='fl'>1</span>)
 <span class='kw'>cliqueList</span><span class='op'>=</span><span class='kw'>findcliqueList</span><span class='op'>$</span><span class='kw'>cliqueList</span>
 <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='kw'>cliqueList</span>)
-</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='co'>#-- run List.nestorFit</span>
+</div><div class='output co'>#&gt; [1] 3</div><div class='input'><span class='co'>#-- run List.nestorFit</span>
 <span class='kw'>fitList</span><span class='op'>=</span><span class='fu'>List.nestorFit</span>(<span class='kw'>cliqueList</span>,<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>, <span class='kw'>sigma_O</span>, <span class='kw'>MO</span>,<span class='kw'>SO</span>, r=<span class='fl'>1</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='kw'>fitList</span>)
-</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='kw'>fitList</span>[[<span class='fl'>1</span>]])
+</div><div class='output co'>#&gt; [1] 3</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='kw'>fitList</span>[[<span class='fl'>1</span>]])
 </div><div class='output co'>#&gt; List of 12
 #&gt;  $ M        : num [1:100, 1:11] 1.101 -0.282 0.444 -0.24 -1.103 ...
 #&gt;  $ S        : num [1:100, 1:11] 0.0441 0.1241 0.0751 0.121 0.1909 ...
-#&gt;  $ Pg       : num [1:11, 1:11] 0.00 2.27e-10 1.00 3.20e-08 1.00 ...
-#&gt;  $ Wg       : num [1:11, 1:11] 0.00 1.11e-04 3.89e+09 1.55e-02 4.53e+06 ...
-#&gt;  $ W        : num [1:11, 1:11] 0.00 2.81e-04 1.18e+06 4.98e-02 3.48e+06 ...
-#&gt;  $ Omega    : num [1:11, 1:11] 3.26 -0.402 1.341 -0.404 -0.666 ...
-#&gt;  $ lowbound :'data.frame':	16 obs. of  5 variables:
-#&gt;   ..$ J        : num [1:16] -725 -679 -663 -562 -530 ...
-#&gt;   ..$ T1       : num [1:16] -1133 -1055 -1033 -924 -890 ...
-#&gt;   ..$ T2       : num [1:16] 97.938 -0.451 -0.345 -4.898 0.494 ...
-#&gt;   ..$ T3       : num [1:16] 309 377 370 367 359 ...
-#&gt;   ..$ parameter: chr [1:16] "complete" "complete" "complete" "complete" ...
-#&gt;  $ features :'data.frame':	15 obs. of  4 variables:
-#&gt;   ..$ diffPg   : num [1:15] 0.645 0.567 0.264 0.99 0.952 ...
-#&gt;   ..$ diffW    : num [1:15] 50.2 95.5 410.9 3184.4 37977.8 ...
-#&gt;   ..$ diffOmega: num [1:15] 6.539 1.708 0.301 1.01 0.867 ...
-#&gt;   ..$ diffWg   : num [1:15] 4.93e+32 4.93e+04 7.51e+15 4.33e+17 5.28e+19 ...
-#&gt;  $ finalIter: num 15
-#&gt;  $ time     : 'difftime' num 0.941902160644531
+#&gt;  $ Pg       : num [1:11, 1:11] 0.00 0.00 0.00 3.67e-11 0.00 ...
+#&gt;  $ Wg       : num [1:11, 1:11] 0.00 0.00 0.00 1.73e-07 0.00 ...
+#&gt;  $ W        : num [1:11, 1:11] 0.0 0.0 0.0 5.9e-07 0.0 ...
+#&gt;  $ Omega    : num [1:11, 1:11] 3.666 -0.402 1.341 -0.404 -0.666 ...
+#&gt;  $ lowbound :'data.frame':	21 obs. of  5 variables:
+#&gt;   ..$ J        : num [1:21] -638 -613 -571 -546 -540 ...
+#&gt;   ..$ T1       : num [1:21] -984 -958 -912 -885 -877 ...
+#&gt;   ..$ T2       : num [1:21] -1.1599 -0.3515 -0.1932 -0.1226 -0.0263 ...
+#&gt;   ..$ T3       : num [1:21] 347 345 342 339 337 ...
+#&gt;   ..$ parameter: chr [1:21] "complete" "complete" "complete" "complete" ...
+#&gt;  $ features :'data.frame':	20 obs. of  4 variables:
+#&gt;   ..$ diffPg   : num [1:20] 0.5 0.3223 0.6861 0.2898 0.0712 ...
+#&gt;   ..$ diffW    : num [1:20] 2430 42522 745545 4186673 33610865 ...
+#&gt;   ..$ diffOmega: num [1:20] 1.357 0.468 0.337 0.388 0.263 ...
+#&gt;   ..$ diffWg   : num [1:20] 1.02e+10 5.58e+10 8.93e+13 5.03e+16 4.68e+18 ...
+#&gt;  $ finalIter: num 20
+#&gt;  $ time     : 'difftime' num 1.00810241699219
 #&gt;   ..- attr(*, "units")= chr "secs"
 #&gt;  $ max.prec : logi FALSE
 #&gt;  $ clique   :List of 1
-#&gt;   ..$ : int [1:2] 3 7</div></pre>
+#&gt;   ..$ : int [1:7] 1 2 3 5 6 7 10</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
