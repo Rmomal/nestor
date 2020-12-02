@@ -13,7 +13,7 @@
 #' @return The variational edge weights matrix.
 #' @export
 #' @importFrom graphics par
-computeWg<-function(Rho,Omega,W,r,n, alpha, hist=FALSE ){
+computeWg<-function(Rho,Omega,W,r,n, alpha, hist=FALSE, min.val, max.val ){
   q=ncol(Rho); p=q-r; O = 1:p
   Wg<-matrix(0,q,q)
   logWg<-matrix(0,q,q)
@@ -32,8 +32,11 @@ computeWg<-function(Rho,Omega,W,r,n, alpha, hist=FALSE ){
     hist(gammaO, breaks=20,main="O")
     hist(gammaOH, breaks=20,main="OH")
   }
-  logWg[-null]=logWg[-null]-mean(logWg[-null])
 
+#   browser()
+ # logWg[-null]=logWg[-null]-mean(logWg[-null])+(q-2)*log(q)/(q-1)
+  # logWg[-null][logWg[-null]<min.val]=min.val
+  # logWg[-null][logWg[-null]>max.val]=max.val
   #--- trimming
   Wg = exp(logWg)
   Wg[null]=0
@@ -133,10 +136,9 @@ F_Sym2Vec <- function(A.mat){
 #' Calculates the Meila matrix using exact computation
 #'
 #' @param W A weight matrix.
-#' @param r The number of missing actors.
 #' @return The Meila matrix.
 #' @export
-exactMeila<-function (W,r){ # for edges weight beta
+exactMeila<-function (W){ # for edges weight beta
   p = nrow(W) ; index=1
   L = EMtree::Laplacian(W)[-index,-index]
   Mei =inverse.gmp(L)
@@ -153,15 +155,15 @@ exactMeila<-function (W,r){ # for edges weight beta
 #' Computes edges probability from weights W (Kirshner (07) formulas)
 #'
 #' @param W A weight matrix.
-#' @param r Number of missing actors.
 #' @param it1 Checks if nestorFit is at it first iteration.
 #' @param verbatim Displays unstable probabilities if set to 2.
 #'
 #' @return The matrix of edges probabilities.
 #' @export
-Kirshner <- function(W,r, it1, verbatim=0){
+Kirshner <- function(W, it1, verbatim=0){
   p = nrow(W);   L = EMtree::Laplacian(W)[-1,-1]
-  K = inverse.gmp(L)
+  #K = inverse.gmp(L)
+  K=solve(L)
   K =  rbind(c(0, diag(K)),
              cbind(diag(K), (diag(K)%o%rep(1, p-1) + rep(1, p-1)%o%diag(K) - 2*K)))
   K = .5*(K + t(K))
@@ -188,7 +190,8 @@ Kirshner <- function(W,r, it1, verbatim=0){
 logSumTree<-function(W){
   index=1;  max.prec=FALSE
   mat=EMtree::Laplacian(W)[-index, -index]
-  output=det.fractional(mat, log=TRUE)
+# output=det.fractional(mat, log=TRUE)
+  output=log(det(mat))
   if(output==log(.Machine$double.xmax )) max.prec=TRUE
   return(list(det=output,max.prec=max.prec))
 }
@@ -265,7 +268,7 @@ LowerBound<-function(Pg ,Omega, M, S, W, Wg,p, logSTW, logSTWg){
 #' \item{max.prec:}{ boolean tracking the reach of maximal precision during computation.}}
 #' @importFrom stats cov2cor
 #' @export
-VEstep<-function(MO,SO,SH,Omega,W,Wg,MH,Pg,logSTW,logSTWg, alpha,it1, verbatim,trackJ=FALSE, hist=FALSE){
+VEstep<-function(MO,SO,SH,Omega,W,Wg,MH,Pg,logSTW,logSTWg, alpha,it1, verbatim,trackJ=FALSE, hist=FALSE, min.val, max.val){
   #--Setting up
   n=nrow(MO); q=ncol(Omega) ;  p=ncol(MO);  O=1:ncol(MO); trim=FALSE ;
   hidden=(q!=p)
@@ -303,7 +306,7 @@ VEstep<-function(MO,SO,SH,Omega,W,Wg,MH,Pg,logSTW,logSTWg, alpha,it1, verbatim,t
     message("trim Rho")
     Rho[Rho>1]=1
     Rho[Rho<(-1)]=-1}
-  Wg.new= computeWg(Rho, Omega, W, r, n, alpha,  hist=hist)
+  Wg.new= computeWg(Rho, Omega, W, r, n, alpha,  hist=hist, min.val=min.val, max.val=max.val)
   logSTWg.tot=logSumTree(Wg.new)
   logSTWg.new=logSTWg.tot$det
   max.prec=logSTWg.tot$max.prec
@@ -314,7 +317,7 @@ VEstep<-function(MO,SO,SH,Omega,W,Wg,MH,Pg,logSTW,logSTWg, alpha,it1, verbatim,t
     max.prec=logSTWg.tot$max.prec
     if(max.prec) message("max.prec!")
   }
-  Pg.new=Kirshner(Wg.new,r, it1=it1,verbatim=verbatim)
+  Pg.new=Kirshner(Wg.new, it1=it1,verbatim=verbatim)
   sumP=signif(sum(Pg.new)-2*(q-1),3)
   if(verbatim==2) cat(paste0(" sumP=", sumP))
   if(trackJ) LB2=c(LowerBound(Pg = Pg.new, Omega=Omega, M=M, S=S,W=W, Wg=Wg.new,p, logSTW=logSTW,logSTWg=logSTWg.new),"Wg")
@@ -329,6 +332,100 @@ VEstep<-function(MO,SO,SH,Omega,W,Wg,MH,Pg,logSTW,logSTWg, alpha,it1, verbatim,t
   return(res)
 }
 
+Meila <- function(W){
+  if(!isSymmetric(W)){cat('Pb: W non symmetric!')}
+  p = nrow(W) ; index=1
+  L = EMtree::Laplacian(W)[-index,-index]
+  Mei =solve(L)
+  Mei = rbind(c(0, diag(Mei)),
+              cbind(diag(Mei),
+                    (diag(Mei) %o% rep(1, p - 1) + rep(1, p - 1) %o% diag(Mei) - 2 * Mei)
+              )
+  )
+  Mei = 0.5 * (Mei + t(Mei))
+
+  return(Mei)
+}
+
+
+
+F_NegLikelihood <- function(beta.vec, P,sum.constraint){
+  M = Meila(F_Vec2Sym(beta.vec))
+  lambda = SetLambda(P, M,sum.constraint)
+  return(- sum(F_Sym2Vec(P)*(log(beta.vec+(beta.vec==0)))) +
+           logSumTree(F_Vec2Sym(beta.vec))$det+
+           lambda*(sum(beta.vec)-sum.constraint/2))
+}
+
+F_NegGradient_Trans <- function(gamma, P,sum.constraint){
+  beta=exp(gamma)
+  beta[gamma==0]=0
+  M = Meila(F_Vec2Sym(beta))
+  lambda = SetLambda(P, M,sum.constraint)
+  #gradient with log transformation
+  return((- F_Sym2Vec(P) + beta*(F_Sym2Vec(M) + lambda)))
+}
+F_NegLikelihood_Trans <- function(gamma, P,sum.constraint){
+  #gamma=gamma-mean(gamma)
+  M = Meila(F_Vec2Sym(exp(gamma)))
+
+  lambda = SetLambda(P, M,sum.constraint)
+
+  suppressWarnings(
+    res<-(-sum(F_Sym2Vec(P) * (log(exp(gamma)))) )+
+      logSumTree(F_Vec2Sym(exp(gamma)))$det+
+      lambda*(sum(exp(gamma))-sum.constraint/2))
+  # cat("like val is... ",res," !!\n Detail: a=",
+  # -sum(F_Sym2Vec(P) * (log(exp(gamma))+ F_Sym2Vec(log.psi))) ,"/b=",
+  # log(SumTree(F_Vec2Sym(exp(gamma)))),"/c=",
+  #   lambda*(sum(exp(gamma))-sum.constraint/2),"\n"
+  # )
+  #cat(paste0("\nSumTree=",SumTree(F_Vec2Sym(exp(gamma)))))
+
+
+  return( res)
+}
+sum.constraint.inf<-function(p,min.order=300){
+  round( p*(p-1)*10^(-min.order/(p-1)))+1
+}
+#########################################################################
+SetLambda <- function(P, M,sum.constraint=1, eps = 1e-6, start=1){
+  # F.x has to be increasing. The target value is 0
+
+  F.x <- function(x){
+    if(x!=0){
+      sum.constraint - sum(P / (x+M))
+    }else{
+      sum.constraint - (2*sum(P[upper.tri(P)] / M[upper.tri(M)]))
+    }
+  }
+  i=1
+  x.min = ifelse(F.x(0) >0,-sort(F_Sym2Vec(M))[1]+1e-10,max(-1e-4, -min(F_Sym2Vec(M))/2));
+  while(F.x(x.min)>0 && i<length(unique(M))){
+    i=i+1
+    x.min=-sort(F_Sym2Vec(M))[i]+1e-10
+  }
+  if(F.x(x.min)>0) stop("Could not set lambda.")
+  x.max = start
+  while(F.x(x.max)<0){x.max = x.max * 10}
+  x = (x.max+x.min)/2
+  f.min = F.x(x.min)
+  f.max = F.x(x.max)
+  f = F.x(x)
+  while(abs(x.max-x.min) > eps){
+    if(f > 0) {
+      x.max = x
+      f.max = f
+    } else{
+      x.min = x
+      f.min = f
+    }
+    x = (x.max+x.min)/2;
+    f = F.x(x)
+  }
+
+  return(x)
+}
 #===========
 #' Computes the maximization step of the algorithm
 #'
@@ -351,7 +448,7 @@ VEstep<-function(MO,SO,SH,Omega,W,Wg,MH,Pg,logSTW,logSTWg, alpha,it1, verbatim,t
 #' \item{max.prec:}{ boolean tracking the reach of maximal precision during computation.}}
 #' @importFrom stats cov2cor
 #' @export
-Mstep<-function(M, S, Pg, Omega,W, Wg, p,logSTW, logSTWg,  trackJ=FALSE){
+Mstep<-function(M, S, Pg, Omega,W, Wg, p,logSTW, logSTWg, min.val, max.val, trackJ=FALSE){
   n=nrow(S)  ; O=1:p ; q=ncol(Omega) ; iterM=0 ; diff=1
   hidden=(q!=p)
   if(hidden){ H=(p+1):q
@@ -363,13 +460,25 @@ Mstep<-function(M, S, Pg, Omega,W, Wg, p,logSTW, logSTWg,  trackJ=FALSE){
   if(trackJ) LB1=c(LowerBound(Pg = Pg, Omega=Omega, M=M, S=S,W=W, Wg=Wg,p,logSTW=logSTW,logSTWg=logSTWg),"Omega")
 
   #--- Beta
-  Mei=exactMeila(W,r)
-  logW.new = matrix(0,q,q) ;null=which(Pg==0)
-  logW.new[-null]= log(Pg[-null]) - log(Mei[-null] )
-  logW.new[-null]=logW.new[-null]-mean(logW.new[-null]) #centrage
-  W.new = exp(logW.new)
-  W.new[null]=0
-  W.new[W.new< 1e-16] = 0 # numeric zeros
+  # Mei=exactMeila(W,r)
+  # logW.new = matrix(0,q,q) ;null=which(Pg==0)
+  # logW.new[-null]= log(Pg[-null]) - log(Mei[-null] )
+  # logW.new[-null]=logW.new[-null]-mean(logW.new[-null]) #centrage
+  # W.new = exp(logW.new)
+  # W.new[null]=0
+  # W.new[W.new< 1e-16] = 0 # numeric zeros
+  init=F_Sym2Vec(W)
+  #gradient ascent in log scale
+  gamma_init=log(init+(init==0))
+  gamma_init[init==0]=0
+  sum.weights=sum.constraint.inf(q)
+
+  gamma = stats::optim(gamma_init, F_NegLikelihood_Trans, gr=F_NegGradient_Trans,method='L-BFGS-B',
+                        Pg,sum.weights, control=list(trace=0,maxit=500,  pgtol=1e-4, factr=1e+10),
+                       lower=rep(min.val, q*(q-1)/2),upper=rep(max.val, q*(q-1)/2))$par
+
+  # cat(round(mean(gamma),2))
+  W.new=F_Vec2Sym(exp(gamma))
   if(hidden) W.new[H,H]=0
   diag(W.new)=0
   W=W.new
@@ -460,13 +569,16 @@ nestorFit<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1
   t1=Sys.time()
   logSTW=logSumTree(W)$det
   logSTWg=logSumTree(Wg)$det
-
-  while(  (diffOmega[iter] > eps) &&   (iter < maxIter) || iter<2 ){
+  q=p+r
+  min.val= (-(q-2)*log(p)+round(log(.Machine$double.xmin))+10)/(q-1)
+  max.val= (-(q-2)*log(p)+round(log(.Machine$double.xmax))-10)/(q-1)
+  while(  (diffOmega[iter] > eps) &&   (iter < maxIter) || iter<3 ){
     iter=iter+1
     if(verbatim==2) cat(paste0("\n Iter n°", iter))
     #--- VE
     resVE<-VEstep(MO=MO,SO=SO,SH=SH,Omega=Omega,W=W,Wg=Wg,MH=MH,Pg=Pg,logSTW,logSTWg,
-              it1=(iter==1),verbatim=verbatim, alpha=alpha, trackJ=trackJ, hist=print.hist)
+              it1=(iter==1),verbatim=verbatim, alpha=alpha, trackJ=trackJ, hist=print.hist,
+              min.val, max.val)
     M=resVE$M
     S=resVE$S
     Pg.new=resVE$Pg
@@ -485,7 +597,8 @@ nestorFit<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1
     logSTWg=resVE$logSTWg
     #--- M
 
-    resM<-Mstep(M=M,S=S,Pg=Pg, Omega=Omega,W=W,logSTW,logSTWg, trackJ=trackJ,Wg=Wg, p=p)
+    resM<-Mstep(M=M,S=S,Pg=Pg, Omega=Omega,W=W,logSTW,logSTWg, trackJ=trackJ,Wg=Wg, p=p,min.val=min.val,
+                max.val=max.val)
     W.new=resM$W
     diffW[iter]=abs(max(W.new-W))
     diffWiter=diffW[iter]
@@ -507,7 +620,8 @@ nestorFit<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1
   }
   ########################
   resVE<-VEstep(MO=MO,SO=SO,SH=SH,Omega=Omega,W=W,Wg=Wg,logSTW,logSTWg,MH=MH,Pg=Pg, it1=(iter==1),
-            verbatim=verbatim, alpha=alpha, trackJ=trackJ, hist=print.hist)
+            verbatim=verbatim, alpha=alpha, trackJ=trackJ, hist=print.hist,
+            min.val, max.val)
   M=resVE$M
   S=resVE$S
   Pg=resVE$Pg
@@ -519,7 +633,8 @@ nestorFit<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1
     MH<-matrix(M[,H],n,r)
   }
   #--- M
-  resM<-Mstep(M=M,S=S,Pg=Pg, Omega=Omega,W=W,logSTW,logSTWg,trackJ=trackJ, Wg=Wg, p=p )
+  resM<-Mstep(M=M,S=S,Pg=Pg, Omega=Omega,W=W,logSTW,logSTWg,trackJ=trackJ, Wg=Wg, p=p, min.val=min.val,
+              max.val=max.val)
   if(resM$max.prec) max.prec=TRUE
 
   W=resM$W
