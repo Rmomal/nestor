@@ -10,13 +10,21 @@
 #' @examples Sigma=generate_missing_data(n=100,p=10,r=1,type="scale-free", plot=FALSE)$Sigma
 #' ggimage(Sigma)
 ggimage<-function(data, no.names=FALSE, order=NULL){
+  num=FALSE
   melted_data <- reshape2::melt(data)
   if(is.null(order)){p=ncol(data) ; order = 1:p}
-  melted_data$Var1 <- factor( melted_data$Var1, levels = colnames(data)[order])
-  melted_data$Var2 <- factor( melted_data$Var2, levels = colnames(data)[order])
+  if(is.null(colnames(data))){
+    level=1:p
+    num=TRUE
+  }else{level=colnames(data)}
+  melted_data$Var1 <- factor( melted_data$Var1, levels = level[order])
+  melted_data$Var2 <- factor( melted_data$Var2, levels = level[order])
+  if(num){
+    melted_data[,1:2]=apply(melted_data[,1:2],2, function(x) as.numeric(as.character(x)))
+  }
   g=ggplot2::ggplot(melted_data, ggplot2::aes(x=.data$Var1, y=.data$Var2, fill=.data$value)) + ggplot2::theme_light()+
     ggplot2::labs(x="",y="")+ ggplot2::geom_tile() +ggplot2::guides(fill=FALSE)+
-    ggplot2::theme(plot.title = element_text(size=10, hjust=0.5))+
+    ggplot2::theme(plot.title = ggplot2::element_text(size=10, hjust=0.5))+
     ggplot2::coord_fixed()
   if(no.names) g=g+theme(axis.text=element_blank(),axis.ticks =element_blank())
   g
@@ -75,18 +83,24 @@ auc<-function(pred,label){
 #' #-- obtain criteria
 #' ppvtpr(nestorFit$Pg,r=1, data$G)
 ppvtpr<-function(probs,G,r, thresh=0.5){
-  q=ncol(probs) ; h=(q-r):q
+  q=ncol(probs) ;
   PPV=round(sum((G!=0)*(probs>thresh))/(sum((G!=0)*(probs>thresh))+ sum((G==0)*(probs>thresh))),2)#TP/(TP+FP)
-  PPVH=round(sum((G[h,]!=0)*(probs[h,]>thresh))/(sum((G[h,]!=0)*(probs[h,]>thresh))+ sum((G[h,]==0)*(probs[h,]>thresh))),2)
-  PPVO=round(sum((G[-h,-h]!=0)*(probs[-h,-h]>thresh))/(sum((G[-h,-h]!=0)*(probs[-h,-h]>thresh))+  sum((G[-h,-h]==0)*(probs[-h,-h]>thresh))),2)
   TPR=round(sum((G!=0)*(probs>thresh))/sum(G!=0), 2)
-  TPRH=round(sum((G[h,]!=0)*(probs[h,]>thresh))/sum(G[h,]!=0), 2)
-  TPRO=round(sum((G[-h,-h]!=0)*(probs[-h,-h]>thresh))/sum(G[-h,-h]!=0), 2)
-  P=(G[h,]!=0) ; N=(G[h,]==0)
-  FP=sum((probs[h,]>thresh)*(G[h,]==0))
-  TN=sum((probs[h,]<thresh)*(G[h,]==0))
-  FPRH=FP/(FP+TN)
-  FNRH=1-TPRH
+  if(r>0){
+    h=(q-r):q
+    PPVH=round(sum((G[h,]!=0)*(probs[h,]>thresh))/(sum((G[h,]!=0)*(probs[h,]>thresh))+ sum((G[h,]==0)*(probs[h,]>thresh))),2)
+    PPVO=round(sum((G[-h,-h]!=0)*(probs[-h,-h]>thresh))/(sum((G[-h,-h]!=0)*(probs[-h,-h]>thresh))+  sum((G[-h,-h]==0)*(probs[-h,-h]>thresh))),2)
+    TPRH=round(sum((G[h,]!=0)*(probs[h,]>thresh))/sum(G[h,]!=0), 2)
+    TPRO=round(sum((G[-h,-h]!=0)*(probs[-h,-h]>thresh))/sum(G[-h,-h]!=0), 2)
+    P=(G[h,]!=0) ; N=(G[h,]==0)
+    FP=sum((probs[h,]>thresh)*(G[h,]==0))
+    TN=sum((probs[h,]<thresh)*(G[h,]==0))
+    FPRH=FP/(FP+TN)
+    FNRH=1-TPRH
+  }else{
+    PPVO=PPV ; TPRO=TPR
+    PPVH=TPRH=FPRH=FNRH=NULL
+  }
   return(list(PPV=PPV,PPVH=PPVH,PPVO=PPVO,TPR=TPR,TPRH=TPRH,TPRO=TPRO,
               FPRH=FPRH,FNRH=FNRH))
 }
@@ -113,6 +127,7 @@ ppvtpr<-function(probs,G,r, thresh=0.5){
 #' plotPerf(nestorFit$Pg, data$G,r=1)
 plotPerf<-function(P,G,r,thresh=0.5, no.names=FALSE){
   # plots heatmaps for the chosen threshold and print verdicts as title
+  # plots heatmaps for the chosen threshold and print verdicts as title
   q=ncol(G)
   criteria=ppvtpr(P,G,r,thresh)
   PPV=criteria$PPV ;PPVH=criteria$PPVH ; PPVO=criteria$PPVO
@@ -120,9 +135,14 @@ plotPerf<-function(P,G,r,thresh=0.5, no.names=FALSE){
   p1<-ggimage(P,no.names=no.names)+labs(title=paste0("G hat"))
   p2<-ggimage(G,no.names=no.names)+labs(title="True G")
   auc<-round(auc(pred = P, label = G),3)
-  grid.arrange(p1,p2,ncol=2, top=paste0("Recall=",TPR," (Obs=",TPRO," , Hid=",TPRH,
-                                        ")\n Precision=",PPV," (Obs=",PPVO," , Hid=",PPVH,")",
-                                        "\n AUC=",auc))
+  if(r>0){
+    grid.arrange(p1,p2,ncol=2, top=paste0("Recall=",TPR," (Obs=",TPRO," , Hid=",TPRH,
+                                          ")\n Precision=",PPV," (Obs=",PPVO," , Hid=",PPVH,")",
+                                          "\n AUC=",auc))
+  }else{
+    grid.arrange(p1,p2,ncol=2, top=paste0("Recall=",TPR,", Precision=",PPV,",\nAUC=",auc))
+  }
+
 }
 
 #' Plot function for nestorFit convergence

@@ -55,6 +55,7 @@ openssl::write_ssh(pub_key) # for git key
 
 # workflow
 devtools::document() # then build and restart
+devtools::load_all()
 devtools::run_examples()
 devtools::check()
 usethis::use_vignette("Usage","Usage example")
