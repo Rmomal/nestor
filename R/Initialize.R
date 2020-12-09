@@ -214,7 +214,7 @@ extractParamBM <- function(BMobject,k){
   membership_name <-  BMobject$membership_name
   res <- list()
   if (model == 'bernoulli') { res$alpha <- BMobject$model_parameters[k][[1]]$pi}
-  # if (model == 'bernoulli_multiplex') { res$alpha <- BMobject$model_parameters[k][[1]]$pi}
+ # if (model == 'bernoulli_multiplex') { res$alpha <- BMobject$model_parameters[k][[1]]$pi}
   if ((membership_name == 'SBM') |  (membership_name == 'SBM_sym')) {
     res$tau <-  BMobject$memberships[[k]]$Z
     res$Z <- apply(res$tau, 1, which.max)
@@ -225,7 +225,7 @@ extractParamBM <- function(BMobject,k){
   ########## ordering
   if ((membership_name == 'SBM') |  (membership_name == 'SBM_sym')) {
     o <- switch(model,
-                #  poisson = order(res$lambda %*% matrix(res$pi,ncol = 1),decreasing = TRUE),
+              #  poisson = order(res$lambda %*% matrix(res$pi,ncol = 1),decreasing = TRUE),
                 bernoulli  =  order(res$alpha %*% matrix(res$pi,ncol = 1),decreasing = TRUE),
                 1:res$k
     )
@@ -373,23 +373,13 @@ initOmega <- function(Sigma = NULL,  cliqueList,cst=1.1) {
 #' #-- initialize the VEM
 #' initList=initVEM(Y=data$Y,cliqueList=initClique,sigma_O=sigma_O, MO=MO,r=1 )
 #' str(initList)
-initVEM<-function(Y,cliqueList,sigma_O,MO,r,random.init=FALSE){
+initVEM<-function(Y,cliqueList,sigma_O,MO,r){
   p=ncol(Y)
   n=nrow(Y)
-  q=p+r
   # Tree
-  # Wginit <- matrix(1, p+r, p+r); Wginit =Wginit / sum(Wginit)
-  # Winit <- matrix(1, p+r, p+r); Winit =Winit / sum(Winit)
-  # diag(Wginit) = 0;diag(Winit) = 0
-  mean.val= (round( q*(q-1)*10^(-300/(q-1)))+1) /(q*(q-1))
-  Wginit = matrix(mean.val, q,q);  diag(Wginit)=0
-
-  if(random.init){ # try different starting points for this EM
-    Wginit = matrix(runif(n=q*q, min=0.9*mean.val,max=1.1*mean.val ),q,q)
-    Wginit=t(Wginit)%*%Wginit/2
-    diag(Wginit)=0
-   }
-  Winit=Wginit
+  Wginit <- matrix(1, p+r, p+r); Wginit =Wginit / sum(Wginit)
+  Winit <- matrix(1, p+r, p+r); Winit =Winit / sum(Winit)
+  diag(Wginit) = 0;diag(Winit) = 0
   # Gaussian layer U
   if(r!=0){
     initial.param<-initOmega(sigma_O,cliqueList = cliqueList,cst=1.05 )
