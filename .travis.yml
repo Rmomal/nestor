@@ -7,10 +7,10 @@ r_check_args: --as-cran
 matrix:
  include:
     - os: linux
-      r: bioc-release
+      r: release
       r_packages:
         - covr
-        - pkgdown
+
       after_success:
         - Rscript -e 'covr::codecov()'
         - R CMD INSTALL .
