@@ -136,7 +136,7 @@ The PCA is done on the correaltion matrix, the variance of hidden variables are 
 The corresponding precision term in omega is set to 1 for identifiability reasons.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>initOmega</span>(Sigma = <span class='kw'>NULL</span>, <span class='kw'>cliqueList</span>, cst = <span class='fl'>1.1</span>)</pre>
+    <pre class="usage"><span class='fu'>initOmega</span><span class='op'>(</span>Sigma <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>cliqueList</span>, cst <span class='op'>=</span> <span class='fl'>1.1</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -166,10 +166,10 @@ The corresponding precision term in omega is set to 1 for identifiability reason
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(n=<span class='fl'>100</span>,p=<span class='fl'>10</span>,r=<span class='fl'>1</span>,type=<span class='st'>"scale-free"</span>, plot=<span class='fl'>TRUE</span>)
-</div><div class='img'><img src='initOmega-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw'>Sigma</span><span class='op'>=</span><span class='kw'>data</span><span class='op'>$</span><span class='kw'>Sigma</span>
-<span class='kw'>initClique</span><span class='op'>=</span><span class='fu'><a href='FitSparsePCA.html'>FitSparsePCA</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>,r=<span class='fl'>1</span>)<span class='op'>$</span><span class='kw'>cliques</span>
-<span class='fu'>initOmega</span>(Sigma=<span class='kw'>Sigma</span>, cliqueList=<span class='kw'>initClique</span>)
+    <pre class="examples"><div class='input'><span class='va'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span><span class='op'>(</span>n<span class='op'>=</span><span class='fl'>100</span>,p<span class='op'>=</span><span class='fl'>10</span>,r<span class='op'>=</span><span class='fl'>1</span>,type<span class='op'>=</span><span class='st'>"scale-free"</span>, plot<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='img'><img src='initOmega-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='va'>Sigma</span><span class='op'>=</span><span class='va'>data</span><span class='op'>$</span><span class='va'>Sigma</span>
+<span class='va'>initClique</span><span class='op'>=</span><span class='fu'><a href='FitSparsePCA.html'>FitSparsePCA</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>Y</span>,r<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>$</span><span class='va'>cliques</span>
+<span class='fu'>initOmega</span><span class='op'>(</span>Sigma<span class='op'>=</span><span class='va'>Sigma</span>, cliqueList<span class='op'>=</span><span class='va'>initClique</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $Sigma0
 #&gt;             [,1]       [,2]       [,3]       [,4]       [,5]        [,6]
 #&gt;  [1,]  1.0000000 -0.6564880  0.3978100  0.4503413  0.1384223 -0.74370241
@@ -198,40 +198,40 @@ The corresponding precision term in omega is set to 1 for identifiability reason
 #&gt; 
 #&gt; $K0
 #&gt;                [,1]          [,2]          [,3]          [,4]          [,5]
-#&gt;  [1,]  2.995000e+00  1.153710e+00  1.110223e-16  2.553513e-15 -1.270332e-16
-#&gt;  [2,]  1.153710e+00  3.226510e+00  9.575898e-01  1.295721e+00 -2.438878e-17
-#&gt;  [3,]  6.243143e-17  9.575898e-01  1.850150e+00  4.714238e-16 -2.443984e-01
-#&gt;  [4,] -1.644027e-15  1.295721e+00 -4.257833e-16  5.212917e+00 -4.187372e-16
-#&gt;  [5,] -1.766063e-16  2.749740e-17 -2.443984e-01  3.554949e-16  2.432368e+00
-#&gt;  [6,]  1.664111e+00  1.617137e-15  6.652788e-16 -3.257295e+00  3.625462e-16
-#&gt;  [7,]  7.336380e-16  5.613872e-16  5.644688e-16 -1.570168e+00  1.541862e+00
-#&gt;  [8,]  1.706045e-17 -4.310475e-17 -2.443984e-01 -6.653440e-16 -2.802267e-01
-#&gt;  [9,]  3.233706e-17  2.544373e-17 -1.148350e-17 -3.396140e-16  2.692887e-16
-#&gt; [10,]  5.437909e-17  2.088013e-16 -2.731656e-01  7.426938e-18 -3.132111e-01
-#&gt; [11,]  2.429243e-15  1.929978e-15  6.714667e-16 -4.911705e+00  7.269801e-16
+#&gt;  [1,]  2.995000e+00  1.153710e+00 -5.551115e-16 -1.443290e-15  1.174218e-16
+#&gt;  [2,]  1.153710e+00  3.226510e+00  9.575898e-01  1.295721e+00  7.316634e-17
+#&gt;  [3,] -8.065872e-17  9.575898e-01  1.850150e+00  4.937363e-16 -2.443984e-01
+#&gt;  [4,] -1.539993e-15  1.295721e+00 -5.044652e-16  5.212917e+00 -1.474759e-16
+#&gt;  [5,] -1.601693e-16 -8.166100e-17 -2.443984e-01 -6.348823e-16  2.432368e+00
+#&gt;  [6,]  1.664111e+00  5.165756e-16 -1.282238e-16 -3.257295e+00  3.106197e-16
+#&gt;  [7,]  3.515853e-16  2.813595e-16  3.898653e-16 -1.570168e+00  1.541862e+00
+#&gt;  [8,]  7.210915e-17 -3.483550e-16 -2.443984e-01 -2.317723e-16 -2.802267e-01
+#&gt;  [9,]  9.718497e-17 -8.456205e-17 -3.371215e-16 -1.169113e-16 -2.758972e-16
+#&gt; [10,] -3.475685e-17  5.794442e-17 -2.731656e-01  3.471644e-17 -3.132111e-01
+#&gt; [11,]  1.478934e-15  1.137663e-15  4.882736e-16 -4.911705e+00  3.637128e-16
 #&gt;                [,6]          [,7]          [,8]          [,9]         [,10]
-#&gt;  [1,]  1.664111e+00 -1.067462e-15 -4.592424e-17  4.001293e-17  9.287821e-17
-#&gt;  [2,] -2.838833e-15 -9.775932e-16  2.682766e-16  1.661790e-16 -4.877756e-17
-#&gt;  [3,] -8.210191e-16 -3.253515e-16 -2.443984e-01  3.048416e-16 -2.731656e-01
-#&gt;  [4,] -3.257295e+00 -1.570168e+00 -7.123834e-17 -4.113466e-32  2.255767e-16
-#&gt;  [5,] -1.714574e-16  1.541862e+00 -2.802267e-01 -6.568957e-16 -3.132111e-01
-#&gt;  [6,]  5.429464e+00  1.538626e+00  1.124888e-16  8.384155e-17 -3.076955e-16
-#&gt;  [7,]  1.538626e+00  2.862596e+00 -5.463791e-16 -5.560838e-16  2.201047e-17
-#&gt;  [8,]  4.845665e-16  7.010088e-16  2.432368e+00  1.541862e+00 -3.132111e-01
-#&gt;  [9,]  2.354495e-16  3.406989e-16  1.541862e+00  2.120907e+00 -3.188177e-32
-#&gt; [10,]  4.178563e-18  3.034853e-16 -3.132111e-01 -1.582697e-16  1.344299e+00
-#&gt; [11,]  4.813036e+00  2.320108e+00  1.537892e-16  6.376353e-32 -5.415899e-16
+#&gt;  [1,]  1.664111e+00  1.879141e-16 -1.922296e-17 -1.175983e-16  6.298948e-17
+#&gt;  [2,] -1.272872e-15 -4.016447e-16  9.755512e-17  3.902567e-18 -7.316634e-17
+#&gt;  [3,] -1.686729e-16 -1.885295e-17 -2.443984e-01  1.754450e-16 -2.731656e-01
+#&gt;  [4,] -3.257295e+00 -1.570168e+00  3.188573e-16  1.351326e-16  1.729410e-16
+#&gt;  [5,]  3.002154e-16  1.541862e+00 -2.802267e-01 -3.173433e-16 -3.132111e-01
+#&gt;  [6,]  5.429464e+00  1.538626e+00 -3.691970e-16 -2.471415e-16 -8.225295e-17
+#&gt;  [7,]  1.538626e+00  2.862596e+00 -5.139808e-16 -4.365212e-16  2.052234e-17
+#&gt;  [8,]  8.150804e-17 -2.318175e-16  2.432368e+00  1.541862e+00 -3.132111e-01
+#&gt;  [9,]  1.179954e-16  4.529421e-17  1.541862e+00  2.120907e+00 -7.913486e-17
+#&gt; [10,] -6.331278e-17 -1.778171e-16 -3.132111e-01 -3.956743e-16  1.344299e+00
+#&gt; [11,]  4.813036e+00  2.320108e+00 -5.343714e-16 -3.004692e-16 -2.410241e-16
 #&gt;               [,11]
-#&gt;  [1,] -3.381668e-15
-#&gt;  [2,] -3.748070e-15
-#&gt;  [3,] -1.033565e-15
+#&gt;  [1,]  2.408360e-15
+#&gt;  [2,] -6.523283e-16
+#&gt;  [3,] -4.325448e-16
 #&gt;  [4,] -4.911705e+00
-#&gt;  [5,] -1.519912e-16
+#&gt;  [5,]  3.234955e-16
 #&gt;  [6,]  4.813036e+00
 #&gt;  [7,]  2.320108e+00
-#&gt;  [8,]  8.095515e-16
-#&gt;  [9,]  4.272343e-16
-#&gt; [10,]  0.000000e+00
+#&gt;  [8,]  4.166517e-17
+#&gt;  [9,]  1.057285e-16
+#&gt; [10,] -4.430592e-17
 #&gt; [11,]  7.257622e+00
 #&gt; 
 #&gt; $cliquelist

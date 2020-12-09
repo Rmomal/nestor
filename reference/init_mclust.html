@@ -132,7 +132,7 @@
     <p>Find initial cliques using mclust on the estimated correlation matrix</p>
     </div>
 
-    <pre class="usage"><span class='fu'>init_mclust</span>(<span class='kw'>Sigma</span>, <span class='kw'>r</span>, n.noise = <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>init_mclust</span><span class='op'>(</span><span class='va'>Sigma</span>, <span class='va'>r</span>, n.noise <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -156,22 +156,22 @@
     <p>A list of size r, with initial cliques of neighbors for each missing actor.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(n=<span class='fl'>100</span>,p=<span class='fl'>10</span>,r=<span class='fl'>1</span>,type=<span class='st'>"scale-free"</span>, plot=<span class='fl'>FALSE</span>)
-<span class='kw'>EMtree</span>::<span class='fu'><a href='https://rdrr.io/pkg/EMtree/man/draw_network.html'>draw_network</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>G</span>,layout=<span class='st'>"nicely"</span>,curv=<span class='fl'>0</span>,btw_rank=<span class='fl'>1</span>,groupes=<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>1</span>,<span class='fl'>10</span>),<span class='fl'>2</span>),
- nodes_size=<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>5</span>,<span class='fl'>5</span>),nodes_label=<span class='fl'>1</span><span class='op'>:</span><span class='fl'>11</span>, pal_nodes= <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"#adc9e0"</span>,<span class='st'>"#e7bd42"</span>),
- pal_edges = <span class='st'>"#31374f"</span>)<span class='op'>$</span><span class='kw'>G</span>
-</div><div class='img'><img src='init_mclust-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw'>PLNfit</span><span class='op'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>)
-<span class='kw'>Sigma_hat</span><span class='op'>=</span><span class='kw'>PLNfit</span><span class='op'>$</span><span class='kw'>sigma_O</span>
+    <pre class="examples"><div class='input'><span class='va'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span><span class='op'>(</span>n<span class='op'>=</span><span class='fl'>100</span>,p<span class='op'>=</span><span class='fl'>10</span>,r<span class='op'>=</span><span class='fl'>1</span>,type<span class='op'>=</span><span class='st'>"scale-free"</span>, plot<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>EMtree</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/EMtree/man/draw_network.html'>draw_network</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>G</span>,layout<span class='op'>=</span><span class='st'>"nicely"</span>,curv<span class='op'>=</span><span class='fl'>0</span>,btw_rank<span class='op'>=</span><span class='fl'>1</span>,groupes<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>10</span><span class='op'>)</span>,<span class='fl'>2</span><span class='op'>)</span>,
+ nodes_size<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>5</span>,<span class='fl'>5</span><span class='op'>)</span>,nodes_label<span class='op'>=</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>11</span>, pal_nodes<span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"#adc9e0"</span>,<span class='st'>"#e7bd42"</span><span class='op'>)</span>,
+ pal_edges <span class='op'>=</span> <span class='st'>"#31374f"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>G</span>
+</div><div class='img'><img src='init_mclust-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='va'>PLNfit</span><span class='op'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>Y</span><span class='op'>)</span>
+<span class='va'>Sigma_hat</span><span class='op'>=</span><span class='va'>PLNfit</span><span class='op'>$</span><span class='va'>sigma_O</span>
 <span class='co'>#-- original true clique</span>
-<span class='kw'>data</span><span class='op'>$</span><span class='kw'>TC</span>
+<span class='va'>data</span><span class='op'>$</span><span class='va'>TC</span>
 </div><div class='output co'>#&gt; [[1]]
 #&gt; [1] 1 2 3 4 8 9
 #&gt; </div><div class='input'><span class='co'>#-- clique found by mclust</span>
-<span class='kw'>clique_mclust</span><span class='op'>=</span><span class='fu'>init_mclust</span>(<span class='kw'>Sigma_hat</span>, r=<span class='fl'>1</span>)
+<span class='va'>clique_mclust</span><span class='op'>=</span><span class='fu'>init_mclust</span><span class='op'>(</span><span class='va'>Sigma_hat</span>, r<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='warning'>Warning: `data_frame()` is deprecated as of tibble 1.1.0.</span>
 #&gt; <span class='warning'>Please use `tibble()` instead.</span>
 #&gt; <span class='warning'><span style='color: #555555;'>This warning is displayed once every 8 hours.</span><span></span>
-#&gt; <span class='warning'></span><span style='color: #555555;'>Call `lifecycle::last_warnings()` to see where this warning was generated.</span><span></span></div><div class='input'><span class='kw'>clique_mclust</span>
+#&gt; <span class='warning'></span><span style='color: #555555;'>Call `lifecycle::last_warnings()` to see where this warning was generated.</span><span></span></div><div class='input'><span class='va'>clique_mclust</span>
 </div><div class='output co'>#&gt; [[1]]
 #&gt; [1] 2 4 5 8
 #&gt; </div></span></pre>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Find initial cliques using blockmodels on the initial marginalized network — init_blockmodels • nestor</title>
+<title>Title — nestora • nestor</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Find initial cliques using blockmodels on the initial marginalized network — init_blockmodels" />
-<meta property="og:description" content="This function aims at clustering the marginal network, inferred from edges probabilities obtained with either nestorFit() or EMtree()." />
+<meta property="og:title" content="Title — nestora" />
+<meta property="og:description" content="Title" />
 
 
 
@@ -123,78 +123,77 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Find initial cliques using blockmodels on the initial marginalized network</h1>
+    <h1>Title</h1>
     
-    <div class="hidden name"><code>init_blockmodels.Rd</code></div>
+    <div class="hidden name"><code>nestora.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function aims at clustering the marginal network, inferred from edges probabilities obtained with either <code><a href='nestorFit.html'>nestorFit()</a></code> or <code>EMtree()</code>.</p>
+    <p>Title</p>
     </div>
 
-    <pre class="usage"><span class='fu'>init_blockmodels</span><span class='op'>(</span><span class='va'>Y</span>, <span class='va'>sigma_O</span>, <span class='va'>MO</span>, <span class='va'>SO</span>, k <span class='op'>=</span> <span class='fl'>3</span>, alpha <span class='op'>=</span> <span class='fl'>0.1</span>, cores <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>nestora</span><span class='op'>(</span>
+  <span class='va'>Y</span>,
+  <span class='va'>MO</span>,
+  <span class='va'>SO</span>,
+  <span class='va'>initList</span>,
+  maxIter <span class='op'>=</span> <span class='fl'>20</span>,
+  eps <span class='op'>=</span> <span class='fl'>0.01</span>,
+  alpha <span class='op'>=</span> <span class='fl'>0.1</span>,
+  verbatim <span class='op'>=</span> <span class='fl'>1</span>,
+  print.hist <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  trackJ <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>Y</th>
-      <td><p>Count dataset.</p></td>
-    </tr>
-    <tr>
-      <th>sigma_O</th>
-      <td><p>PLNmodels output: covariance matrix estimate.</p></td>
+      <td><p>count dataset</p></td>
     </tr>
     <tr>
       <th>MO</th>
-      <td><p>PLNmodels output: observed means estimate.</p></td>
+      <td><p>estimated means from norm_PLN</p></td>
     </tr>
     <tr>
       <th>SO</th>
-      <td><p>PLNmodels output: observed marginal variances estimate.</p></td>
+      <td><p>estimated marginal vairances from norm_PLN</p></td>
     </tr>
     <tr>
-      <th>k</th>
-      <td><p>Number of groups to find.</p></td>
+      <th>initList</th>
+      <td><p>result from initVEM</p></td>
+    </tr>
+    <tr>
+      <th>maxIter</th>
+      <td><p>maximun number of iterations</p></td>
+    </tr>
+    <tr>
+      <th>eps</th>
+      <td><p>convergence precision parameter</p></td>
     </tr>
     <tr>
       <th>alpha</th>
-      <td><p>Tempering parameter.</p></td>
+      <td><p>tempering parameter, default to 0.1</p></td>
     </tr>
     <tr>
-      <th>cores</th>
-      <td><p>Number of cores for parallel computation (uses mclapply, not available for Windows).</p></td>
+      <th>verbatim</th>
+      <td><p>controls verbosity, between 0,1 and 2.</p></td>
+    </tr>
+    <tr>
+      <th>print.hist</th>
+      <td><p>prints edges weights histograms at each step if TRUE</p></td>
+    </tr>
+    <tr>
+      <th>trackJ</th>
+      <td><p>computes the lower bound at each parameter update if TRUE. Otherwise, the lower bound is only computed at each new VE step.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of cliques</p>
+    <p>bla</p>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span><span class='op'>(</span>n<span class='op'>=</span><span class='fl'>100</span>,p<span class='op'>=</span><span class='fl'>10</span>,r<span class='op'>=</span><span class='fl'>1</span>,type<span class='op'>=</span><span class='st'>"scale-free"</span>, plot<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='img'><img src='init_blockmodels-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='va'>data</span><span class='op'>$</span><span class='va'>TC</span>
-</div><div class='output co'>#&gt; [[1]]
-#&gt; [1] 1 2 3 4 8
-#&gt; </div><div class='input'><span class='va'>PLNfit</span><span class='op'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>Y</span><span class='op'>)</span>
-<span class='va'>MO</span><span class='op'>&lt;-</span><span class='va'>PLNfit</span><span class='op'>$</span><span class='va'>MO</span>
-<span class='va'>SO</span><span class='op'>&lt;-</span><span class='va'>PLNfit</span><span class='op'>$</span><span class='va'>SO</span>
-<span class='va'>sigma_O</span><span class='op'>=</span><span class='va'>PLNfit</span><span class='op'>$</span><span class='va'>sigma_O</span>
-<span class='co'>#-- initialize with blockmodels</span>
-<span class='fu'>init_blockmodels</span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>Y</span>,<span class='va'>sigma_O</span>, <span class='va'>MO</span>, <span class='va'>SO</span>, k<span class='op'>=</span><span class='fl'>2</span> <span class='op'>)</span>
-</div><div class='output co'>#&gt; 
-#&gt; </div><div class='output co'>#&gt; $cliqueList
-#&gt; $cliqueList[[1]]
-#&gt; $cliqueList[[1]][[1]]
-#&gt; [1] 3
-#&gt; 
-#&gt; 
-#&gt; $cliqueList[[2]]
-#&gt; $cliqueList[[2]][[1]]
-#&gt; [1]  1  2  4  5  6  7  8  9 10
-#&gt; 
-#&gt; 
-#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -132,7 +132,7 @@
     <p>Fit sparse PCA on a grid of alpha</p>
     </div>
 
-    <pre class="usage"><span class='fu'>FitSparsePCA</span>(<span class='kw'>M</span>, r = <span class='fl'>1</span>, min.size = <span class='fl'>1</span>, alphaGrid = <span class='fl'>10</span><span class='op'>^</span>(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='op'>-</span><span class='fl'>4</span>, <span class='fl'>0</span>, by = <span class='fl'>0.1</span>)))</pre>
+    <pre class="usage"><span class='fu'>FitSparsePCA</span><span class='op'>(</span><span class='va'>M</span>, r <span class='op'>=</span> <span class='fl'>1</span>, min.size <span class='op'>=</span> <span class='fl'>1</span>, alphaGrid <span class='op'>=</span> <span class='fl'>10</span><span class='op'>^</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>4</span>, <span class='fl'>0</span>, by <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -168,15 +168,15 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(n=<span class='fl'>100</span>,p=<span class='fl'>10</span>,r=<span class='fl'>1</span>,type=<span class='st'>"scale-free"</span>, plot=<span class='fl'>TRUE</span>)
-</div><div class='img'><img src='FitSparsePCA-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw'>TrueClique</span><span class='op'>=</span><span class='kw'>data</span><span class='op'>$</span><span class='kw'>TC</span>
-<span class='kw'>PLNfit</span><span class='op'>=</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>)
-<span class='kw'>findclique</span><span class='op'>=</span><span class='fu'>FitSparsePCA</span>(<span class='kw'>PLNfit</span><span class='op'>$</span><span class='kw'>MO</span>,r=<span class='fl'>1</span>)
-<span class='kw'>initClique</span><span class='op'>=</span><span class='kw'>findclique</span><span class='op'>$</span><span class='kw'>cliques</span>
-<span class='kw'>TrueClique</span>
+    <pre class="examples"><div class='input'><span class='va'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span><span class='op'>(</span>n<span class='op'>=</span><span class='fl'>100</span>,p<span class='op'>=</span><span class='fl'>10</span>,r<span class='op'>=</span><span class='fl'>1</span>,type<span class='op'>=</span><span class='st'>"scale-free"</span>, plot<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='img'><img src='FitSparsePCA-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='va'>TrueClique</span><span class='op'>=</span><span class='va'>data</span><span class='op'>$</span><span class='va'>TC</span>
+<span class='va'>PLNfit</span><span class='op'>=</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>Y</span><span class='op'>)</span>
+<span class='va'>findclique</span><span class='op'>=</span><span class='fu'>FitSparsePCA</span><span class='op'>(</span><span class='va'>PLNfit</span><span class='op'>$</span><span class='va'>MO</span>,r<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>initClique</span><span class='op'>=</span><span class='va'>findclique</span><span class='op'>$</span><span class='va'>cliques</span>
+<span class='va'>TrueClique</span>
 </div><div class='output co'>#&gt; [[1]]
 #&gt; [1] 1 4 7 8 9
-#&gt; </div><div class='input'><span class='kw'>initClique</span>
+#&gt; </div><div class='input'><span class='va'>initClique</span>
 </div><div class='output co'>#&gt; [[1]]
 #&gt; [1]  2  4  5  6  7  8  9 10
 #&gt; </div></pre>

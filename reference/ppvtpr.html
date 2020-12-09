@@ -132,7 +132,7 @@
     <p>Computes precision and recall statistics separating observed from hidden variables, and (FPR,FNR) for hidden variables .</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ppvtpr</span>(<span class='kw'>probs</span>, <span class='kw'>G</span>, <span class='kw'>r</span>, thresh = <span class='fl'>0.5</span>)</pre>
+    <pre class="usage"><span class='fu'>ppvtpr</span><span class='op'>(</span><span class='va'>probs</span>, <span class='va'>G</span>, <span class='va'>r</span>, thresh <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -171,19 +171,19 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(n=<span class='fl'>100</span>,p=<span class='fl'>10</span>,r=<span class='fl'>1</span>,type=<span class='st'>"scale-free"</span>, plot=<span class='fl'>FALSE</span>)
-<span class='kw'>PLNfit</span><span class='op'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>)
-<span class='kw'>MO</span><span class='op'>&lt;-</span><span class='kw'>PLNfit</span><span class='op'>$</span><span class='kw'>MO</span>
-<span class='kw'>SO</span><span class='op'>&lt;-</span><span class='kw'>PLNfit</span><span class='op'>$</span><span class='kw'>SO</span>
-<span class='kw'>sigma_O</span><span class='op'>=</span><span class='kw'>PLNfit</span><span class='op'>$</span><span class='kw'>sigma_O</span>
+    <pre class="examples"><div class='input'><span class='va'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span><span class='op'>(</span>n<span class='op'>=</span><span class='fl'>100</span>,p<span class='op'>=</span><span class='fl'>10</span>,r<span class='op'>=</span><span class='fl'>1</span>,type<span class='op'>=</span><span class='st'>"scale-free"</span>, plot<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='va'>PLNfit</span><span class='op'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>Y</span><span class='op'>)</span>
+<span class='va'>MO</span><span class='op'>&lt;-</span><span class='va'>PLNfit</span><span class='op'>$</span><span class='va'>MO</span>
+<span class='va'>SO</span><span class='op'>&lt;-</span><span class='va'>PLNfit</span><span class='op'>$</span><span class='va'>SO</span>
+<span class='va'>sigma_O</span><span class='op'>=</span><span class='va'>PLNfit</span><span class='op'>$</span><span class='va'>sigma_O</span>
 <span class='co'>#-- use true clique for example</span>
-<span class='kw'>initClique</span><span class='op'>=</span><span class='kw'>data</span><span class='op'>$</span><span class='kw'>TC</span>
+<span class='va'>initClique</span><span class='op'>=</span><span class='va'>data</span><span class='op'>$</span><span class='va'>TC</span>
 <span class='co'>#-- initialize the VEM</span>
-<span class='kw'>initList</span><span class='op'>=</span><span class='fu'><a href='initVEM.html'>initVEM</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>,cliqueList=<span class='kw'>initClique</span>,<span class='kw'>sigma_O</span>, <span class='kw'>MO</span>,r=<span class='fl'>1</span> )
-<span class='kw'>nestorFit</span><span class='op'>=</span><span class='fu'><a href='nestorFit.html'>nestorFit</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>, <span class='kw'>MO</span>,<span class='kw'>SO</span>, initList=<span class='kw'>initList</span>, maxIter=<span class='fl'>3</span>,verbatim=<span class='fl'>1</span> )
+<span class='va'>initList</span><span class='op'>=</span><span class='fu'><a href='initVEM.html'>initVEM</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>Y</span>,cliqueList<span class='op'>=</span><span class='va'>initClique</span>,<span class='va'>sigma_O</span>, <span class='va'>MO</span>,r<span class='op'>=</span><span class='fl'>1</span> <span class='op'>)</span>
+<span class='va'>nestorFit</span><span class='op'>=</span><span class='fu'><a href='nestorFit.html'>nestorFit</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>Y</span>, <span class='va'>MO</span>,<span class='va'>SO</span>, initList<span class='op'>=</span><span class='va'>initList</span>, maxIter<span class='op'>=</span><span class='fl'>3</span>,verbatim<span class='op'>=</span><span class='fl'>1</span> <span class='op'>)</span>
 </div><div class='output co'>#&gt; 
-#&gt; nestor ran in 0.24secs and 3 iterations.</div><div class='input'><span class='co'>#-- obtain criteria</span>
-<span class='fu'>ppvtpr</span>(<span class='kw'>nestorFit</span><span class='op'>$</span><span class='kw'>Pg</span>,r=<span class='fl'>1</span>, <span class='kw'>data</span><span class='op'>$</span><span class='kw'>G</span>)
+#&gt; nestor ran in 0.213secs and 3 iterations.</div><div class='input'><span class='co'>#-- obtain criteria</span>
+<span class='fu'>ppvtpr</span><span class='op'>(</span><span class='va'>nestorFit</span><span class='op'>$</span><span class='va'>Pg</span>,r<span class='op'>=</span><span class='fl'>1</span>, <span class='va'>data</span><span class='op'>$</span><span class='va'>G</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $PPV
 #&gt; [1] 1
 #&gt; 

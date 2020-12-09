@@ -132,7 +132,7 @@
     <p>Runs PLN function from the PLNmodels package and normalized the outputs</p>
     </div>
 
-    <pre class="usage"><span class='fu'>norm_PLN</span>(<span class='kw'>Y</span>, X = <span class='kw'>NULL</span>, O = <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>norm_PLN</span><span class='op'>(</span><span class='va'>Y</span>, X <span class='op'>=</span> <span class='cn'>NULL</span>, O <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -163,21 +163,21 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='kw'>n</span><span class='op'>=</span><span class='fl'>100</span> <span class='co'># 100 samples</span>
-<span class='kw'>p</span><span class='op'>=</span><span class='fl'>10</span>  <span class='co'># 10 species</span>
-<span class='kw'>r</span><span class='op'>=</span><span class='fl'>1</span> <span class='co'># 1 missing actor</span>
-<span class='kw'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span>(n=<span class='kw'>n</span>,p=<span class='kw'>p</span>,r=<span class='kw'>r</span>,type=<span class='st'>"scale-free"</span>, plot=<span class='fl'>TRUE</span>)
-</div><div class='img'><img src='norm_PLN-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw'>X</span><span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(X1=<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='kw'>n</span>), X2=<span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='kw'>n</span>))
-<span class='kw'>normPLNfit</span><span class='op'>&lt;-</span><span class='fu'>norm_PLN</span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>Y</span>,<span class='kw'>X</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='kw'>normPLNfit</span>)
+    <pre class="examples"><div class='input'> <span class='va'>n</span><span class='op'>=</span><span class='fl'>100</span> <span class='co'># 100 samples</span>
+<span class='va'>p</span><span class='op'>=</span><span class='fl'>10</span>  <span class='co'># 10 species</span>
+<span class='va'>r</span><span class='op'>=</span><span class='fl'>1</span> <span class='co'># 1 missing actor</span>
+<span class='va'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span><span class='op'>(</span>n<span class='op'>=</span><span class='va'>n</span>,p<span class='op'>=</span><span class='va'>p</span>,r<span class='op'>=</span><span class='va'>r</span>,type<span class='op'>=</span><span class='st'>"scale-free"</span>, plot<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='img'><img src='norm_PLN-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='va'>X</span><span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>X1<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span>, X2<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>normPLNfit</span><span class='op'>&lt;-</span><span class='fu'>norm_PLN</span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>Y</span>,<span class='va'>X</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>normPLNfit</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; List of 4
-#&gt;  $ MO     : num [1:100, 1:10] -0.411 1.3302 0.6971 1.1111 -0.0267 ...
+#&gt;  $ MO     : num [1:100, 1:10] -0.4107 1.3302 0.6974 1.1092 -0.0268 ...
 #&gt;  $ SO     : num [1:100, 1:10] 0.135 0.0378 0.0663 0.0475 0.1143 ...
 #&gt;  $ sigma_O: num [1:10, 1:10] 1 -0.64 0.406 0.476 0.373 ...
 #&gt;   ..- attr(*, "dimnames")=List of 2
 #&gt;   .. ..$ : chr [1:10] "Y1" "Y2" "Y3" "Y4" ...
 #&gt;   .. ..$ : chr [1:10] "Y1" "Y2" "Y3" "Y4" ...
-#&gt;  $ theta  : num [1:10, 1:3] 1.81 2.12 1.61 2.15 1.8 ...
+#&gt;  $ theta  : num [1:10, 1:3] 1.81 2.12 1.61 2.14 1.81 ...
 #&gt;   ..- attr(*, "dimnames")=List of 2
 #&gt;   .. ..$ : chr [1:10] "Y1" "Y2" "Y3" "Y4" ...
 #&gt;   .. ..$ : chr [1:3] "(Intercept)" "XX1" "XX2"</div></pre>

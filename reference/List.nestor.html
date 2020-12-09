@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Find initial cliques using blockmodels on the initial marginalized network — init_blockmodels • nestor</title>
+<title>Run function nestor on a list of initial cliques using parallel computation (mclapply) — List.nestor • nestor</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Find initial cliques using blockmodels on the initial marginalized network — init_blockmodels" />
-<meta property="og:description" content="This function aims at clustering the marginal network, inferred from edges probabilities obtained with either nestorFit() or EMtree()." />
+<meta property="og:title" content="Run function nestor on a list of initial cliques using parallel computation (mclapply) — List.nestor" />
+<meta property="og:description" content="Run function nestor on a list of initial cliques using parallel computation (mclapply)" />
 
 
 
@@ -123,78 +123,102 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Find initial cliques using blockmodels on the initial marginalized network</h1>
+    <h1>Run function nestor on a list of initial cliques using parallel computation (mclapply)</h1>
     
-    <div class="hidden name"><code>init_blockmodels.Rd</code></div>
+    <div class="hidden name"><code>List.nestor.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function aims at clustering the marginal network, inferred from edges probabilities obtained with either <code><a href='nestorFit.html'>nestorFit()</a></code> or <code>EMtree()</code>.</p>
+    <p>Run function nestor on a list of initial cliques using parallel computation (mclapply)</p>
     </div>
 
-    <pre class="usage"><span class='fu'>init_blockmodels</span><span class='op'>(</span><span class='va'>Y</span>, <span class='va'>sigma_O</span>, <span class='va'>MO</span>, <span class='va'>SO</span>, k <span class='op'>=</span> <span class='fl'>3</span>, alpha <span class='op'>=</span> <span class='fl'>0.1</span>, cores <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>List.nestor</span><span class='op'>(</span>
+  <span class='va'>cliqueList</span>,
+  <span class='va'>Y</span>,
+  <span class='va'>sigma_O</span>,
+  <span class='va'>MO</span>,
+  <span class='va'>SO</span>,
+  <span class='va'>r</span>,
+  alpha <span class='op'>=</span> <span class='fl'>0.1</span>,
+  cores <span class='op'>=</span> <span class='fl'>1</span>,
+  maxIter <span class='op'>=</span> <span class='fl'>20</span>,
+  eps <span class='op'>=</span> <span class='fl'>0.001</span>,
+  trackJ <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>cliqueList</th>
+      <td><p>a list containing all initial cliques to be tested</p></td>
+    </tr>
+    <tr>
       <th>Y</th>
-      <td><p>Count dataset.</p></td>
+      <td><p>count dataset</p></td>
     </tr>
     <tr>
       <th>sigma_O</th>
-      <td><p>PLNmodels output: covariance matrix estimate.</p></td>
+      <td><p>result of PLN estimation: variance covariance matrix of observed data</p></td>
     </tr>
     <tr>
       <th>MO</th>
-      <td><p>PLNmodels output: observed means estimate.</p></td>
+      <td><p>result of PLN estimation: means matrix of observed data</p></td>
     </tr>
     <tr>
       <th>SO</th>
-      <td><p>PLNmodels output: observed marginal variances estimate.</p></td>
+      <td><p>result of PLN estimation: marginal variances matrix of observed data</p></td>
     </tr>
     <tr>
-      <th>k</th>
-      <td><p>Number of groups to find.</p></td>
+      <th>r</th>
+      <td><p>number of hidden variables</p></td>
     </tr>
     <tr>
       <th>alpha</th>
-      <td><p>Tempering parameter.</p></td>
+      <td><p>tempering parameter</p></td>
     </tr>
     <tr>
       <th>cores</th>
-      <td><p>Number of cores for parallel computation (uses mclapply, not available for Windows).</p></td>
+      <td><p>number of cores</p></td>
+    </tr>
+    <tr>
+      <th>maxIter</th>
+      <td><p>maximal number of iterations of the algorithm</p></td>
+    </tr>
+    <tr>
+      <th>eps</th>
+      <td><p>convergence precision parameter</p></td>
+    </tr>
+    <tr>
+      <th>trackJ</th>
+      <td><p>boolean for the estimation of the lower bound at each parameter update</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of cliques</p>
+    <p>a list containing the fit of nestor for every cliques contained in cliqueList</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span><span class='op'>(</span>n<span class='op'>=</span><span class='fl'>100</span>,p<span class='op'>=</span><span class='fl'>10</span>,r<span class='op'>=</span><span class='fl'>1</span>,type<span class='op'>=</span><span class='st'>"scale-free"</span>, plot<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='img'><img src='init_blockmodels-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='va'>data</span><span class='op'>$</span><span class='va'>TC</span>
-</div><div class='output co'>#&gt; [[1]]
-#&gt; [1] 1 2 3 4 8
-#&gt; </div><div class='input'><span class='va'>PLNfit</span><span class='op'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>Y</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'> <span class='va'>data</span><span class='op'>=</span><span class='fu'><a href='generate_missing_data.html'>generate_missing_data</a></span><span class='op'>(</span>n<span class='op'>=</span><span class='fl'>100</span>,p<span class='op'>=</span><span class='fl'>10</span>,r<span class='op'>=</span><span class='fl'>1</span>,type<span class='op'>=</span><span class='st'>"scale-free"</span>, plot<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='va'>PLNfit</span><span class='op'>&lt;-</span><span class='fu'><a href='norm_PLN.html'>norm_PLN</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>Y</span><span class='op'>)</span>
 <span class='va'>MO</span><span class='op'>&lt;-</span><span class='va'>PLNfit</span><span class='op'>$</span><span class='va'>MO</span>
 <span class='va'>SO</span><span class='op'>&lt;-</span><span class='va'>PLNfit</span><span class='op'>$</span><span class='va'>SO</span>
 <span class='va'>sigma_O</span><span class='op'>=</span><span class='va'>PLNfit</span><span class='op'>$</span><span class='va'>sigma_O</span>
-<span class='co'>#-- initialize with blockmodels</span>
-<span class='fu'>init_blockmodels</span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>Y</span>,<span class='va'>sigma_O</span>, <span class='va'>MO</span>, <span class='va'>SO</span>, k<span class='op'>=</span><span class='fl'>2</span> <span class='op'>)</span>
-</div><div class='output co'>#&gt; 
-#&gt; </div><div class='output co'>#&gt; $cliqueList
-#&gt; $cliqueList[[1]]
-#&gt; $cliqueList[[1]][[1]]
-#&gt; [1] 3
-#&gt; 
-#&gt; 
-#&gt; $cliqueList[[2]]
-#&gt; $cliqueList[[2]][[1]]
-#&gt; [1]  1  2  4  5  6  7  8  9 10
-#&gt; 
-#&gt; 
-#&gt; </div></pre>
+<span class='co'>#-- find a list of initial cliques</span>
+<span class='va'>findcliqueList</span><span class='op'>=</span><span class='fu'><a href='boot_FitSparsePCA.html'>boot_FitSparsePCA</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>Y</span>, B<span class='op'>=</span><span class='fl'>5</span>, r<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>cliqueList</span><span class='op'>=</span><span class='va'>findcliqueList</span><span class='op'>$</span><span class='va'>cliqueList</span>
+<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>cliqueList</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='co'>#-- run List.nestor</span>
+<span class='va'>fitList</span><span class='op'>=</span><span class='fu'>List.nestor</span><span class='op'>(</span><span class='va'>cliqueList</span>,<span class='va'>data</span><span class='op'>$</span><span class='va'>Y</span>, <span class='va'>sigma_O</span>, <span class='va'>MO</span>,<span class='va'>SO</span>, r<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>fitList</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>fitList</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; List of 3
+#&gt;  $ message: chr "could not find function \"nestor\""
+#&gt;  $ call   : language nestor(Y = Y, MO = MO, SO = SO, initList = init, eps = eps, alpha = alpha,      maxIter = maxIter, verbatim = 0, | __truncated__
+#&gt;  $ clique :List of 1
+#&gt;   ..$ : int [1:2] 3 7
+#&gt;  - attr(*, "class")= chr [1:3] "simpleError" "error" "condition"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

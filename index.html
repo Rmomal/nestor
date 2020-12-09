@@ -81,9 +81,9 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="nestor-network-inference-from-species-counts-with-missing-actors-" class="section level1">
+<div id="nestor-network-inference-from-species-counts-with-missing-actors" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#nestor-network-inference-from-species-counts-with-missing-actors-" class="anchor"></a>nestor: Network inference from Species counTs with missing actORs.</h1></div>
+<a href="#nestor-network-inference-from-species-counts-with-missing-actors" class="anchor"></a>nestor: Network inference from Species counTs with missing actORs.</h1></div>
 <!-- badges: start -->
 
 <blockquote>
@@ -96,29 +96,26 @@
 <h3 class="hasAnchor">
 <a href="#emtree-dependency" class="anchor"></a>EMtree dependency</h3>
 <p><code>nestor</code> uses functions from the R package <code>EMtree</code> which development version is available from <a href="https://github.com/">GitHub</a></p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw">devtools</span>::<span class="fu">install_github</span>(<span class="st">"Rmomal/EMtree"</span>)
-</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"Rmomal/EMtree"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="cran-dependencies" class="section level3">
 <h3 class="hasAnchor">
 <a href="#cran-dependencies" class="anchor"></a>CRAN dependencies</h3>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="kw">required_CRAN</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"utils"</span>, <span class="st">"stats"</span>, <span class="st">"ROCR"</span>,<span class="st">"graphics"</span>, <span class="st">"mvtnorm"</span>, <span class="st">"parallel"</span>, 
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">required_CRAN</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"utils"</span>, <span class="st">"stats"</span>, <span class="st">"ROCR"</span>,<span class="st">"graphics"</span>, <span class="st">"mvtnorm"</span>, <span class="st">"parallel"</span>, 
                    <span class="st">"gridExtra"</span>, <span class="st">"reshape2"</span>  ,<span class="st">"ggplot2"</span>, <span class="st">"magrittr"</span>, <span class="st">"dplyr"</span>, 
-                   <span class="st">"tidyr"</span>, <span class="st">"tibble"</span>, <span class="st">"blockmodels"</span>, <span class="st">"mclust"</span>, <span class="st">"PLNmodels"</span>)
-<span class="kw">not_installed_CRAN</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html">setdiff</a></span>(<span class="kw">required_CRAN</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span>(<span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span>()))
-<span class="co">if</span> (<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="kw">not_installed_CRAN</span>) <span class="op">&gt;</span> <span class="fl">0</span>) <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="kw">not_installed_CRAN</span>)
-</pre></div>
+                   <span class="st">"tidyr"</span>, <span class="st">"tibble"</span>, <span class="st">"blockmodels"</span>, <span class="st">"mclust"</span>, <span class="st">"PLNmodels"</span><span class="op">)</span>
+<span class="va">not_installed_CRAN</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html">setdiff</a></span><span class="op">(</span><span class="va">required_CRAN</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">not_installed_CRAN</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="va">not_installed_CRAN</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="installation-of-nestor" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installation-of-nestor" class="anchor"></a>Installation of <code>nestor</code>
 </h3>
 <p>You can install the development version from <a href="https://github.com/">GitHub</a> with:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="kw">devtools</span>::<span class="fu">install_github</span>(<span class="st">"Rmomal/nestor"</span>)
-</pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"Rmomal/nestor"</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 </div>
