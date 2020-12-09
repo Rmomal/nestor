@@ -87,7 +87,7 @@ ppvtpr<-function(probs,G,r, thresh=0.5){
   PPV=round(sum((G!=0)*(probs>thresh))/(sum((G!=0)*(probs>thresh))+ sum((G==0)*(probs>thresh))),2)#TP/(TP+FP)
   TPR=round(sum((G!=0)*(probs>thresh))/sum(G!=0), 2)
   if(r>0){
-    h=(q-r):q
+    h=(q-r+1):q
     PPVH=round(sum((G[h,]!=0)*(probs[h,]>thresh))/(sum((G[h,]!=0)*(probs[h,]>thresh))+ sum((G[h,]==0)*(probs[h,]>thresh))),2)
     PPVO=round(sum((G[-h,-h]!=0)*(probs[-h,-h]>thresh))/(sum((G[-h,-h]!=0)*(probs[-h,-h]>thresh))+  sum((G[-h,-h]==0)*(probs[-h,-h]>thresh))),2)
     TPRH=round(sum((G[h,]!=0)*(probs[h,]>thresh))/sum(G[h,]!=0), 2)
