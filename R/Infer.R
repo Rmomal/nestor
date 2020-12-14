@@ -397,7 +397,6 @@ Mstep<-function(M, S, Pg, Omega,W, Wg, p,logSTW, logSTWg,  trackJ=FALSE){
 
 #' Core function of nestorFit
 #'
-#' @param Y Count dataset.
 #' @param MO Estimated means from norm_PLN.
 #' @param SO Estimated marginal vairances from norm_PLN.
 #' @param initList Result list from initVEM.
@@ -434,12 +433,12 @@ Mstep<-function(M, S, Pg, Omega,W, Wg, p,logSTW, logSTWg,  trackJ=FALSE){
 #' #-- initialize with true clique for example
 #' initClique=data$TC
 #' #-- initialize the VEM
-#' initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
+#' initList=initVEM(cliqueList=initClique,sigma_O, MO,r=1 )
 #' #-- run core function nestorFit
-#' fit=nestorFit(data$Y, MO,SO, initList=initList, maxIter=5,verbatim=1)
+#' fit=nestorFit( MO,SO, initList=initList, maxIter=5,verbatim=1)
 #' str(fit)
 
-nestorFit<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1,
+nestorFit<-function(MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1,
                    print.hist=FALSE, trackJ=FALSE){
   n=nrow(MO);  p=ncol(MO);  O=1:ncol(MO)
   MH=initList$MHinit;omegainit=initList$omegainit
@@ -549,7 +548,6 @@ nestorFit<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1
 #' Run function nestorFit on a list of initial cliques using parallel computation (mclapply)
 #'
 #' @param cliqueList List containing all initial cliques to be tested.
-#' @param Y Count dataset.
 #' @param sigma_O Result of PLN estimation: variance covariance matrix of observed data.
 #' @param MO Result of PLN estimation: means matrix of observed data.
 #' @param SO Result of PLN estimation: marginal variances matrix of observed data.
@@ -573,17 +571,17 @@ nestorFit<-function(Y,MO,SO,initList, maxIter=20,eps=1e-2, alpha=0.1, verbatim=1
 #' cliqueList=findcliqueList$cliqueList
 #' length(cliqueList)
 #' #-- run List.nestorFit
-#' fitList=List.nestorFit(cliqueList,data$Y, sigma_O, MO,SO, r=1)
+#' fitList=List.nestorFit(cliqueList, sigma_O, MO,SO, r=1)
 #' length(fitList)
 #' str(fitList[[1]])
-List.nestorFit<-function(cliqueList, Y, sigma_O, MO,SO, r,alpha=0.1, cores=1,maxIter=20,eps=1e-3, trackJ=FALSE){
-  p=ncol(Y) ; O=1:p ; n=nrow(Y)
+List.nestorFit<-function(cliqueList, sigma_O, MO,SO, r,alpha=0.1, cores=1,maxIter=20,eps=1e-3, trackJ=FALSE){
+  p=ncol(MO) ; O=1:p ; n=nrow(MO)
   #--- run all initialisations with parallel computation
   list<-mclapply(cliqueList, function(c){
     #init
-    init=initVEM(Y = Y, cliqueList=c, sigma_O,MO,r = r)
+    init=initVEM(cliqueList=c, sigma_O,MO,r = r)
    #run nestorFit
-    VEM<- tryCatch({nestorFit(Y=Y,MO=MO,SO=SO,initList=init, eps=eps, alpha=alpha,maxIter=maxIter,
+    VEM<- tryCatch({nestorFit(MO=MO,SO=SO,initList=init, eps=eps, alpha=alpha,maxIter=maxIter,
                             verbatim = 0, print.hist=FALSE, trackJ=trackJ)},
                    error=function(e){e},finally={})
     VEM$clique=c

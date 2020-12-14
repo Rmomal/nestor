@@ -42,8 +42,8 @@ ggimage<-function(data, no.names=FALSE, order=NULL){
 #' SO<-PLNfit$SO
 #' sigma_O=PLNfit$sigma_O
 #' initClique=data$TC
-#' initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
-#' nestorFit=nestorFit(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1)
+#' initList=initVEM(cliqueList=initClique,sigma_O, MO,r=1 )
+#' nestorFit=nestorFit( MO,SO, initList=initList, maxIter=3,verbatim=1)
 #' res=auc(nestorFit$Pg,data$G)
 
 auc<-function(pred,label){
@@ -78,8 +78,8 @@ auc<-function(pred,label){
 #' #-- use true clique for example
 #' initClique=data$TC
 #' #-- initialize the VEM
-#' initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
-#' nestorFit=nestorFit(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1 )
+#' initList=initVEM(cliqueList=initClique,sigma_O, MO,r=1 )
+#' nestorFit=nestorFit(MO,SO, initList=initList, maxIter=3,verbatim=1 )
 #' #-- obtain criteria
 #' ppvtpr(nestorFit$Pg,r=1, data$G)
 ppvtpr<-function(probs,G,r, thresh=0.5){
@@ -121,8 +121,8 @@ ppvtpr<-function(probs,G,r, thresh=0.5){
 #' #-- use true clique for example
 #' initClique=data$TC
 #' #-- initialize the VEM
-#' initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
-#' nestorFit=nestorFit(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1 )
+#' initList=initVEM(cliqueList=initClique,sigma_O, MO,r=1 )
+#' nestorFit=nestorFit(MO,SO, initList=initList, maxIter=3,verbatim=1 )
 #' #-- obtain criteria
 #' plotPerf(nestorFit$Pg, data$G,r=1)
 plotPerf<-function(P,G,r,thresh=0.5, no.names=FALSE){
@@ -163,8 +163,8 @@ plotPerf<-function(P,G,r,thresh=0.5, no.names=FALSE){
 #' #-- use true clique for example
 #' initClique=data$TC
 #' #-- initialize the VEM
-#' initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
-#' nestorFit=nestorFit(data$Y, MO,SO, initList=initList, maxIter=3 , verbatim=1)
+#' initList=initVEM(cliqueList=initClique,sigma_O, MO,r=1 )
+#' nestorFit=nestorFit(MO,SO, initList=initList, maxIter=3 , verbatim=1)
 #' #-- obtain criteria
 #' plotConv(nestorFit)
 plotConv<-function(nestorFit){

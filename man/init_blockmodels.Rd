@@ -4,11 +4,9 @@
 \alias{init_blockmodels}
 \title{Find initial cliques using blockmodels on the initial marginalized network}
 \usage{
-init_blockmodels(Y, sigma_O, MO, SO, k = 3, alpha = 0.1, cores = 1)
+init_blockmodels(sigma_O, MO, SO, k = 3, alpha = 0.1, cores = 1)
 }
 \arguments{
-\item{Y}{Count dataset.}
-
 \item{sigma_O}{PLNmodels output: covariance matrix estimate.}
 
 \item{MO}{PLNmodels output: observed means estimate.}
@@ -35,5 +33,5 @@ MO<-PLNfit$MO
 SO<-PLNfit$SO
 sigma_O=PLNfit$sigma_O
 #-- initialize with blockmodels
-init_blockmodels(data$Y,sigma_O, MO, SO, k=2 )
+init_blockmodels(sigma_O, MO, SO, k=2 )
 }

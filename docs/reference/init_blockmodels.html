@@ -132,15 +132,11 @@
     <p>This function aims at clustering the marginal network, inferred from edges probabilities obtained with either <code><a href='nestorFit.html'>nestorFit()</a></code> or <code>EMtree()</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>init_blockmodels</span><span class='op'>(</span><span class='va'>Y</span>, <span class='va'>sigma_O</span>, <span class='va'>MO</span>, <span class='va'>SO</span>, k <span class='op'>=</span> <span class='fl'>3</span>, alpha <span class='op'>=</span> <span class='fl'>0.1</span>, cores <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>init_blockmodels</span><span class='op'>(</span><span class='va'>sigma_O</span>, <span class='va'>MO</span>, <span class='va'>SO</span>, k <span class='op'>=</span> <span class='fl'>3</span>, alpha <span class='op'>=</span> <span class='fl'>0.1</span>, cores <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>Y</th>
-      <td><p>Count dataset.</p></td>
-    </tr>
     <tr>
       <th>sigma_O</th>
       <td><p>PLNmodels output: covariance matrix estimate.</p></td>
@@ -181,7 +177,7 @@
 <span class='va'>SO</span><span class='op'>&lt;-</span><span class='va'>PLNfit</span><span class='op'>$</span><span class='va'>SO</span>
 <span class='va'>sigma_O</span><span class='op'>=</span><span class='va'>PLNfit</span><span class='op'>$</span><span class='va'>sigma_O</span>
 <span class='co'>#-- initialize with blockmodels</span>
-<span class='fu'>init_blockmodels</span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>Y</span>,<span class='va'>sigma_O</span>, <span class='va'>MO</span>, <span class='va'>SO</span>, k<span class='op'>=</span><span class='fl'>2</span> <span class='op'>)</span>
+<span class='fu'>init_blockmodels</span><span class='op'>(</span><span class='va'>sigma_O</span>, <span class='va'>MO</span>, <span class='va'>SO</span>, k<span class='op'>=</span><span class='fl'>2</span> <span class='op'>)</span>
 </div><div class='output co'>#&gt; 
 #&gt; </div><div class='output co'>#&gt; $cliqueList
 #&gt; $cliqueList[[1]]

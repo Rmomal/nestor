@@ -4,11 +4,9 @@
 \alias{initVEM}
 \title{Initialize all parameters for the variational inference}
 \usage{
-initVEM(Y, cliqueList, sigma_O, MO, r)
+initVEM(cliqueList, sigma_O, MO, r)
 }
 \arguments{
-\item{Y}{Count dataset.}
-
 \item{cliqueList}{List of size r of initial neighbors for each missing actor.}
 
 \item{sigma_O}{PLNmodels output: estimated observed bloc of the variance-covariance matrix.}
@@ -37,6 +35,6 @@ sigma_O=PLNfit$sigma_O
 findclique=FitSparsePCA(MO,r=1)
 initClique=findclique$cliques
 #-- initialize the VEM
-initList=initVEM(Y=data$Y,cliqueList=initClique,sigma_O=sigma_O, MO=MO,r=1 )
+initList=initVEM(cliqueList=initClique,sigma_O=sigma_O, MO=MO,r=1 )
 str(initList)
 }

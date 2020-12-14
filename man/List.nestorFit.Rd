@@ -6,7 +6,6 @@
 \usage{
 List.nestorFit(
   cliqueList,
-  Y,
   sigma_O,
   MO,
   SO,
@@ -20,8 +19,6 @@ List.nestorFit(
 }
 \arguments{
 \item{cliqueList}{List containing all initial cliques to be tested.}
-
-\item{Y}{Count dataset.}
 
 \item{sigma_O}{Result of PLN estimation: variance covariance matrix of observed data.}
 
@@ -58,7 +55,7 @@ findcliqueList=boot_FitSparsePCA(MO, B=5, r=1)
 cliqueList=findcliqueList$cliqueList
 length(cliqueList)
 #-- run List.nestorFit
-fitList=List.nestorFit(cliqueList,data$Y, sigma_O, MO,SO, r=1)
+fitList=List.nestorFit(cliqueList, sigma_O, MO,SO, r=1)
 length(fitList)
 str(fitList[[1]])
 }

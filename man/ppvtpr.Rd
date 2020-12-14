@@ -39,8 +39,8 @@ sigma_O=PLNfit$sigma_O
 #-- use true clique for example
 initClique=data$TC
 #-- initialize the VEM
-initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
-nestorFit=nestorFit(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1 )
+initList=initVEM(cliqueList=initClique,sigma_O, MO,r=1 )
+nestorFit=nestorFit(MO,SO, initList=initList, maxIter=3,verbatim=1 )
 #-- obtain criteria
 ppvtpr(nestorFit$Pg,r=1, data$G)
 }

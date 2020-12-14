@@ -5,7 +5,6 @@
 \title{Core function of nestorFit}
 \usage{
 nestorFit(
-  Y,
   MO,
   SO,
   initList,
@@ -18,8 +17,6 @@ nestorFit(
 )
 }
 \arguments{
-\item{Y}{Count dataset.}
-
 \item{MO}{Estimated means from norm_PLN.}
 
 \item{SO}{Estimated marginal vairances from norm_PLN.}
@@ -64,8 +61,8 @@ sigma_O=PLNfit$sigma_O
 #-- initialize with true clique for example
 initClique=data$TC
 #-- initialize the VEM
-initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
+initList=initVEM(cliqueList=initClique,sigma_O, MO,r=1 )
 #-- run core function nestorFit
-fit=nestorFit(data$Y, MO,SO, initList=initList, maxIter=5,verbatim=1)
+fit=nestorFit( MO,SO, initList=initList, maxIter=5,verbatim=1)
 str(fit)
 }

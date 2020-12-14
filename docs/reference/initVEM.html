@@ -132,15 +132,11 @@
     <p>Initialize all parameters for the variational inference</p>
     </div>
 
-    <pre class="usage"><span class='fu'>initVEM</span><span class='op'>(</span><span class='va'>Y</span>, <span class='va'>cliqueList</span>, <span class='va'>sigma_O</span>, <span class='va'>MO</span>, <span class='va'>r</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>initVEM</span><span class='op'>(</span><span class='va'>cliqueList</span>, <span class='va'>sigma_O</span>, <span class='va'>MO</span>, <span class='va'>r</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>Y</th>
-      <td><p>Count dataset.</p></td>
-    </tr>
     <tr>
       <th>cliqueList</th>
       <td><p>List of size r of initial neighbors for each missing actor.</p></td>
@@ -178,7 +174,7 @@
 <span class='va'>findclique</span><span class='op'>=</span><span class='fu'><a href='FitSparsePCA.html'>FitSparsePCA</a></span><span class='op'>(</span><span class='va'>MO</span>,r<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
 <span class='va'>initClique</span><span class='op'>=</span><span class='va'>findclique</span><span class='op'>$</span><span class='va'>cliques</span>
 <span class='co'>#-- initialize the VEM</span>
-<span class='va'>initList</span><span class='op'>=</span><span class='fu'>initVEM</span><span class='op'>(</span>Y<span class='op'>=</span><span class='va'>data</span><span class='op'>$</span><span class='va'>Y</span>,cliqueList<span class='op'>=</span><span class='va'>initClique</span>,sigma_O<span class='op'>=</span><span class='va'>sigma_O</span>, MO<span class='op'>=</span><span class='va'>MO</span>,r<span class='op'>=</span><span class='fl'>1</span> <span class='op'>)</span>
+<span class='va'>initList</span><span class='op'>=</span><span class='fu'>initVEM</span><span class='op'>(</span>cliqueList<span class='op'>=</span><span class='va'>initClique</span>,sigma_O<span class='op'>=</span><span class='va'>sigma_O</span>, MO<span class='op'>=</span><span class='va'>MO</span>,r<span class='op'>=</span><span class='fl'>1</span> <span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>initList</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; List of 4
 #&gt;  $ Wginit   : num [1:11, 1:11] 0 0.00826 0.00826 0.00826 0.00826 ...

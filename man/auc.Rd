@@ -24,7 +24,7 @@ MO<-PLNfit$MO
 SO<-PLNfit$SO
 sigma_O=PLNfit$sigma_O
 initClique=data$TC
-initList=initVEM(data$Y,cliqueList=initClique,sigma_O, MO,r=1 )
-nestorFit=nestorFit(data$Y, MO,SO, initList=initList, maxIter=3,verbatim=1)
+initList=initVEM(cliqueList=initClique,sigma_O, MO,r=1 )
+nestorFit=nestorFit( MO,SO, initList=initList, maxIter=3,verbatim=1)
 res=auc(nestorFit$Pg,data$G)
 }

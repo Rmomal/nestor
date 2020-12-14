@@ -23,7 +23,7 @@ set.seed(4) # first seed givig 5 nodes (p is 10)
 
 ## Simulation and preparation
 
-`nestor` can simulate data with with missing actors with the function `missing_from_scratch()`. It requires the desired type of dependency structure (scale-free, erdos, tree or cluster) and the number of missing actors `r`. Here is an example with `r=1` for the scale-free structure:
+`nestor` can simulate data with with missing actors with the function `generate_missing_data()`. It requires the desired type of dependency structure (scale-free, erdos, tree or cluster) and the number of missing actors `r`. Here is an example with `r=1` for the scale-free structure:
 ```{r, fig.width=3,fig.height=3,out.width = "30%"}
 library(nestor)
 p=10
@@ -57,7 +57,7 @@ The `min.size` parameter defines the minimal size of the output clique. The func
 
 Once an initial clique has been found, the algorithm can be initialized. This is the aim of the function `initVEM()`, which initializes all required parameters. This function builds one initialization from one initial clique. We initialize with the clique previously identified:
 ```{r }
-initList = initVEM(data$Y, cliqueList=initClique, sigma_obs, MO, r=1 )
+initList = initVEM(cliqueList=initClique, sigma_obs, MO, r=1 )
 ```
 
 Then to set the tempering parameter `alpha`, we can look at the output of the `alphaMax()` function.
@@ -67,7 +67,7 @@ alphaMax(p+r, n)
 
 The actual tempering parameter should be lower than the upper bound given by `alphaMax()`. Here we set `alpha` to $0.1$. The core function `nestorFit()` can now be run as follows:
 ```{r}
-fit = nestorFit(data$Y, MO,SO, initList=initList, alpha=0.1, eps=1e-3, 
+fit = nestorFit(MO,SO, initList=initList, alpha=0.1, eps=1e-3, 
              maxIter=30)
 ```
 The object `fit` contains inferred means and variances of the complete data, as well as edges weight and probability matrices.
@@ -97,9 +97,9 @@ four_cliques = complement_spca(data$Y, k=2)
 four_cliques
 ```
 
-This package provides with a parllel procedure for the computation of several fits of `nestorFit()` corresponding to a list of possible cliques, with the function `List.nestorFit()`. Below is an example with the list of six cliques previously obtained with the `complement_spca()` function:
+This package provides with a parallel procedure for the computation of several fits of `nestorFit()` corresponding to a list of possible cliques, with the function `List.nestorFit()`. Below is an example with the list of six cliques previously obtained with the `complement_spca()` function:
 ```{r}
-fitList=List.nestorFit(four_cliques, data$Y, sigma_obs, MO,SO,r=1,eps=1e-3,
+fitList=List.nestorFit(four_cliques, sigma_obs, MO,SO,r=1,eps=1e-3,
                     maxIter = 50, alpha=0.1)
 ```
 

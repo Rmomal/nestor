@@ -12,7 +12,7 @@ MO<-PLNfit$MO
 SO<-PLNfit$SO
 sigma_O=PLNfit$sigma_O
 #-- initialize with blockmodels
-blockinit=init_blockmodels(data$Y,sigma_O, MO, SO, k=k )
+blockinit=init_blockmodels(sigma_O, MO, SO, k=k )
 blockinit$cliqueList
 test_that("blockmodels", {
   expect_length(blockinit$cliqueList,k)
@@ -33,7 +33,7 @@ test_that("alpha", {
 })
 
 cliques=list(list(blockinit$cliqueList[[1]][[1]],blockinit$cliqueList[[2]][[1]]))
-initTest=initVEM(data$Y,cliqueList = list(1,2),MO = MO,sigma_O = sigma_O,r=2)
+initTest=initVEM(cliqueList = list(1,2),MO = MO,sigma_O = sigma_O,r=2)
 test_that("initVEMr2", {
   expect_equal(ncol(initTest$omegainit),p+2)
 })

@@ -163,7 +163,6 @@ norm_PLN<-function(Y, X=NULL, O=NULL){
 #' Find initial cliques using blockmodels on the initial marginalized network
 #'
 #' This function aims at clustering the marginal network, inferred from edges probabilities obtained with either `nestorFit()` or `EMtree()`.
-#' @param Y Count dataset.
 #' @param sigma_O PLNmodels output: covariance matrix estimate.
 #' @param MO PLNmodels output: observed means estimate.
 #' @param SO PLNmodels output: observed marginal variances estimate.
@@ -183,16 +182,16 @@ norm_PLN<-function(Y, X=NULL, O=NULL){
 #' SO<-PLNfit$SO
 #' sigma_O=PLNfit$sigma_O
 #' #-- initialize with blockmodels
-#' init_blockmodels(data$Y,sigma_O, MO, SO, k=2 )
-init_blockmodels<-function(Y, sigma_O, MO, SO, k=3, alpha=0.1, cores=1){
-  init=initVEM(Y = Y,cliqueList=NULL, cov2cor(sigma_O),MO,r = 0)
+#' init_blockmodels(sigma_O, MO, SO, k=2 )
+init_blockmodels<-function(sigma_O, MO, SO, k=3, alpha=0.1, cores=1){
+  init=initVEM(cliqueList=NULL, cov2cor(sigma_O),MO,r = 0)
   #--- fit nestorFit with 0 missing actor
-  resVEM0<- tryCatch(nestorFit(Y,MO,SO,initList=init, eps=1e-3, alpha=alpha, maxIter=100,verbatim = 0),
+  resVEM0<- tryCatch(nestorFit(MO,SO,initList=init, eps=1e-3, alpha=alpha, maxIter=100,verbatim = 0),
                      error=function(e){e}, finally={})
   if(length(resVEM0)>3){
     sbm.0 <- BM_bernoulli("SBM_sym",1*(resVEM0$Pg>0.5), plotting="", verbosity=0,ncores=cores)
   }else{
-    p=ncol(Y)
+    p=ncol(MO)
     resEM0 = EMtree(cov2cor(sigma_O))
     sbm.0 <- BM_bernoulli("SBM_sym",1*(resEM0$edges_prob>2/p), plotting="", verbosity=0,ncores=1)
   }
@@ -349,7 +348,6 @@ initOmega <- function(Sigma = NULL,  cliqueList,cst=1.1) {
 
 #' Initialize all parameters for the variational inference
 #'
-#' @param Y Count dataset.
 #' @param cliqueList List of size r of initial neighbors for each missing actor.
 #' @param sigma_O PLNmodels output: estimated observed bloc of the variance-covariance matrix.
 #' @param MO PLNmodels output: estimated variational mean values of the latent parameters corresponding to observed species.
@@ -371,11 +369,11 @@ initOmega <- function(Sigma = NULL,  cliqueList,cst=1.1) {
 #' findclique=FitSparsePCA(MO,r=1)
 #' initClique=findclique$cliques
 #' #-- initialize the VEM
-#' initList=initVEM(Y=data$Y,cliqueList=initClique,sigma_O=sigma_O, MO=MO,r=1 )
+#' initList=initVEM(cliqueList=initClique,sigma_O=sigma_O, MO=MO,r=1 )
 #' str(initList)
-initVEM<-function(Y,cliqueList,sigma_O,MO,r){
-  p=ncol(Y)
-  n=nrow(Y)
+initVEM<-function(cliqueList,sigma_O,MO,r){
+  p=ncol(MO)
+  n=nrow(MO)
   # Tree
   Wginit <- matrix(1, p+r, p+r); Wginit =Wginit / sum(Wginit)
   Winit <- matrix(1, p+r, p+r); Winit =Winit / sum(Winit)
