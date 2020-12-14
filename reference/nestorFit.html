@@ -133,7 +133,6 @@
     </div>
 
     <pre class="usage"><span class='fu'>nestorFit</span><span class='op'>(</span>
-  <span class='va'>Y</span>,
   <span class='va'>MO</span>,
   <span class='va'>SO</span>,
   <span class='va'>initList</span>,
@@ -148,10 +147,6 @@
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>Y</th>
-      <td><p>Count dataset.</p></td>
-    </tr>
     <tr>
       <th>MO</th>
       <td><p>Estimated means from norm_PLN.</p></td>
@@ -217,11 +212,11 @@
 <span class='co'>#-- initialize with true clique for example</span>
 <span class='va'>initClique</span><span class='op'>=</span><span class='va'>data</span><span class='op'>$</span><span class='va'>TC</span>
 <span class='co'>#-- initialize the VEM</span>
-<span class='va'>initList</span><span class='op'>=</span><span class='fu'><a href='initVEM.html'>initVEM</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>Y</span>,cliqueList<span class='op'>=</span><span class='va'>initClique</span>,<span class='va'>sigma_O</span>, <span class='va'>MO</span>,r<span class='op'>=</span><span class='fl'>1</span> <span class='op'>)</span>
+<span class='va'>initList</span><span class='op'>=</span><span class='fu'><a href='initVEM.html'>initVEM</a></span><span class='op'>(</span>cliqueList<span class='op'>=</span><span class='va'>initClique</span>,<span class='va'>sigma_O</span>, <span class='va'>MO</span>,r<span class='op'>=</span><span class='fl'>1</span> <span class='op'>)</span>
 <span class='co'>#-- run core function nestorFit</span>
-<span class='va'>fit</span><span class='op'>=</span><span class='fu'>nestorFit</span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>Y</span>, <span class='va'>MO</span>,<span class='va'>SO</span>, initList<span class='op'>=</span><span class='va'>initList</span>, maxIter<span class='op'>=</span><span class='fl'>5</span>,verbatim<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>fit</span><span class='op'>=</span><span class='fu'>nestorFit</span><span class='op'>(</span> <span class='va'>MO</span>,<span class='va'>SO</span>, initList<span class='op'>=</span><span class='va'>initList</span>, maxIter<span class='op'>=</span><span class='fl'>5</span>,verbatim<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
-#&gt; nestor ran in 0.301secs and 4 iterations.</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>fit</span><span class='op'>)</span>
+#&gt; nestor ran in 0.271secs and 4 iterations.</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>fit</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; List of 11
 #&gt;  $ M        : num [1:100, 1:11] 2.3145 -0.536 1.4827 0.0809 0.793 ...
 #&gt;  $ S        : num [1:100, 1:11] 0.0125 0.1691 0.028 0.1016 0.0537 ...
@@ -241,7 +236,7 @@
 #&gt;   ..$ diffOmega: num [1:4] 0.62307 0.05675 0.01324 0.00369
 #&gt;   ..$ diffWg   : num [1:4] 2.99e+10 4.91e+09 7.47e+10 7.81e+11
 #&gt;  $ finalIter: num 4
-#&gt;  $ time     : 'difftime' num 0.301491022109985
+#&gt;  $ time     : 'difftime' num 0.270549058914185
 #&gt;   ..- attr(*, "units")= chr "secs"
 #&gt;  $ max.prec : logi FALSE</div></pre>
   </div>
